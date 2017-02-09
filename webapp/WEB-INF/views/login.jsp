@@ -96,7 +96,11 @@
 							'Content-Type' : 'application/json'
 						},
 					}).success(function(response) {					
-						$scope.database = response.DATABASE;							
+						$scope.database = response.DATABASE;
+						
+						dis(response)
+						
+						
 						setTimeout(function(){ 	$("#company").val("balancikapos_class12345CRM NEW 2017"); },1000);							
 					});
 				};
