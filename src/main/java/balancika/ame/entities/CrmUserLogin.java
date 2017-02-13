@@ -5,11 +5,45 @@ public class CrmUserLogin{
 	private String userID;
 	private String username;
 	private String password;
+	private String type;
 	private int status;
 	private String parentID;
 	private String appId;
 	private MeDataSource dataSource;
+	private int has;
+	private int permission;
+	
+	
+	@Override
+	public String toString() {
+		return "CrmUserLogin [userID=" + userID + ", username=" + username + ", password=" + password + ", type=" + type
+				+ ", status=" + status + ", parentID=" + parentID + ", appId=" + appId + ", dataSource=" + dataSource
+				+ ", has=" + has + ", permission=" + permission + "]";
+	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public int getHas() {
+		return has;
+	}
+
+	public void setHas(int has) {
+		this.has = has;
+	}
+
+	public int getPermission() {
+		return permission;
+	}
+
+	public void setPermission(int permission) {
+		this.permission = permission;
+	}
 
 	public String getAppId() {
 		return appId;

@@ -3,6 +3,7 @@ package balancika.ame.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,21 +18,11 @@ public class MainController {
 		return "index";
 	}
 	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
-	public String login(ModelMap model){
+	public String login(ModelMap model, HttpServletRequest request){
 		model.addAttribute("title", "Login Account");
+		model.addAttribute("msg", getErrorMessage(request, "SPRING_SECURITY_LAST_EXCEPTION"));
 		return "login";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	// start layout	
 	@RequestMapping("head")
@@ -63,4 +54,13 @@ public class MainController {
 	}
 	// end layout
 	
+	
+	private String getErrorMessage(HttpServletRequest request, String key){
+		Exception exception = (Exception) request.getSession().getAttribute(key);
+		String error = "";
+		if (exception instanceof BadCredentialsException) {
+			error = exception.getMessage();
+		}
+		return error;
+	}
 }

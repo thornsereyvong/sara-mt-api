@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>	
@@ -14,7 +15,7 @@
 			<div class="login-box-body">
 				<h3 class="login-box-msg">Login Company</h3>
 				<div class="">
-					<%-- <c:if test="${param.error != null}">
+					<c:if test="${param.error != null}">
 						<div class="bg-warning text-center alert alert-warning">
 							<span class="h4">${msg}</span>
 						</div>
@@ -23,20 +24,19 @@
 						<div class="alert alert-success">
 							<p>You have been logged out successfully.</p>
 						</div>
-					</c:if> --%>
-		
+					</c:if>
 				</div>
 				<div class="clearfix"></div>
 				<form id="form-login" method="POST" action="${pageContext.request.contextPath}/login" ng-controller="viewCompany">
 					<div class="form-group has-feedback">
-						<input type="text" class="form-control" placeholder="Username" name="crm_username" id="username" required>
+						<input type="text" class="form-control" placeholder="Username" value="balancika" name="ame_username" id="ame_username" required>
 					</div>
 					<div class="form-group has-feedback">
-						<input type="password" class="form-control" placeholder="Password" name="crm_password" id="password" required>
+						<input type="password" class="form-control" placeholder="Password" value="balancika@123" name="ame_password" id="ame_password" required>
 					</div>
 					<div class="form-group has-feedback">
 						<select class="form-control" name="company" id="company" data-ng-init="listSystemDatabase()">
-							<option ng-repeat="db in database" class="ng-cloak" value="{{db.DBName}}12345{{db.ComName}}">{{db.ComName}}</option>
+							<option ng-repeat="db in databases" class="ng-cloak" value="{{db.dbName}}12345{{db.comName}}">{{db.comName}}</option>
 						</select>
 					</div>
 					<div class="row">
@@ -90,17 +90,13 @@
 				$scope.listSystemDatabase = function() {
 					$http({
 						method : 'POST',
-						url : "${pageContext.request.contextPath}/database",
+						url : "${pageContext.request.contextPath}/rest/database/list",
 						headers : {
 							'Accept' : 'application/json',
 							'Content-Type' : 'application/json'
 						},
-					}).success(function(response) {					
-						$scope.database = response.DATABASE;
-						
-						dis(response)
-						
-						
+					}).success(function(response) {		
+						$scope.databases = response.DATA;
 						setTimeout(function(){ 	$("#company").val("balancikapos_class12345CRM NEW 2017"); },1000);							
 					});
 				};
@@ -124,14 +120,14 @@
 						validating : 'glyphicon glyphicon-refresh'
 					},
 					fields : {
-						crm_username : {
+						ame_username : {
 							validators : {
 								notEmpty : {
 									message : 'The username is required and can not be empty!'
 								}
 							}
 						},
-						crm_password : {
+						ame_password : {
 							validators : {
 								notEmpty : {
 									message : 'The password is required and can not be empty!'
