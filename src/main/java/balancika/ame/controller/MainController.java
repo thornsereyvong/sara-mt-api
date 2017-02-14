@@ -15,6 +15,8 @@ public class MainController {
 	@RequestMapping(value = {"/","/index"}, method = RequestMethod.GET)
 	public String index(ModelMap model){
 		model.addAttribute("title", "Dashboard");
+		model.addAttribute("mDashboardAct", "active");
+		
 		return "index";
 	}
 	@RequestMapping(value = {"/login"}, method = RequestMethod.GET)
@@ -53,8 +55,6 @@ public class MainController {
 		return "layout/menu";
 	}
 	// end layout
-	
-	
 	private String getErrorMessage(HttpServletRequest request, String key){
 		Exception exception = (Exception) request.getSession().getAttribute(key);
 		String error = "";
