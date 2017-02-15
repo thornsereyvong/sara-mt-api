@@ -26,6 +26,25 @@ public class MainController {
 		return "login";
 	}
 	
+	@RequestMapping(value = {"/group"}, method = RequestMethod.GET)
+	public String group(ModelMap model, HttpServletRequest request){
+		model.addAttribute("title", "Group");
+		model.addAttribute("mDashboardAct", "active");
+		model.addAttribute("mAM","open");
+		return "group";
+	}
+	
+	@RequestMapping(value = {"/post-transaction"}, method = RequestMethod.GET)
+	public String postTransaction(ModelMap model, HttpServletRequest request){
+		model.addAttribute("title", "Post Transaction");
+		//model.addAttribute("mDashboardAct", "active");
+		//model.addAttribute("mAM","open");
+		return "post-transaction";
+	}
+	
+	
+	
+	
 	// start layout	
 	@RequestMapping("head")
 	public String head(ModelMap model, HttpServletRequest request) {

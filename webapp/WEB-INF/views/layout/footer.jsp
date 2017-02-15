@@ -21,6 +21,7 @@
     <script src="${pageContext.request.contextPath}/resources/bootstrap/js/bootstrap.min.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/plugins/datepicker/bootstrap-datepicker.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/plugins/timepicker/bootstrap-timepicker.min.js"></script>
+	<script src="${pageContext.request.contextPath}/resources/plugins/daterangepicker/daterangepicker.js"></script>
 	
 	<script src="${pageContext.request.contextPath}/resources/js/jPages.js"></script>
 	<script src="${pageContext.request.contextPath}/resources/plugins/select2/select2.full.js"></script>
@@ -41,8 +42,8 @@
   	<script>
     	$(function () {    	 
    	  		$(".select2").select2();
-   	  		$(".select2-small").select2(); //{ minimumResultsForSearch: Infinity}    	  
-    	  	$(".date").datepicker();
+   	  		$(".select2-small").select2({ minimumResultsForSearch: Infinity}); //{ minimumResultsForSearch: Infinity}    	  
+    	  	$(".date").daterangepicker();
     	  	
     	  	$('.table-responsive').on('show.bs.dropdown', function () {
 	     		$('.table-responsive').css( "overflow", "inherit" );

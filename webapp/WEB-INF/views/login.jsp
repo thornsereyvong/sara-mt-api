@@ -29,7 +29,7 @@
 				<div class="clearfix"></div>
 				<form id="form-login" method="POST" action="${pageContext.request.contextPath}/login" ng-controller="viewCompany">
 					<div class="form-group has-feedback">
-						<input type="text" class="form-control" placeholder="Username" value="balancika" name="ame_username" id="ame_username" required>
+						<input type="text" class="form-control" placeholder="Username" value="balweb" name="ame_username" id="ame_username" required>
 					</div>
 					<div class="form-group has-feedback">
 						<input type="password" class="form-control" placeholder="Password" value="balancika@123" name="ame_password" id="ame_password" required>
