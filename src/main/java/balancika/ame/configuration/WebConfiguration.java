@@ -42,13 +42,7 @@ public class WebConfiguration extends WebMvcConfigurerAdapter {
 		RestTemplate restTemplate = new RestTemplate();
 		return restTemplate;
 	}
-	
-	@Bean
-	public CommonsMultipartResolver multipartResolver() {
-	    CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-	    multipartResolver.setMaxUploadSize(5242880);
-	    return new CommonsMultipartResolver();
-	}
+		
 	
 	@Bean
 	public MessageSource messageSource(){
