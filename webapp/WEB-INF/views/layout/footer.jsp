@@ -43,7 +43,7 @@
     	$(function () {    	 
    	  		$(".select2").select2();
    	  		$(".select2-small").select2({ minimumResultsForSearch: Infinity}); //{ minimumResultsForSearch: Infinity}    	  
-    	  	$(".date").daterangepicker();
+    	  	$(".date").daterangepicker({singleDatePicker: true, showDropdowns: true, format: 'YYYY-MM-DD'});
     	  	
     	  	$('.table-responsive').on('show.bs.dropdown', function () {
 	     		$('.table-responsive').css( "overflow", "inherit" );

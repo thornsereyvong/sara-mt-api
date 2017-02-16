@@ -4,7 +4,11 @@
 	<head>	
 	
 		<jsp:include page="${request.contextPath}/head"></jsp:include>
-	
+		<style>
+			.width-75{ width: 75px !important; }
+			.cursor-pointer{ cursor: pointer !important; margin-top: -20px !important;}
+		
+		</style>
 	</head>
 	<body class="sidebar-mini wysihtml5-supported skin-red-light" ng-app="postTranApp">
     	<div class="wrapper">
@@ -34,14 +38,13 @@
 							</div>
 						</div>
 						<div class="box-body">
-							<div class="col-sm-2"><h4>Transaction</h4></div>
-							<div class="col-sm-12"><hr style="margin-top: 3px;" /></div>
 							<div class="row">
 								<div class="col-sm-12">
 									<div class="col-sm-6 col-md-3 col-xs-12">
 										<label class="font-label">Transaction Type <span class="requrie">(Required)</span></label>
 										<div class="form-group">
-											<select style="width:100%" class="form-control select2-small" name="tranType" id="tranType">
+											
+											<select style="width:100%" ng-model="transType" ng-change="transChange()" class="form-control select2-small" name="tranType" id="tranType">
 												<option value="">-- SELECT Transaction Type --</option>
 												<option value="AP Return Invoice">AP Return Invoice</option>
 												<option value="AP Debit Note">AP Debit Note</option>
@@ -58,17 +61,118 @@
 											</select>
 										</div>
 									</div>
-									<div class="col-sm-6 col-md-3 col-xs-12"><br>
-										<div class="checkbox">
-			                          		<label>
-		                           				<input type="checkbox"> Show posted, voided and deleted transactions
-			                          		</label>
+									<div class="col-sm-6 col-md-3 col-xs-12">
+			                        	<div class="icheckbox icheckbox-primary"><br><br>
+			                        		<input id="ckrShowAll" ng-click="ckrShowAllClick()" class="styled" type="checkbox">
+			                        		<label class="cursor-pointer"  for="ckrShowAll">Show posted, voided and deleted transactions</label>
 			                        	</div>
 									</div>
 								</div>
 							</div>
-							
-							
+							<!-- <div class="row">
+								<div class="col-sm-12">
+									<div class="col-sm-2"><h4>Filter</h4></div>
+									<div class="col-sm-12"><hr style="margin-top: 3px;" /></div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-3 col-xs-12">
+										<label class="font-label">Transaction Date</label>
+										<div class="form-group">
+											<select style="width:100%" class="form-control select2-small" name="tranDate" id="tranDate">
+												<option selected value="All">All</option>
+												<option value="range">Range</option>
+												<option value="today">Today</option>
+												<option value="this period">This Period</option>
+												<option value="this year">This Year</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-3 col-xs-12">
+										<label class="font-label">From Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" class="form-control pull-right date" readonly="readonly" name="fromdate" id="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="col-sm-6 col-md-3 col-xs-12">
+										<label class="font-label">To Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" class="form-control pull-right date" readonly="readonly" name="todate" id="todate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-3 col-xs-12">
+										<label class="font-label">Filter Type</label>
+										<div class="form-group">
+											<select style="width:100%" class="form-control select2-small" name="filterType" id="filterType">
+												<option selected value="All">All</option>
+												<option value="Entry No">Entry No</option>
+												<option value="Journal Type">Journal Type</option>
+												<option value="Reference">Reference</option>
+												<option value="Remark">Remark</option>
+												<option value="Vendor ID">Vendor ID</option>
+												<option value="Vendor Name">Vendor Name</option>
+												<option value="Customer ID">Customer ID</option>
+												<option value="Customer Name">Customer Name</option>
+												<option value="Employee ID">Employee ID</option>
+												<option value="Employee Name">Employee Name</option>
+												<option value="Total Amount">Total Amount</option>
+											</select>
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">&nbsp;</label>
+										<div class="form-group">
+											<input type="text" class="form-control" name="filterVal" id="filterVal">
+										</div>
+									</div>
+									<div class="col-sm-3 col-md-3 col-xs-12">
+										<button type="button" id="btnfSearch" name="btnfSearch" class="btn btn-primary pull-right" >SEARCH</button>
+										<br>
+									</div>
+								</div>
+								<div class="col-sm-12"><hr style="margin-top: 3px;" /></div>
+								
+							</div> -->
+							<div class="row">
+								<div class="col-sm-12">
+									<div class="tablecontainer table-responsive"> 
+										<table class="table table-hover">
+											<tr>
+												<th class="width-75 text-center">
+													<div class="icheckbox icheckbox-primary"><input id="ckrAll" ng-click="ckrAll()" class="styled" type="checkbox"><label class="cursor-pointer" for="ckrAll"></label></div>
+					                        	</th>
+												<th>Trans. ID</th>
+												<th>Trans. Date</th>
+												<th>Trans. Name</th>
+												<th>Reference</th>
+												<th>Remark</th>
+												<th>Total Amount</th>
+												<th>Post Status</th>
+											</tr>
+											<tbody>
+												
+												<tr  ng-repeat="tr in trans">
+													<td class="width-75 text-center">
+														<div class="icheckbox icheckbox-primary"><input name="ckr" id="ckr{{$index}}" class="styled" type="checkbox"><label class="cursor-pointer" for="ckr{{$index}}"></label></div>
+													</td>
+													<td ng-cloak>{{tr.transId}}</td>
+													<td ng-cloak>{{tr.transDate}}</td>
+													<td ng-cloak>{{tr.transName}}</td>
+													<td ng-cloak>{{tr.transReference}}</td>
+													<td ng-cloak>{{tr.transRemark}}</td>
+													<td ng-cloak>{{tr.transAmt | number:2}}</td>
+													<td ng-cloak>{{tr.transStatus}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</section>		
@@ -95,10 +199,10 @@
 												<div class="col-sm-6 col-md-4 col-xs-12">
 													<label class="font-label">Transaction Date</label>
 													<div class="form-group">
-														<select style="width:100%" class="form-control select2-small" name="tranDate" id="tranDate">
-															<option selected value="All">All</option>
+														<select style="width:100%" class="form-control select2-small" name="datafilter" id="datafilter">
+															<option value="All">All</option>
 															<option value="range">Range</option>
-															<option value="today">Today</option>
+															<option selected value="today">Today</option>
 															<option value="this period">This Period</option>
 															<option value="this year">This Year</option>
 														</select>
@@ -136,6 +240,8 @@
 															<option value="Vendor Name">Vendor Name</option>
 															<option value="Customer ID">Customer ID</option>
 															<option value="Customer Name">Customer Name</option>
+															<option value="Employee ID">Employee ID</option>
+															<option value="Employee Name">Employee Name</option>
 															<option value="Total Amount">Total Amount</option>
 														</select>
 													</div>
@@ -161,6 +267,7 @@
 					</div>
 				</div>
 				
+				<div id="errors"></div>
 			</div>
 			<jsp:include page="${request.contextPath}/foot"></jsp:include>
 		</div>
@@ -177,58 +284,108 @@
 			app.controller('postTranCon',['$scope','$http',function($scope, $http){	
 					
 				$scope.btnFilterData = function(){
-					$("#frmFilterPost").modal("toggle");
+					$("#frmFilterPost").modal("toggle");				
 				}
+				$scope.transType = "";
+				$scope.transChange = function(){
+					if($scope.transType != ""){
+						$scope.listTransaction(0);						
+					}
+				}
+				
+				
+				$scope.listTransaction = function(searchClick){
+					
+					var fromDate = getValueStringById("fromdate");
+					var toDate = getValueStringById("todate");
+					var filterType = getValueStringById("filterType");
+					var transType = getValueStringById("tranType");
+					var isVoid = $("#ckrShowAll");
+					var isVoidCk = 0;
+					if(isVoid.is(':checked')){
+						isVoidCk = 1;
+					}					
+					var search = getValueStringById("filterVal");
+					if(transType != ""){
+						$http({
+				 			method: 'POST',
+						    url: "${pageContext.request.contextPath}/rest/post-transaction/list",
+						    headers: {
+						    	'Accept': 'application/json',
+						        'Content-Type': 'application/json'
+						    },
+						    data : {
+							    "fromDate":fromDate,"toDate":toDate, "filterType":filterType, "transType":transType, "search":search, "isVoid": isVoidCk, "searchClick":searchClick
+							}
+						}).success(function(response) {
+							$scope.trans = [];
+							if(response.MESSAGE == "SUCCESS"){
+								$scope.trans = response.DATA;
+							}
+						});
+					}else{
+						$scope.trans = [];
+					}
+						
+					
+				}
+				
+				$scope.ckrShowAllClick = function(){					
+					$scope.listTransaction(0);					
+				}
+				
+				$scope.ckrAll = function(){					
+					var ckrAll = $("#ckrAll");
+					if(ckrAll.is(':checked')){
+						$("input[name=ckr]").prop('checked', true);
+					}else{
+						$("input[name=ckr]").prop('checked', false);
+					}
+				}
+				
 				
 			}]);
 			
 			
 			$(function(){
 				
-				$('#fromdate').daterangepicker({
-			        singleDatePicker: true,
-			        showDropdowns: true,
-			        format: 'DD/MM/YYYY' 
-			    }).on('change', function(e) {
-					if($("#fromdate").val() != ""){
-						$('#frmFilterPostTrans').bootstrapValidator('revalidateField', 'fromdate');
-					}			  
-				});
-				$('#todate').daterangepicker({
-			        singleDatePicker: true,
-			        showDropdowns: true,
-			        format: 'DD/MM/YYYY' 
-			    }).on('change', function(e) {
-					if($("#todate").val() != ""){
-						$('#frmFilterPostTrans').bootstrapValidator('revalidateField', 'todate');
-					}			  
-				});
+				$('#fromdate').val(moment().format('YYYY-MM-DD'));  
+			    $('#todate').val(moment().format('YYYY-MM-DD'));
 				
-				$('#frmFilterPostTrans').bootstrapValidator({
-					message : 'This value is not valid',
-					feedbackIcons : {
-						valid : 'glyphicon glyphicon-ok',
-						invalid : 'glyphicon glyphicon-remove',
-						validating : 'glyphicon glyphicon-refresh'
-					},
-					fields : {
-						todate : {
-							validators : {
-								date: {
-			                        format: 'DD/MM/YYYY',
-			                        message: 'The value is not a valid date'
-			                    }
-							}
-						},
-						fromdate : {
-							validators : {	
-								date: {
-			                        format: 'DD/MM/YYYY',
-			                        message: 'The value is not a valid date'
-			                    }
-							}
-						}
-					}
+				$("#datafilter").change(function(){
+					var action = $("#datafilter").val();
+					switch(action) {
+					    case 'All':
+					        $('#fromdate').prop("disabled", true);  
+					        $('#todate').prop("disabled", true);
+					        $('#fromdate').val($('#fromdate').attr('data-default-date'));  
+					        $('#todate').val($('#todate').attr('data-default-date'));
+					        break;
+					    case 'range':
+					    	$('#fromdate').prop("disabled", false);  
+					        $('#todate').prop("disabled", false);
+					        $('#fromdate').val("");  
+					        $('#todate').val("");
+					        break;
+					    case 'today':
+					    	 $('#fromdate').prop("disabled", true);  
+						     $('#todate').prop("disabled", true); 				     				    
+						     $('#fromdate').val(moment().format('YYYY-MM-DD'));  
+						     $('#todate').val(moment().format('YYYY-MM-DD'));
+					        break;
+					    case 'this period':
+					    	 $('#fromdate').prop("disabled", true);  
+						     $('#todate').prop("disabled", true);
+						     $('#fromdate').val((new Date()).getFullYear()+"-"+moment().format('MM')+"-"+"01");  
+						     $('#todate').val((new Date()).getFullYear()+"-"+moment().format('MM')+"-"+getLastDayOfMonth()); 
+					        break;
+					    case 'this year':
+					    	 $('#fromdate').prop("disabled", true);  
+						     $('#todate').prop("disabled", true);
+						     $('#fromdate').val((new Date()).getFullYear()+"-01-01");  
+						     $('#todate').val((new Date()).getFullYear()+"-12-01"); 
+					        break;
+					}				
 				});
 			});
 		</script>		
