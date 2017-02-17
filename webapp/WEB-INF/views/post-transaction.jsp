@@ -158,7 +158,7 @@
 												
 												<tr  ng-repeat="tr in trans">
 													<td class="width-75 text-center">
-														<div class="icheckbox icheckbox-primary"><input name="ckr" id="ckr{{$index}}" class="styled" type="checkbox"><label class="cursor-pointer" for="ckr{{$index}}"></label></div>
+														<div class="icheckbox icheckbox-primary"><input name="ckr" ng-click="ckrDetailClick($index)" id="ckr{{$index}}" class="styled" type="checkbox"><label class="cursor-pointer" for="ckr{{$index}}"></label></div>
 													</td>
 													<td ng-cloak>{{tr.transId}}</td>
 													<td ng-cloak>{{tr.transDate}}</td>
@@ -295,7 +295,8 @@
 				
 				
 				$scope.listTransaction = function(searchClick){
-					
+					$("#ckrAll").prop('checked', false);
+					$scope.totalRow = 0;
 					var fromDate = getValueStringById("fromdate");
 					var toDate = getValueStringById("todate");
 					var filterType = getValueStringById("filterType");
@@ -333,16 +334,31 @@
 				$scope.ckrShowAllClick = function(){					
 					$scope.listTransaction(0);					
 				}
-				
+				$scope.totalRow = 0;
 				$scope.ckrAll = function(){					
 					var ckrAll = $("#ckrAll");
 					if(ckrAll.is(':checked')){
+						$scope.totalRow = $("input[name=ckr]").length;
 						$("input[name=ckr]").prop('checked', true);
 					}else{
+						$scope.totalRow = 0;
 						$("input[name=ckr]").prop('checked', false);
 					}
 				}
 				
+				$scope.ckrDetailClick = function(index){
+					var lCkr = $("#ckr"+index);
+					if(lCkr.is(':checked')){
+						$scope.totalRow++;
+					}else{
+						$scope.totalRow--;
+					}			
+					if($scope.totalRow==$("input[name=ckr]").length){
+						$("#ckrAll").prop('checked', true);
+					}else{
+						$("#ckrAll").prop('checked', false);
+					}				
+				}
 				
 			}]);
 			
