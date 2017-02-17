@@ -279,6 +279,7 @@
 			var app = angular.module('postTranApp', ['angular-loading-bar', 'ngAnimate']).config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
 			    cfpLoadingBarProvider.includeSpinner = false;
 			}]);
+			
 			var self = this;
 	
 			app.controller('postTranCon',['$scope','$http',function($scope, $http){	
