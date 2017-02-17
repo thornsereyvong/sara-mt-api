@@ -76,7 +76,9 @@
 			        <button type="button" class="close" data-dismiss="modal" ng-click="closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			        <h4 class="modal-title" id="myModalLabel"><b>[CREATE] Group</b></h4>
 			      </div>
+			       <form id="form_group">
 			      <div class="modal-body">
+			     
 			      <div class="clearfix"></div>
 			       
 			       <div class="col-sm-12">
@@ -154,11 +156,15 @@
 			       
 			       
 			        <div class="clearfix"></div>
+			        
 			      </div>
 			      <div class="modal-footer">
 			        <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="closeModal()">Cancel</button>
-			        <button type="button" class="btn btn-default">Save</button>
+			        <button type="button" id="btn_save" class="btn btn-default">Save</button>
 			      </div>
+			      
+			      </form>
+			      
 			    </div>
 			  </div>
 			</div>
@@ -204,6 +210,23 @@
 						}
 					});
 				}
+
+				$scope.listAuthorizationGroup = function(){
+					$http({
+			 			method: 'GET',
+					    url: "${pageContext.request.contextPath}/rest/authorizationgroup/list",
+					    headers: {
+					    	'Accept': 'application/json',
+					        'Content-Type': 'application/json'
+					    }	    
+					}).success(function(response) {
+						$scope.emps = [];
+						if(response.MESSAGE == "SUCCESS"){
+							$scope.emps = response.DATA;
+						}
+					});
+				}
+				
 				$scope.ckrAll = function(){					
 					var ckrAll = $("#ckrAll");
 					if(ckrAll.is(':checked')){
@@ -230,8 +253,42 @@
 		
 		<script type="text/javascript">
 
+			$("#btn_save").click(function(){
+				$("#form_group").submit();
+			});
+		
 			$(document).ready(function(){
-
+				$('#form_group').bootstrapValidator({
+					message: 'This value is not valid',
+					feedbackIcons: {
+						valid: 'glyphicon glyphicon-ok',
+						invalid: 'glyphicon glyphicon-remove',
+						validating: 'glyphicon glyphicon-refresh'
+					},
+					fields: {
+						authori_name: {
+							validators: {
+								notEmpty: {
+									message: 'The authorization group name is required and can not be empty!'
+								},
+								stringLength: {
+									max: 255,
+									message: 'The authorization group name must be less than 255 characters long.'
+								}
+							}
+						},
+						authori_desc: {
+							validators: {
+								stringLength: {
+									max: 255,
+									message: 'The authorization group description must be less than 255 characters long.'
+								}
+							}
+						}
+						
+					}
+				});
+			  
 			});
 		
 		</script>		
