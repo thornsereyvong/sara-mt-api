@@ -29,9 +29,10 @@ public class MainController {
 	@RequestMapping(value = {"/group"}, method = RequestMethod.GET)
 	public String group(ModelMap model, HttpServletRequest request){
 		model.addAttribute("title", "Group");
-		model.addAttribute("mDashboardAct", "active");
-		model.addAttribute("mAM","open");
-		return "group";
+		model.addAttribute("mAuthoriAct", "active");
+		model.addAttribute("mAuthorOpen","open");
+		model.addAttribute("mAuthorGroup","active");
+		return "authorization/group";
 	}
 	
 	@RequestMapping(value = {"/post-transaction"}, method = RequestMethod.GET)
