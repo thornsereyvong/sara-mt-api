@@ -1,8 +1,5 @@
 package balancika.ame.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 public class Transaction {
 	
 	String transId;
@@ -73,57 +70,43 @@ public class Transaction {
 	
 	
 	
-	@JsonIgnore
-    @JsonProperty(value = "fromDate")
+	
 	public String getFromDate() {
 		return fromDate;
 	}
 	public void setFromDate(String fromDate) {
 		this.fromDate = fromDate;
 	}
-	@JsonIgnore
-    @JsonProperty(value = "toDate")
 	public String getToDate() {
 		return toDate;
 	}
 	public void setToDate(String toDate) {
 		this.toDate = toDate;
 	}
-	@JsonIgnore
-    @JsonProperty(value = "filterType")
 	public String getFilterType() {
 		return filterType;
 	}
 	public void setFilterType(String filterType) {
 		this.filterType = filterType;
 	}
-	@JsonIgnore
-    @JsonProperty(value = "search")
 	public String getSearch() {
 		return search;
 	}
 	public void setSearch(String search) {
 		this.search = search;
 	}
-	@JsonIgnore
-    @JsonProperty(value = "isVoid")
 	public int getIsVoid() {
 		return isVoid;
 	}
 	public void setIsVoid(int isVoid) {
 		this.isVoid = isVoid;
 	}
-	@JsonIgnore
-    @JsonProperty(value = "searchClick")
 	public int getSearchClick() {
 		return searchClick;
 	}
 	public void setSearchClick(int searchClick) {
 		this.searchClick = searchClick;
 	}
-	
-	@JsonIgnore
-    @JsonProperty(value = "transType")
 	public String getTransType() {
 		return transType;
 	}

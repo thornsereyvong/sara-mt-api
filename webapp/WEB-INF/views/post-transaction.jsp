@@ -1,14 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-	<head>	
-	
+	<head>
 		<jsp:include page="${request.contextPath}/head"></jsp:include>
-		<style>
-			.width-75{ width: 75px !important; }
-			.cursor-pointer{ cursor: pointer !important; margin-top: -20px !important;}
-		
-		</style>
 	</head>
 	<body class="sidebar-mini wysihtml5-supported skin-red-light" ng-app="postTranApp">
     	<div class="wrapper">
@@ -17,7 +11,7 @@
 			<jsp:include page="${request.contextPath}/menu"></jsp:include>
 			
 			
-			<div class="content-wrapper">
+			<div class="content-wrapper" id="postTranCon" ng-controller="postTranCon" data-ng-init="startup()" >
 				<section class="content-header">
 					<h1>Post Transaction</h1>
 					<ol class="breadcrumb">
@@ -25,16 +19,16 @@
 						<li><a href="#">Post Transaction</a></li>
 					</ol>
 				</section>
-				<section class="content" ng-controller="postTranCon">
+				<section class="content" >
 					<div class="box box-danger">						
 						<div class="box-header">
 							<div class="col-sm-12">
-								<button style="margin-top: 10px;" class="btn btn-default"><i class="fa fa-folder-open"></i> Open</button>
-								<button style="margin-top: 10px;" class="btn btn-primary"><i class="fa fa-gears"></i> Post</button>
-								<button style="margin-top: 10px;" class="btn btn-danger"><i class="fa fa-trash"></i> Void</button>
-								<button style="margin-top: 10px;" class="btn btn-success"><i class="fa fa-clone"></i> Void & Clone</button>
+								<button style="margin-top: 10px;" ng-click="btnOpenData()" class="btn btn-default"><i class="fa fa-folder-open"></i> Open</button>
+								<button style="margin-top: 10px;" ng-click="btnPostData()" class="btn btn-primary"><i class="fa fa-gears"></i> Post</button>
+								<button style="margin-top: 10px;" ng-click="btnVoidData()" class="btn btn-danger"><i class="fa fa-trash"></i> Void</button>
+								<button style="margin-top: 10px;" ng-click="btnVoidNCloneData()" class="btn btn-success"><i class="fa fa-clone"></i> Void & Clone</button>
 								<button style="margin-top: 10px;" ng-click="btnFilterData()" class="btn btn-info"><i class="fa fa-search"></i> Filter</button>
-								<button style="margin-top: 10px;" class="btn btn-danger"><i class="fa fa-remove"></i> Close</button>
+								<button style="margin-top: 10px;" ng-click="btnClose()" class="btn btn-danger"><i class="fa fa-remove"></i> Close</button>
 							</div>
 						</div>
 						<div class="box-body">
@@ -154,7 +148,7 @@
 												<th>Total Amount</th>
 												<th>Post Status</th>
 											</tr>
-											<tbody>
+											<tbody id="data-content-post">
 												
 												<tr  ng-repeat="tr in trans">
 													<td class="width-75 text-center">
@@ -165,7 +159,7 @@
 													<td ng-cloak>{{tr.transName}}</td>
 													<td ng-cloak>{{tr.transReference}}</td>
 													<td ng-cloak>{{tr.transRemark}}</td>
-													<td ng-cloak>{{tr.transAmt | number:2}}</td>
+													<td ng-cloak class="dis-number">{{tr.transAmt | number:2}}</td>
 													<td ng-cloak>{{tr.transStatus}}</td>
 												</tr>
 											</tbody>
@@ -199,7 +193,7 @@
 												<div class="col-sm-6 col-md-4 col-xs-12">
 													<label class="font-label">Transaction Date</label>
 													<div class="form-group">
-														<select style="width:100%" class="form-control select2-small" name="datafilter" id="datafilter">
+														<select style="width:100%"  class="form-control select2-small" name="datafilter" id="datafilter">
 															<option value="All">All</option>
 															<option value="range">Range</option>
 															<option selected value="today">Today</option>
@@ -261,7 +255,7 @@
 							<div class="modal-footer">
 								<button type="button" id="btnfCancel" name="btnfCancel" class="btn btn-danger" data-dismiss="modal">CANCEL</button>
 								 &nbsp;&nbsp;
-								<button type="button" id="btnfSearch" name="btnfSearch" class="btn btn-primary pull-right" >SEARCH</button>
+								<button type="button" id="btnfSearch" ng-click="btnSearchClick()" name="btnfSearch" class="btn btn-primary pull-right" >SEARCH</button>
 							</div>
 						</div>
 					</div>
@@ -283,7 +277,20 @@
 	
 			app.controller('postTranCon',['$scope','$http',function($scope, $http){	
 					
-				$scope.btnFilterData = function(){
+				$scope.btnFilterData = function(){					
+					var transType = getValueStringById("tranType");
+					var datafilter = getValueStringById("datafilter");
+					if(transType != "" && datafilter == 'All'){						
+						for(var i=0; i< $scope.ftDate.length;i++){						
+							if(transType == $scope.ftDate[i].transType){
+								$('#fromdate').prop("disabled", false);  
+						        $('#todate').prop("disabled", false);
+						        $('#fromdate').val($scope.ftDate[i].fromDate);  
+						        $('#todate').val($scope.ftDate[i].toDate);	
+						        break;
+							}						
+						}
+					}					
 					$("#frmFilterPost").modal("toggle");				
 				}
 				$scope.transType = "";
@@ -293,6 +300,24 @@
 					}
 				}
 				
+				$scope.startup = function(){
+					$http.get("${pageContext.request.contextPath}/rest/post-transaction/start-up").success(function(response){
+						$scope.ftDate = response.DATA;
+					});
+				}
+				
+				$scope.setFromToDate = function(){					
+					var transType = getValueStringById("tranType");
+					if(transType != ""){
+						for(var i=0; i< $scope.ftDate.length;i++){
+							if(transType == $scope.ftDate[i].transType){								
+						        $('#fromdate').val($scope.ftDate[i].fromDate);  
+						        $('#todate').val($scope.ftDate[i].toDate);	
+						        break;
+							}						
+						}	
+					}
+				}
 				
 				$scope.listTransaction = function(searchClick){
 					$("#ckrAll").prop('checked', false);
@@ -327,8 +352,6 @@
 					}else{
 						$scope.trans = [];
 					}
-						
-					
 				}
 				
 				$scope.ckrShowAllClick = function(){					
@@ -360,6 +383,27 @@
 					}				
 				}
 				
+				$scope.btnSearchClick = function(){
+					$scope.listTransaction(1);
+				}
+				
+				$scope.btnVoidData = function(){
+					var tr = $("#data-content-post tr");
+					var listTrans = [];
+					for(var i=0; i<tr.length;i++){
+						var ckr = $("#ckr"+i);
+						
+						
+						if(ckr.is(':checked')){
+							alert($scope.trans[i].transId)
+							listTrans.push($scope.trans[i]);
+						}
+					}
+					dis(listTrans);
+				}
+				
+				
+				
 			}]);
 			
 			
@@ -371,11 +415,12 @@
 				$("#datafilter").change(function(){
 					var action = $("#datafilter").val();
 					switch(action) {
-					    case 'All':
-					        $('#fromdate').prop("disabled", true);  
-					        $('#todate').prop("disabled", true);
-					        $('#fromdate').val($('#fromdate').attr('data-default-date'));  
-					        $('#todate').val($('#todate').attr('data-default-date'));
+					    case 'All':	
+					    	$('#fromdate').prop("disabled", false);  
+					        $('#todate').prop("disabled", false);
+					        $('#fromdate').val(moment().format('YYYY-MM-DD'));  
+					        $('#todate').val(moment().format('YYYY-MM-DD'));
+					        angular.element(document.getElementById('postTranCon')).scope().setFromToDate();					        
 					        break;
 					    case 'range':
 					    	$('#fromdate').prop("disabled", false);  

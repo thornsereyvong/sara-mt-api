@@ -11,4 +11,5 @@ import balancika.ame.entities.Transaction;
 @Repository
 public interface PostTransactionService {
 	List<Transaction> listTransaction(Transaction tran, MeDataSource dataSource) throws SQLException;
+	List<Transaction> listTransFTDate(MeDataSource dataSource) throws SQLException;
 }

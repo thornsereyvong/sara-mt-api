@@ -64,14 +64,14 @@ public class MeDataSource {
 	public String toString(){
 		return ip+"/"+port+"/"+db+"/"+un+"/"+pw+"/"+userid;
 	}
-	public MeDataSource getMeDataSourceByHttpServlet(HttpServletRequest req, String user){
+	public MeDataSource getMeDataSourceByHttpServlet(HttpServletRequest req){
 		MeDataSource dataSource = new MeDataSource();
 		dataSource.setDb(req.getSession().getAttribute("databaseName").toString());
 		dataSource.setIp(req.getSession().getAttribute("ip").toString());
 		dataSource.setPort(req.getSession().getAttribute("port").toString());
 		dataSource.setUn(req.getSession().getAttribute("usernamedb").toString());
 		dataSource.setPw(req.getSession().getAttribute("passworddb").toString());				
-		dataSource.setUserid(user);				
+		dataSource.setUserid(req.getSession().getAttribute("userActivity").toString());				
 		return dataSource;
 	}
 }

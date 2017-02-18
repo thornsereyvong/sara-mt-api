@@ -34,7 +34,7 @@ public class PostTransactionController {
 	@RequestMapping(value = {"/list"}, method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> listTransaction(@RequestBody Transaction tran,HttpServletRequest req) throws SQLException{
 		Map<String, Object> map = new HashMap<String, Object>();
-		dataSource = dataSource.getMeDataSourceByHttpServlet(req, "");
+		dataSource = dataSource.getMeDataSourceByHttpServlet(req);
 		List<Transaction> trans = 	post.listTransaction(tran, dataSource);
 				
 		if(trans != null){
@@ -48,6 +48,22 @@ public class PostTransactionController {
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
-	
+	@RequestMapping(value = {"/start-up"}, method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> startUp(HttpServletRequest req) throws SQLException{
+		Map<String, Object> map = new HashMap<String, Object>();
+		dataSource = dataSource.getMeDataSourceByHttpServlet(req);
+		List<Transaction> trans = 	post.listTransFTDate(dataSource);
+				
+		if(trans != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("DATA", trans);
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+	}
 	
 }

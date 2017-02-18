@@ -28,6 +28,7 @@ public class CustomUsernamPasswordAuthenticationFilter extends UsernamePasswordA
 		dataSource.setPort(request.getSession().getAttribute("port").toString());
 		dataSource.setUn(request.getSession().getAttribute("usernamedb").toString());
 		dataSource.setPw(request.getSession().getAttribute("passworddb").toString());
+		dataSource.setUserid(request.getSession().getAttribute("userActivity").toString());
 		return super.attemptAuthentication(request, response);
 	}
 }

@@ -41,5 +41,7 @@
 	.has-error .select2-selection {  border: 1px solid #a94442; border-radius: 2px;}
 	.has-success .select2-selection{ border: 1px solid #00a65a; border-radius: 2px;}
 	.color_menu { color: #b9292d; }
+	.width-75{ width: 75px !important; }
+	.cursor-pointer{ cursor: pointer !important; margin-top: -20px !important;}
 </style>
 

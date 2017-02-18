@@ -49,4 +49,31 @@ public class PostTransactionServiceImpl implements PostTransactionService{
 		return null;
 	}
 
+	@Override
+	public List<Transaction> listTransFTDate(MeDataSource dataSource) throws SQLException {
+		CallableStatement cstmt = null;
+		try (Connection con = DBConnection.getConnection(dataSource)){
+					
+			String sql = "{call ame_post_trans_FTDate()}";
+			cstmt = (CallableStatement) con.prepareCall(sql);		
+			ResultSet rs = cstmt.executeQuery();
+			ArrayList<Transaction> arrTran = new ArrayList<Transaction>();
+			Transaction trans = null;
+			while(rs.next()){
+				trans = new Transaction();
+				trans.setTransType(rs.getString("Module"));
+				trans.setFromDate(rs.getString("FromDate"));
+				trans.setToDate(rs.getString("ToDate"));
+				arrTran.add(trans);
+			}
+			rs.close();			
+			return arrTran;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			 cstmt.close();
+		}
+		return null;
+	}
+
 }
