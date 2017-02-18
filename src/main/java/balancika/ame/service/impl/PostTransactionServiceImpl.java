@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mysql.jdbc.CallableStatement;
 import com.mysql.jdbc.Connection;
 import balancika.ame.entities.MeDataSource;
+import balancika.ame.entities.PostTransactionFrm;
 import balancika.ame.entities.Transaction;
 import balancika.ame.service.PostTransactionService;
 import balancika.ame.utilities.DBConnection;
@@ -73,6 +74,99 @@ public class PostTransactionServiceImpl implements PostTransactionService{
 		}finally{
 			 cstmt.close();
 		}
+		return null;
+	}
+
+	@Override
+	public boolean voidTrans(PostTransactionFrm trans, MeDataSource dataSource) throws SQLException {
+		CallableStatement cstmt = null;
+		try (Connection con = DBConnection.getConnection(dataSource)){
+			String sql = "";
+			for(int i=0; i<trans.getTranss().size(); i++){
+				switch(trans.getTransType()){  
+					case "AP Invoice":
+						sql = "{call spVoid_Purchase(?,0)}";
+						break;
+					case "AP Return Invoice": 
+				    	sql = "{call spVoid_PurchaseReturn(?,0)}";
+				    	break;
+				    case "AP Debit Note":
+				    	sql = "{call spVoid_DebitNote(?,0)}";
+				    	break;
+				    case "AP Payment":
+				    	sql = "{call spVoid_Payment(?,0)}";
+				    	break;
+			    	case "AR Invoice":
+			    		sql = "{call spVoid_Sale(?,0)}";
+				    	break;
+		    		case "AR Return Invoice":
+		    			sql = "{call spVoid_SaleReturn(?,0)}"; 
+				    	break;
+		    		case "AR Credit Note":
+		    			sql = "{call spVoid_CreditNote(?,0)}";
+				    	break;
+	    			case "AR Receipt":
+	    				sql = "{call spVoid_Receipt(?,0)}"; 
+				    	break;
+	    			case "IC Transfer":
+	    				sql = "{call spVoid_Transfer(?,0)}";
+				    	break;
+	    			case "IC Adjustment":
+	    				sql = "{call spVoid_Adjustment(?,0)}";
+				    	break;
+	    			case "Cash Transfer":
+	    				sql = "{call spVoid_CashTransfer(?,0)}";
+				    	break;
+	    			case "Cash Advance Clearance":
+	    				sql = "{call spVoid_CashAdvanceClearance(?,0)}";
+				    	break;
+	    			case "GL Entries":
+	    				//sql = "{call spVoid_Payment(?,0)}";
+				    	break;
+				    default:
+			    	
+				} 
+				if(!sql.equals("")){
+					cstmt = (CallableStatement) con.prepareCall(sql);	
+					cstmt.setString(1, trans.getTranss().get(i).getTransId());
+					if(cstmt.executeUpdate()>0){
+						System.out.println(trans.getTranss().get(i).getTransId()+" is successful void!");
+					}else{
+						System.out.println(trans.getTranss().get(i).getTransId()+" is unsuccessful void!");
+					}
+				}
+			}
+					
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			 cstmt.close();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean checkExist(Transaction tran, MeDataSource dataSource) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean checkPostJournal(Transaction tran, MeDataSource dataSource) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean checkDrCr(Transaction tran, MeDataSource dataSource) throws SQLException {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public String checkReference(Transaction tran, MeDataSource dataSource) throws SQLException {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

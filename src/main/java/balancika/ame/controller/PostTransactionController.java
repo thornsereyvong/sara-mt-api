@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import balancika.ame.entities.MeDataSource;
+import balancika.ame.entities.PostTransactionFrm;
 import balancika.ame.entities.Transaction;
 import balancika.ame.service.PostTransactionService;
 
@@ -65,5 +66,21 @@ public class PostTransactionController {
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
-	
+	@RequestMapping(value = {"/post"}, method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> postTrans(@RequestBody PostTransactionFrm trans,HttpServletRequest req) throws SQLException{
+		Map<String, Object> map = new HashMap<String, Object>();
+		dataSource = dataSource.getMeDataSourceByHttpServlet(req);
+		//List<Transaction> trans = 	post.listTransFTDate(dataSource);
+		
+		if(trans != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("STATUS", HttpStatus.OK.value());
+			map.put("DATA", trans);
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+	}
 }

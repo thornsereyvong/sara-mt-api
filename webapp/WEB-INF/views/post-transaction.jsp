@@ -40,6 +40,7 @@
 											
 											<select style="width:100%" ng-model="transType" ng-change="transChange()" class="form-control select2-small" name="tranType" id="tranType">
 												<option value="">-- SELECT Transaction Type --</option>
+												<option value="AP Invoice">AP Invoice</option>
 												<option value="AP Return Invoice">AP Return Invoice</option>
 												<option value="AP Debit Note">AP Debit Note</option>
 												<option value="AP Payment">AP Payment</option>
@@ -393,18 +394,31 @@
 					var listTrans = [];
 					for(var i=0; i<tr.length;i++){
 						var ckr = $("#ckr"+i);
-						
-						
 						if(ckr.is(':checked')){
-							alert($scope.trans[i].transId)
-							listTrans.push($scope.trans[i]);
+							if($scope.trans[i].transStatus == "Posted" && $scope.trans[i].transName == "GL Entries"){
+								listTrans.push($scope.trans[i]);
+							}
 						}
 					}
-					dis(listTrans);
+					var transType = getValueStringById("tranType");
+					if(listTrans.length>0){
+						$http({
+				 			method: 'POST',
+						    url: "${pageContext.request.contextPath}/rest/post-transaction/post",
+						    headers: {
+						    	'Accept': 'application/json',
+						        'Content-Type': 'application/json'
+						    },
+						    data : {
+							    "transType" : transType,
+							    "action" : "voided",
+							    "transs" : listTrans
+							}
+						}).success(function(response) {
+							dis(response)
+						});
+					}
 				}
-				
-				
-				
 			}]);
 			
 			
