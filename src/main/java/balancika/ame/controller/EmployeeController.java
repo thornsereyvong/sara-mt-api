@@ -34,7 +34,7 @@ public class EmployeeController {
 	@RequestMapping(value = {"/list"}, method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> listEmployee(HttpServletRequest req) throws SQLException{
 		Map<String, Object> map = new HashMap<String, Object>();
-		dataSource = dataSource.getMeDataSourceByHttpServlet(req, "");
+		dataSource = dataSource.getMeDataSourceByHttpServlet(req);
 		List<Employee>	 emps = empService.listEmployee(dataSource)	;
 		if(emps != null){
 			map.put("MESSAGE", "SUCCESS");

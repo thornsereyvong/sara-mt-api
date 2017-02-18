@@ -32,7 +32,7 @@ public class AuthorizationGroupController {
 	@RequestMapping(value = {"/list"}, method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> listAuthorizationGroup(HttpServletRequest req) throws SQLException{
 		Map<String, Object> map = new HashMap<String, Object>();
-		dataSource = dataSource.getMeDataSourceByHttpServlet(req, "");
+		dataSource = dataSource.getMeDataSourceByHttpServlet(req);
 		
 		List<AuthorizationGroup> auth = authService.listAuthorizationGroup(dataSource);
 		
