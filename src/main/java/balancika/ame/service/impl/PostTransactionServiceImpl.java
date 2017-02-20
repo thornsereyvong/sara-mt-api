@@ -121,7 +121,7 @@ public class PostTransactionServiceImpl implements PostTransactionService{
 	    				sql = "{call spVoid_CashAdvanceClearance(?,0)}";
 				    	break;
 	    			case "GL Entries":
-	    				//sql = "{call spVoid_Payment(?,0)}";
+	    				
 				    	break;
 				    default:
 			    	
@@ -148,7 +148,73 @@ public class PostTransactionServiceImpl implements PostTransactionService{
 
 	@Override
 	public boolean checkExist(Transaction tran, MeDataSource dataSource) throws SQLException {
-		// TODO Auto-generated method stub
+		CallableStatement cstmt = null;
+		try (Connection con = DBConnection.getConnection(dataSource)){
+					
+			String sql = "";
+			
+			switch(tran.getTransType()){  
+				case "AP Invoice":
+					sql = "select";
+					break;
+				case "AP Return Invoice": 
+			    	sql = "{call spVoid_PurchaseReturn(?,0)}";
+			    	break;
+			    case "AP Debit Note":
+			    	sql = "{call spVoid_DebitNote(?,0)}";
+			    	break;
+			    case "AP Payment":
+			    	sql = "{call spVoid_Payment(?,0)}";
+			    	break;
+		    	case "AR Invoice":
+		    		sql = "{call spVoid_Sale(?,0)}";
+			    	break;
+	    		case "AR Return Invoice":
+	    			sql = "{call spVoid_SaleReturn(?,0)}"; 
+			    	break;
+	    		case "AR Credit Note":
+	    			sql = "{call spVoid_CreditNote(?,0)}";
+			    	break;
+				case "AR Receipt":
+					sql = "{call spVoid_Receipt(?,0)}"; 
+			    	break;
+				case "IC Transfer":
+					sql = "{call spVoid_Transfer(?,0)}";
+			    	break;
+				case "IC Adjustment":
+					sql = "{call spVoid_Adjustment(?,0)}";
+			    	break;
+				case "Cash Transfer":
+					sql = "SELECT COUNT(*) 'Exist' FROM tblMoney_Company_Transfer WHERE PostStatus = 'Posted' and TrID=?";
+			    	break;
+				case "Cash Advance Clearance":
+					sql = "{call spVoid_CashAdvanceClearance(?,0)}";
+			    	break;
+				case "GL Entries":
+					
+			    	break;
+			    default:
+		    	
+			} 
+			
+			
+			cstmt = (CallableStatement) con.prepareCall(sql);		
+			ResultSet rs = cstmt.executeQuery();
+			ArrayList<Transaction> arrTran = new ArrayList<Transaction>();
+			Transaction trans = null;
+			while(rs.next()){
+				trans = new Transaction();
+				trans.setTransType(rs.getString("Module"));
+				trans.setFromDate(rs.getString("FromDate"));
+				trans.setToDate(rs.getString("ToDate"));
+				arrTran.add(trans);
+			}
+			rs.close();	
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			 cstmt.close();
+		}
 		return false;
 	}
 
