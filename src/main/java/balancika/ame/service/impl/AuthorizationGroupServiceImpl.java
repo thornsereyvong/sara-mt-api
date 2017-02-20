@@ -3,7 +3,9 @@ package balancika.ame.service.impl;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +14,8 @@ import com.mysql.jdbc.CallableStatement;
 import com.mysql.jdbc.Connection;
 
 import balancika.ame.entities.AuthorizationGroup;
+import balancika.ame.entities.AuthorizationGroupDetail;
+import balancika.ame.entities.Employee;
 import balancika.ame.entities.MeDataSource;
 import balancika.ame.service.AuthorizationGroupService;
 import balancika.ame.utilities.DBConnection;
@@ -37,9 +41,10 @@ public class AuthorizationGroupServiceImpl implements AuthorizationGroupService 
 			while(rs.next()){
 				authGroup = new AuthorizationGroup();
 				
-				authGroup.setAuthorGroupId(rs.getString("AuthGroup_ID"));
-				authGroup.setAuthorGroupName(rs.getString("AuthGroup_Name"));
-				authGroup.setAuthorGroupDesc(rs.getString("AuthGroup_Description"));
+				authGroup.setAuthGroupId(rs.getString("AuthGroup_ID"));
+				authGroup.setAuthGroupName(rs.getString("AuthGroup_Name"));
+				authGroup.setAuthGroupDesc(rs.getString("AuthGroup_Description"));
+				authGroup.setAuthGroupCount(rs.getString("Count"));
 				
 				arrauthGro.add(authGroup);
 			}
@@ -52,5 +57,179 @@ public class AuthorizationGroupServiceImpl implements AuthorizationGroupService 
 		}
 		return null;
 	}
+
+	
+	@Override
+	public Map<String, Object> createAuthorizationGroup(AuthorizationGroup authoriGroup , MeDataSource dataSoruce)	throws SQLException {
+		
+		CallableStatement cbs = null;
+		
+		
+		try (Connection con = DBConnection.getConnection(dataSoruce)){
+			
+			String AuthGroup = "";
+					AuthGroup += "(";
+					AuthGroup += "'TempAuth_ID',";
+					AuthGroup += "'" + authoriGroup.getAuthGroupName() + "',";
+					AuthGroup += "'" + authoriGroup.getAuthGroupDesc() + "'";
+					AuthGroup += ")";
+			
+			
+			
+			String AuthGroupDetail = "";
+			if(authoriGroup.getAuthGroupDetail() != null){
+				for(AuthorizationGroupDetail authorisationGroupDetail : authoriGroup.getAuthGroupDetail()){
+					AuthGroupDetail += "(";
+					AuthGroupDetail += "'TempAuth_ID',";
+					AuthGroupDetail += "'" + authorisationGroupDetail.getAuthGroupEmpId() + "'";
+					AuthGroupDetail += "),";
+				}
+				if (AuthGroupDetail != "") {
+					AuthGroupDetail = AuthGroupDetail.substring(0, AuthGroupDetail.length() - 1);
+				}
+			}
+			
+			Map<String, Object> m = new HashMap<String, Object>();
+			
+			String sql = "{call spHRMAddAuthorisationGroup(?,?,?,?)}";
+			cbs = (CallableStatement) con.prepareCall(sql);
+			cbs.setString(1, dataSoruce.getUserid());	
+			cbs.setString(2, authoriGroup.getAuthGroupName());
+			cbs.setString(3, AuthGroup);	
+			cbs.setString(4, AuthGroupDetail);
+			boolean results = cbs.execute();
+			
+			while(results){
+				ResultSet rs = cbs.getResultSet();
+				
+				 while (rs.next()) {
+					 m.put("MESSAGE", rs.getString("ID"));
+		         }	 
+		         rs.close();
+		        
+		        results = cbs.getMoreResults();
+		        ResultSet rs2 = cbs.getResultSet();
+		        
+		        while (rs2.next()) {
+		        	 m.put("DESCRIPTION", rs2.getString("alert"));
+		         }	 
+		         rs.close();
+		         
+		         return m;
+			}
+	
+			
+			 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			cbs.close();
+		}
+		return null;
+	}
+
+
+	@Override
+	public Map<String, Object> deleteAuthorizationGroup(MeDataSource dataSource,String ID)throws SQLException {
+		CallableStatement cstmt = null;
+		Map<String, Object> m = new HashMap<String, Object>();
+		try (Connection con = DBConnection.getConnection(dataSource)){
+			
+			String sql = "{call spHRMDeleteAuthorisationGroup(?,?)}";
+			cstmt = (CallableStatement) con.prepareCall(sql);
+			cstmt.setString(1, dataSource.getUserid());	
+			cstmt.setString(2, ID);
+			if(cstmt.executeUpdate() > 0){
+				m.put("MESSAGE", "SUCCESS");
+			}else{
+				m.put("MESSAGE", "FAIL");
+			}
+			
+			return m;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			 cstmt.close();
+		}
+		return null;
+	}
+
+
+	@Override
+	public Map<String, Object> getAuthorizationGroup(String ID, MeDataSource dataSource) throws SQLException {
+		CallableStatement cstmt = null;
+		Map<String, Object> m = new HashMap<String, Object>();
+		try (Connection con = DBConnection.getConnection(dataSource)){
+			
+			String sql = "{call spHRMGetAuthorisationGroupID(?)}";
+			cstmt = (CallableStatement) con.prepareCall(sql);
+			cstmt.setString(1, ID);
+			
+			boolean results = cstmt.execute();
+			while(results){
+				ResultSet rs = cstmt.getResultSet();
+				
+				List<AuthorizationGroup> TempArrauthGro = new ArrayList<AuthorizationGroup>();
+				m.put("MESSAGE", "SUCCESS");
+				while (rs.next()) {
+					AuthorizationGroup arryAuthGroup = new AuthorizationGroup();
+					
+					arryAuthGroup.setAuthGroupId(rs.getString("AuthGroup_ID"));
+					arryAuthGroup.setAuthGroupName(rs.getString("AuthGroup_Name"));
+					arryAuthGroup.setAuthGroupDesc(rs.getString("AuthGroup_Description"));
+					TempArrauthGro.add(arryAuthGroup);
+					m.put("authorizationGroup", TempArrauthGro);
+		        }
+		        rs.close();
+		        
+		        results = cstmt.getMoreResults();
+		        ResultSet rs2 = cstmt.getResultSet();
+		        
+		        List<AuthorizationGroupDetail> TempArrauthGroDetail = new ArrayList<AuthorizationGroupDetail>();
+		        
+		        while (rs2.next()) {
+		        	AuthorizationGroupDetail arrauthGroDetail = new AuthorizationGroupDetail();
+		        	arrauthGroDetail.setAuthGroupId(rs2.getString("AuthGroup_ID"));
+		        	arrauthGroDetail.setAuthGroupEmpId(rs2.getString("AuthGroup_EmpID"));
+		        	TempArrauthGroDetail.add(arrauthGroDetail);
+					m.put("authorizationGroupDetail", TempArrauthGroDetail);
+		        }	 
+		        rs.close();
+		        
+		        
+		         
+		        results = cstmt.getMoreResults();
+		        ResultSet rs3 = cstmt.getResultSet();
+		        List<Employee> tempArrauth = new ArrayList<Employee>();
+		        while (rs3.next()) {
+		        	Employee empDetail = new Employee();
+		        	empDetail.setEmpID(rs3.getString("EmpID"));
+		        	empDetail.setEmpName(rs3.getString("EmpName"));
+		        	tempArrauth.add(empDetail);
+		        	m.put("Employees", tempArrauth);
+		        }	 
+		        rs.close();
+		         
+		        return m;
+			}
+			
+			
+		} catch (Exception e) {
+			m.put("MESSAGE", "FAIL");
+			e.printStackTrace();
+		}
+		
+		return null;
+		
+	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 }

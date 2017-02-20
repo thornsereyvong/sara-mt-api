@@ -39,24 +39,47 @@
 					</div>
 					<div class="box-body">
 						<div class="col-sm-12">
-							<div class="tablecontainer table-responsive">
+							<div class="tablecontainer table-responsive" data-ng-init="listAuthorizationGroup()">
 								<table class="table table-hover">
 									<thead>
 										<tr>
-											<th>Authorization Group ID</th>
-											<th>Authorization Group Name</th>
-											<th></th>
+											<th style="cursor: pointer;" ng-click="sort('authorGroupId')">Authorization Group ID
+												<span class="glyphicon sort-icon" ng-show="sortKey=='authorGroupId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+											</th>
+											<th style="cursor: pointer;" ng-click="sort('ng-cloak')">Authorization Group Name
+												<span class="glyphicon sort-icon" ng-show="sortKey=='ng-cloak'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+											</th>
+											<th style="cursor: pointer;" ng-click="sort('authorGroupDesc')">Authorization Group Description
+												<span class="glyphicon sort-icon" ng-show="sortKey=='authorGroupDesc'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+											</th>
+											<th style="cursor: pointer;" ng-click="sort('authGroupCount')">Count Employee
+												<span class="glyphicon sort-icon" ng-show="sortKey=='authGroupCount'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+											</th>
+											<th style="width: 175px;"></th>
 										</tr>
 									</thead>
 									<tbody>
 										<tbody>
 											
-											
-										</tbody>
-									</table>
+											<tr pagination-id="listAuthGroup" dir-paginate="data in authGroup |orderBy:sortKey:reverse |filter:search |itemsPerPage:10"  >
+												<td ng-cloak>{{data.authGroupId}}</td>
+												<td ng-cloak>{{data.authGroupName}}</td>
+												<td ng-cloak>{{data.authGroupDesc}}</td>
+												<td ng-cloak>{{data.authGroupCount}}</td>
+												<td ng-cloak >
+													<button class="btn btn-danger" ng-click="deleteAuthGroup(data.authGroupId)"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+													<button class="btn btn-info" ng-click="getAuthGroupByID(data.authGroupId)"  data-toggle="modal" data-target="#myModalEdit"><i class="glyphicon glyphicon-pencil"></i> Edit</button>
+												</td>							
+											</tr> 
 									
 									</tbody>
 								</table>
+								<dir-pagination-controls 
+									pagination-id="listAuthGroup"
+									max-size="10" 
+									direction-links="true"
+									boundary-links="true"> 
+								</dir-pagination-controls>
 							</div>
 						</div>
 					</div>
@@ -84,14 +107,121 @@
 			       <div class="col-sm-12">
 			       		<label>Authorization Name</label>
 			       		<div class="form-group">
-			       			<input type="text" name="authori_name" id="authori_name" class="form-control"> 
+			       			<input type="text" name="authori_name" id="authori_name" ng-model="authName" class="form-control"> 
 			       		</div>
 			       </div>
 			        <div class="clearfix"></div>
 			       <div class="col-sm-12">
 			       		<label>Authorization Description</label>
 			       		<div class="form-group">
-			       			<input type="text" name="authori_desc" id="authori_desc" class="form-control"> 
+			       			<input type="text" name="authori_desc" id="authori_desc" ng-model="authDesc" class="form-control"> 
+			       		</div>
+			       </div>
+			       
+			      <div class="col-sm-3">
+				  	<form class="form-inline">
+				        <div class="form-group" style="padding-top: 20px;">
+				        	<div class="input-group"> 
+				        		<input type="text" pagination-id="listEmployeeCreate" ng-model="search" class="form-control" placeholder="Search">
+				        	</div>
+				        </div>
+				    </form>
+				    <br/>
+				</div>
+				<div class="col-sm-2">
+				  	<form class="form-inline">
+				        <div class="form-group" style="padding-top: 20px;">
+				        	<label>Row: </label>
+				        	<div class="input-group">
+				        		<select class="form-control" ng-model="pageSize.row" id ="row" ng-options="obj.value as obj.label for obj in pageSize.rows"></select>
+				        	</div>
+				        </div>
+				    </form>
+				    <br/>
+				</div>
+			       <div class="col-sm-12">
+			 			<div class="tablecontainer table-responsive">
+							<table class="table table-hover">
+								<tbody>
+									<tr>
+										<th class="width-75 text-center">
+											<!-- <div class="icheckbox icheckbox-primary">
+												<input id="ckrAll" ng-click="ckrAll()" class="styled"
+													type="checkbox"><label class="cursor-pointer"
+													for="ckrAll"></label>
+											</div>-->
+										</th> 
+										<th style="cursor: pointer;" ng-click="sort('empID')" >Employee ID 
+											<span class="glyphicon sort-icon" ng-show="sortKey=='empID'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>
+										<th style="cursor: pointer;" ng-click="sort('empName')">Employee Name 
+											<span class="glyphicon sort-icon" ng-show="sortKey=='empName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>	
+									</tr>
+								</tbody>
+								<tbody id="data-emp">
+									<tr  pagination-id="listEmployeeCreate" dir-paginate="tr in emps |orderBy:sortKey:reverse |filter:search |itemsPerPage:pageSize.row" current-page="currentPage" >
+												<td class="width-75 text-center">
+													<div class="icheckbox icheckbox-primary">
+														<input ng-checked="tr.statusCheck" name="ckr" id="ckr{{$index}}" ng-click="ckRowClick(($index + 1) + (currentPage - 1) * pageSize.row)" class="styled" type="checkbox">
+														<label class="cursor-pointer" for="ckr{{$index}}"></label>
+													</div>
+												</td>
+												<td ng-cloak>{{tr.empID}}</td>
+												<td ng-cloak>{{tr.empName}}</td>							
+											</tr> 
+									
+								</tbody>
+							</table>
+							<dir-pagination-controls 
+							    pagination-id="listEmployeeCreate"
+								max-size="pageSize.row" 
+								direction-links="true"
+								boundary-links="true"> 
+							</dir-pagination-controls> 
+						</div>      
+			       </div>
+			       
+			       
+			        <div class="clearfix"></div>
+			        
+			      </div>
+			      <div class="modal-footer">
+			        <button type="button" id="btn_save" ng-click="createAuthGroup()" class="btn btn-default">Save</button>
+			        <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="closeModal()">Cancel</button>
+			      </div>
+			      
+			      </form>
+			      
+			    </div>
+			  </div>
+			</div>
+			<!-- Close Dialog  -->
+			
+			
+			<!-- Dialog Update  -->
+			
+			<div  data-ng-init="employeeEdit()" data-backdrop="static" class="modal fade bs-example-modal-lg" id="myModalEdit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog modal-lg" role="document">
+			    <div class="modal-content">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" ng-click="closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel"><b>[Edit] Group</b></h4>
+			      </div>
+			       <form id="edit_form_group">
+			      <div class="modal-body">
+			     
+			      <div class="clearfix"></div>
+			       
+			       <div class="col-sm-12">
+			       		<label>Authorization Name</label>
+			       		<div class="form-group">
+			       			<input type="text" name="authori_name" id="edit_authori_name"  class="form-control"> 
+			       		</div>
+			       </div>
+			        <div class="clearfix"></div>
+			       <div class="col-sm-12">
+			       		<label>Authorization Description</label>
+			       		<div class="form-group">
+			       			<input type="text" name="authori_desc" id="edit_authori_desc"  class="form-control"> 
 			       		</div>
 			       </div>
 			       
@@ -128,12 +258,14 @@
 													for="ckrAll"></label>
 											</div>-->
 										</th> 
-										<th>Employee ID</th>
-										<th>Employee Name</th>	
+										<th style="cursor: pointer;" ng-click="sort('empID')" >Employee ID 
+											<span class="glyphicon sort-icon" ng-show="sortKey=='empID'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>
+										<th style="cursor: pointer;" ng-click="sort('empName')">Employee Name 
+											<span class="glyphicon sort-icon" ng-show="sortKey=='empName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>	
 									</tr>
 								</tbody>
-								<tbody>
-									<tr dir-paginate="tr in emps |orderBy:sortKey:reverse |filter:search |itemsPerPage:pageSize.row" current-page="currentPage" >
+								<tbody id="data-emp-edit">
+									<tr  dir-paginate="tr in employeeEdit |orderBy:sortKey:reverse |filter:search |itemsPerPage:pageSize.row" current-page="currentPage" >
 												<td class="width-75 text-center">
 													<div class="icheckbox icheckbox-primary">
 														<input ng-checked="tr.statusCheck" name="ckr" id="ckr{{$index}}" ng-click="ckRowClick(($index + 1) + (currentPage - 1) * pageSize.row)" class="styled" type="checkbox">
@@ -159,8 +291,8 @@
 			        
 			      </div>
 			      <div class="modal-footer">
+			        <button type="button" id="btn_save" ng-click="createAuthGroup()" class="btn btn-default">Save</button>
 			        <button type="button" class="btn btn-warning" data-dismiss="modal" ng-click="closeModal()">Cancel</button>
-			        <button type="button" id="btn_save" class="btn btn-default">Save</button>
 			      </div>
 			      
 			      </form>
@@ -168,7 +300,8 @@
 			    </div>
 			  </div>
 			</div>
-			<!-- Close Dialog  -->
+			
+			<!-- Close Dialog Update  -->
 		</div>
 		<jsp:include page="${request.contextPath}/foot"></jsp:include>
 	</div>
@@ -194,7 +327,13 @@
 			            		{ value: "30", label: "30" },
 			            		];
 				$scope.pageSize.row = $scope.pageSize.rows[1].value;
-				
+
+
+				$scope.sort = function(keyname){
+				    $scope.sortKey = keyname;  
+				    $scope.reverse = !$scope.reverse;
+				};
+	
 				$scope.listEmployee = function(){
 					$http({
 			 			method: 'GET',
@@ -220,9 +359,55 @@
 					        'Content-Type': 'application/json'
 					    }	    
 					}).success(function(response) {
-						$scope.emps = [];
+						$scope.authGroup = [];
 						if(response.MESSAGE == "SUCCESS"){
-							$scope.emps = response.DATA;
+							$scope.authGroup = response.DATA;
+						}
+					});
+				}
+
+				$scope.getAuthGroupByID = function(authID){
+					$http({
+			 			method: 'GET',
+					    url: "${pageContext.request.contextPath}/rest/authorizationgroup/get/"+authID,
+					    headers: {
+					    	'Accept': 'application/json',
+					        'Content-Type': 'application/json'
+					    }	    
+					}).success(function(response) {
+						$scope.authGroupByID = [];
+						$scope.employeeEdit = [];
+						if(response.MESSAGE == "SUCCESS"){
+							$scope.authGroupByID = response;
+							
+							 angular.forEach($scope.authGroupByID.authorizationGroup, function(value, key){
+									$("#edit_authori_name").val(value.authGroupName);
+									$("#edit_authori_desc").val(value.authGroupDesc);
+							 });
+
+							 
+							$scope.employeeEdit = response.Employees;
+							 
+							
+									
+						}
+					});
+				}
+
+				$scope.deleteAuthGroup = function(authID){
+					$http({
+			 			method: 'DELETE',
+					    url: "${pageContext.request.contextPath}/rest/authorizationgroup/delete/"+authID,
+					    headers: {
+					    	'Accept': 'application/json',
+					        'Content-Type': 'application/json'
+					    }	    
+					}).success(function(response) {
+						if(response.MESSAGE == "SUCCESS"){
+							
+							$scope.listAuthorizationGroup();
+						}else{
+					
 						}
 					});
 				}
@@ -241,8 +426,55 @@
 				}
 
 				$scope.closeModal = function(){
+					setValueById("authori_name","");
+					setValueById("authori_desc","");
+					$("#form_group").bootstrapValidator('resetForm', 'true');
 					$("input[name=ckr]").prop('checked', false);
 				}
+
+				$scope.createAuthGroup = function(){
+					var tr = $("#data-emp tr");
+					var listEmpDetail = [];
+					for(var i=0; i<tr.length;i++){
+						var ckr = $("#ckr"+i);
+
+						if(ckr.is(':checked')){
+							listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empID});
+						}
+					}
+				
+
+					$('#form_group').data('bootstrapValidator').validate();
+						var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
+						if(addAuthGroup){
+							var groupName = getValueStringById("authori_name");
+							var groupDesc = getValueStringById("authori_desc");
+							var stringValue = {
+								    "authGroupName":groupName,"authGroupDesc":groupDesc, "authGroupDetail":listEmpDetail
+							};
+							$http({
+					 			method: 'POST',
+							    url: "${pageContext.request.contextPath}/rest/authorizationgroup/create",
+							    headers: {
+							    	'Accept': 'application/json',
+							        'Content-Type': 'application/json'
+							    }	,
+							    data : stringValue    
+							}).success(function(response) {	
+						
+								if(response.MESSAGE == "SUCCESS"){
+									$scope.listAuthorizationGroup();
+								}else if(response.MESSAGE == "EXIST"){
+									alert("EXIST");
+								}
+								
+							});
+						}
+					
+				}
+
+				
+				
 				
 				
 			}]);
@@ -253,11 +485,9 @@
 		
 		<script type="text/javascript">
 
-			$("#btn_save").click(function(){
-				$("#form_group").submit();
-			});
 		
 			$(document).ready(function(){
+
 				$('#form_group').bootstrapValidator({
 					message: 'This value is not valid',
 					feedbackIcons: {
