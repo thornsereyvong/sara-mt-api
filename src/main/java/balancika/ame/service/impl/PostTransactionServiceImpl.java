@@ -149,10 +149,8 @@ public class PostTransactionServiceImpl implements PostTransactionService{
 	@Override
 	public boolean checkExist(Transaction tran, MeDataSource dataSource) throws SQLException {
 		CallableStatement cstmt = null;
-		try (Connection con = DBConnection.getConnection(dataSource)){
-					
-			String sql = "";
-			
+		try (Connection con = DBConnection.getConnection(dataSource)){					
+			String sql = "";			
 			switch(tran.getTransType()){  
 				case "AP Invoice":
 					sql = "select";
