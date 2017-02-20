@@ -276,9 +276,36 @@
 			}]);
 			
 			var self = this;
-	
+			
+			app.factory('appService', function($http) {
+				 return {
+					 voidTrans: function(transType, transId) {
+						 return $http({
+					 			method: 'POST',
+							    url: "${pageContext.request.contextPath}/rest/post-transaction/void",
+							    headers: {
+							    	'Accept': 'application/json',
+							        'Content-Type': 'application/json'
+							    },
+							    data : {
+								    "transType" : transType,
+								    "transId" : transId
+								}
+							}).then(function(response) {
+								if(response.MESSAGE = "FAILED"){
+								 	if(confirm(response.MSG)){
+								 		return true;
+								 	}else{
+								 		return false;
+								 	}
+								}
+							});	
+					 }
+				 }
+			});
+			
 			app.controller('postTranCon',['$scope','$http',function($scope, $http){	
-					
+				$scope.statusVoid = false;	
 				$scope.btnFilterData = function(){					
 					var transType = getValueStringById("tranType");
 					var datafilter = getValueStringById("datafilter");
@@ -390,35 +417,83 @@
 				}
 				
 				$scope.btnVoidData = function(){
-					var tr = $("#data-content-post tr");
+					myService($http);
+					
+					/* var tr = $("#data-content-post tr");
 					var listTrans = [];
 					for(var i=0; i<tr.length;i++){
 						var ckr = $("#ckr"+i);
 						if(ckr.is(':checked')){
-							if($scope.trans[i].transStatus == "Posted" && $scope.trans[i].transName == "GL Entries"){
+							if($scope.trans[i].transStatus == "Posted" && $scope.trans[i].transName != "GL Entries"){
 								listTrans.push($scope.trans[i]);
 							}
 						}
 					}
 					var transType = getValueStringById("tranType");
 					if(listTrans.length>0){
-						$http({
-				 			method: 'POST',
-						    url: "${pageContext.request.contextPath}/rest/post-transaction/post",
-						    headers: {
-						    	'Accept': 'application/json',
-						        'Content-Type': 'application/json'
-						    },
-						    data : {
-							    "transType" : transType,
-							    "action" : "voided",
-							    "transs" : listTrans
-							}
-						}).success(function(response) {
-							dis(response)
-						});
-					}
+						for(var i=0; i<listTrans.length;i++){
+							//alert($scope.voidfn(transType, listTrans[i].transId));
+							/* if($scope.voidfn(transType, listTrans[i].transId)){
+								alert("continue")
+								continue;
+							}else{
+								break;
+							} */
+							
+							/* var myDataPromise = myService.getData();
+						    myDataPromise.then(function(result) { 
+								dis(result)
+						    }); 
+							myFunction($scope, myService);
+						}
+						
+					} */
 				}
+				
+				$scope.voidfn = function(transType, transId){					
+					$http({
+			 			method: 'POST',
+					    url: "${pageContext.request.contextPath}/rest/post-transaction/void",
+					    headers: {
+					    	'Accept': 'application/json',
+					        'Content-Type': 'application/json'
+					    },
+					    data : {
+						    "transType" : transType,
+						    "transId" : transId
+						}
+					}).success(function(response) {
+						if(response.MESSAGE = "FAILED"){
+						 	if(confirm(response.MSG)){
+						 		return true;
+						 	}else{
+						 		return false;
+						 	}
+						}
+					});	
+					
+				}
+				
+				$scope.msg = function(msg){
+					swal({
+					  	title: "Are you sure?",
+					  	text: msg,
+					  	type: "warning",
+					  	html:true,
+					  	showCancelButton: true,
+					  	confirmButtonColor: "#DD6B55",
+					  	confirmButtonText: "Yes, delete it!",
+					  	closeOnConfirm: false
+					},
+					function(isConfirm){
+				 		if (isConfirm) {
+				   			return false;
+				  		} else {
+				    		return true;
+				  		}
+					});
+				}
+				
 			}]);
 			
 			
