@@ -83,4 +83,90 @@ public class PostTransactionController {
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = {"/void"}, method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> voidTrans(@RequestBody Transaction tran,HttpServletRequest req) throws SQLException{
+		Map<String, Object> map = new HashMap<String, Object>();
+		dataSource = dataSource.getMeDataSourceByHttpServlet(req);
+		if(tran != null){
+			String sql = "";
+			switch(tran.getTransType()){  
+				case "AP Invoice":
+					sql = "SELECT COUNT(*) as CRow FROM tblPurchase WHERE PostStatus = 'Posted' AND PurID = '"+tran.getTransId()+"'";
+					if(post.checkExist(sql, dataSource)){
+						if(!post.checkLockPeriod(tran, dataSource)){
+							String msg = post.checkReference("AP-IN", tran.getTransId(), dataSource);
+							if(msg.equals("")){
+								sql = "{ call spVoid_Purchase(?,?)}";
+								if(post.voidTransByTransId(sql, tran.getTransId(), 0, dataSource)){
+									map.put("MESSAGE", "SUCCESS");
+									map.put("MSG", "The purchase with record ID: "+tran.getTransId()+"was successful voided!");
+								}else{
+									map.put("MESSAGE", "FAILED");
+									map.put("MSG", "The purchase with record ID: "+tran.getTransId()+"was unsuccessful voided!");
+								}								
+							}else{
+								map.put("MESSAGE", "FAILED");
+								map.put("MSG", msg);
+							}
+						}else{
+							map.put("MESSAGE", "FAILED");
+							map.put("MSG", "The purchase with record ID: "+tran.getTransId()+" was locked.");
+						}
+					}else{
+						map.put("MESSAGE", "FAILED");
+						map.put("MSG", "The purchase with record ID: "+tran.getTransId()+" does not exist.");
+					}					
+					break;
+				case "AP Return Invoice": 
+			    	
+			    	break;
+			    case "AP Debit Note":
+			    	
+			    	break;
+			    case "AP Payment":
+			    	
+			    	break;
+		    	case "AR Invoice":
+		    		
+			    	break;
+	    		case "AR Return Invoice":
+	    			
+			    	break;
+	    		case "AR Credit Note":
+	    			
+			    	break;
+				case "AR Receipt":
+					
+			    	break;
+				case "IC Transfer":
+					
+			    	break;
+				case "IC Adjustment":
+					
+			    	break;
+				case "Cash Transfer":
+					//sql = "SELECT COUNT(*) 'Exist' FROM tblMoney_Company_Transfer WHERE PostStatus = 'Posted' and TrID=?";
+			    	break;
+				case "Cash Advance Clearance":
+					
+			    	break;
+				case "GL Entries":
+					
+			    	break;
+			    default:
+		    	
+			} 
+			
+			map.put("STATUS", HttpStatus.OK.value());
+			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		}
+		
+		map.put("MESSAGE", "FAILED");
+		map.put("STATUS", HttpStatus.NOT_FOUND.value());
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+	}
+	
+	
+	
 }

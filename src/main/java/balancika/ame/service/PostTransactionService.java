@@ -14,8 +14,10 @@ public interface PostTransactionService {
 	List<Transaction> listTransaction(Transaction tran, MeDataSource dataSource) throws SQLException;
 	List<Transaction> listTransFTDate(MeDataSource dataSource) throws SQLException;
 	boolean voidTrans(PostTransactionFrm trans, MeDataSource dataSource) throws SQLException;
-	boolean checkExist(Transaction tran, MeDataSource dataSource) throws SQLException;
+	boolean checkExist(String sql, MeDataSource dataSource) throws SQLException;
 	boolean checkPostJournal(Transaction tran, MeDataSource dataSource) throws SQLException;
 	boolean checkDrCr(Transaction tran, MeDataSource dataSource) throws SQLException;
-	String checkReference(Transaction tran, MeDataSource dataSource) throws SQLException;
+	boolean checkLockPeriod(Transaction Tran, MeDataSource dataSource) throws SQLException;
+	String checkReference(String rType, String rId, MeDataSource dataSource) throws SQLException;
+	boolean voidTransByTransId(String sql,String transId,int clone, MeDataSource dataSource);
 }
