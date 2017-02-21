@@ -57,7 +57,7 @@ public class AuthorizationGroupController {
 		try {
 			
 			Map<String, Object> m = authService.createAuthorizationGroup(authGroup, dataSource);
-			System.out.println(m);
+			
 			if(m.get("MESSAGE") == null || m.get("MESSAGE").equals("")){
 				map.put("MESSAGE", "FAILED");
 				map.put("STATUS", HttpStatus.NOT_FOUND.value());
@@ -73,6 +73,38 @@ public class AuthorizationGroupController {
 			}
 			
 		
+			
+		}catch (Exception e) {
+			map.put("message", "fail");
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.CREATED);
+		
+	}
+	
+	
+	
+	@RequestMapping(value = {"/edit"}, method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> editAuthorizationGroup(@RequestBody AuthorizationGroup authGroup ) throws SQLException{
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		try {
+			
+			Map<String, Object> m = authService.updateAuthorizationGroup(authGroup, dataSource);
+			System.out.println(m);
+			if(m.get("MESSAGE") == null || m.get("MESSAGE").equals("")){
+				map.put("MESSAGE", "FAILED");
+				map.put("STATUS", HttpStatus.NOT_FOUND.value());
+				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+			}else if(m.get("MESSAGE").equals("exist")){
+				map.put("MESSAGE", "EXIST");
+				map.put("STATUS", HttpStatus.OK.value());
+				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+			}else{
+				map.put("MESSAGE", "SUCCESS");
+				map.put("STATUS", HttpStatus.OK.value());
+				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+			}
 			
 		}catch (Exception e) {
 			map.put("message", "fail");

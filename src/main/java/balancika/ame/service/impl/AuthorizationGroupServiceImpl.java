@@ -202,10 +202,22 @@ public class AuthorizationGroupServiceImpl implements AuthorizationGroupService 
 		        results = cstmt.getMoreResults();
 		        ResultSet rs3 = cstmt.getResultSet();
 		        List<Employee> tempArrauth = new ArrayList<Employee>();
+		       
 		        while (rs3.next()) {
 		        	Employee empDetail = new Employee();
+		        	
+		        	boolean dataCheck = true;
+		        	
+		        	if(rs3.getString("EmpID").equals(rs3.getString("AuthGroup_EmpID")))
+		        		dataCheck = true;
+		        	else
+		        		dataCheck = false;
+		        	
+		        	//System.out.println(rs3.getString("EmpID")+" "+rs3.getString("AuthGroup_EmpID"));
+		        	//System.out.println(dataCheck);
 		        	empDetail.setEmpID(rs3.getString("EmpID"));
 		        	empDetail.setEmpName(rs3.getString("EmpName"));
+		        	empDetail.setStatusCheck(dataCheck);
 		        	tempArrauth.add(empDetail);
 		        	m.put("Employees", tempArrauth);
 		        }	 
@@ -222,6 +234,77 @@ public class AuthorizationGroupServiceImpl implements AuthorizationGroupService 
 		
 		return null;
 		
+	}
+
+
+	@Override
+	public Map<String, Object> updateAuthorizationGroup(AuthorizationGroup authoriGroup, MeDataSource dataSource)throws SQLException {
+		
+		CallableStatement cbs = null;
+		
+		
+		try (Connection con = DBConnection.getConnection(dataSource)){
+			
+			String AuthGroupID = authoriGroup.getAuthGroupId();
+			String AuthGroupName = authoriGroup.getAuthGroupName();
+			
+			String AuthGroup = "";
+			AuthGroup += "AuthGroup_ID='" + authoriGroup.getAuthGroupId() + "',";
+			AuthGroup += "AuthGroup_Name='" + authoriGroup.getAuthGroupName() + "',";
+			AuthGroup += "AuthGroup_Description='" + authoriGroup.getAuthGroupDesc() + "'";
+			
+			String AuthGroupDetail = "";
+			if(authoriGroup.getAuthGroupDetail() != null){
+				for(AuthorizationGroupDetail authorisationGroupDetail : authoriGroup.getAuthGroupDetail()){
+					AuthGroupDetail += "(";
+					AuthGroupDetail += "'"+  authoriGroup.getAuthGroupId() +"',";
+					AuthGroupDetail += "'" + authorisationGroupDetail.getAuthGroupEmpId() + "'";
+					AuthGroupDetail += "),";
+				}
+				if (AuthGroupDetail != "") {
+					AuthGroupDetail = AuthGroupDetail.substring(0, AuthGroupDetail.length() - 1);
+				}
+			}
+			
+			Map<String, Object> m = new HashMap<String, Object>();
+			
+			String sql = "{call spHRMUpdateAuthorisationGroup(?,?,?,?,?)}";
+			cbs = (CallableStatement) con.prepareCall(sql);
+			cbs.setString(1, dataSource.getUserid());	
+			cbs.setString(2, AuthGroupID);
+			cbs.setString(3, AuthGroupName);	
+			cbs.setString(4, AuthGroup);
+			cbs.setString(5, AuthGroupDetail);
+			
+			boolean results = cbs.execute();
+			
+			while(results){
+				ResultSet rs = cbs.getResultSet();
+				
+				 while (rs.next()) {
+					 m.put("MESSAGE", rs.getString("Exist"));
+		         }	 
+		         rs.close();
+		        
+		        results = cbs.getMoreResults();
+		        ResultSet rs2 = cbs.getResultSet();
+		        
+		        while (rs2.next()) {
+		        	 m.put("DESCRIPTION", rs2.getString("alert"));
+		         }	 
+		         rs.close();
+		         
+		         return m;
+			}
+	
+			
+			 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			cbs.close();
+		}
+		return null;
 	}
 	
 	
