@@ -1,30 +1,49 @@
 package balancika.ame.entities;
 
+import java.util.List;
+
 
 public class AuthorizationGroup {
 
-	private String authorGroupId;
-	private String authorGroupName;
-	private String authorGroupDesc;
+	private String authGroupId;
+	private String authGroupName;
+	private String authGroupDesc;
+	private String authGroupCount;
+	private List<AuthorizationGroupDetail> authGroupDetail;
 	
-	public String getAuthorGroupId() {
-		return authorGroupId;
+	public String getAuthGroupId() {
+		return authGroupId;
 	}
-	public void setAuthorGroupId(String authorGroupId) {
-		this.authorGroupId = authorGroupId;
+	public String getAuthGroupCount() {
+		return authGroupCount;
 	}
-	public String getAuthorGroupName() {
-		return authorGroupName;
+	public void setAuthGroupCount(String authGroupCount) {
+		this.authGroupCount = authGroupCount;
 	}
-	public void setAuthorGroupName(String authorGroupName) {
-		this.authorGroupName = authorGroupName;
+	public void setAuthGroupId(String authGroupId) {
+		this.authGroupId = authGroupId;
 	}
-	public String getAuthorGroupDesc() {
-		return authorGroupDesc;
+	public String getAuthGroupName() {
+		return authGroupName;
 	}
-	public void setAuthorGroupDesc(String authorGroupDesc) {
-		this.authorGroupDesc = authorGroupDesc;
+	public void setAuthGroupName(String authGroupName) {
+		this.authGroupName = authGroupName;
 	}
+	public String getAuthGroupDesc() {
+		return authGroupDesc;
+	}
+	public void setAuthGroupDesc(String authGroupDesc) {
+		this.authGroupDesc = authGroupDesc;
+	}
+	public List<AuthorizationGroupDetail> getAuthGroupDetail() {
+		return authGroupDetail;
+	}
+	public void setAuthGroupDetail(List<AuthorizationGroupDetail> authGroupDetail) {
+		this.authGroupDetail = authGroupDetail;
+	}
+	
+	
+	
 	
 	
 	
