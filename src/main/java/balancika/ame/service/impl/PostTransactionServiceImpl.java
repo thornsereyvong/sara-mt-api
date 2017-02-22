@@ -185,10 +185,10 @@ public class PostTransactionServiceImpl implements PostTransactionService{
 			ResultSet rs = cstmt.executeQuery();
 			int i=0;
 			while(rs.next()){i++;
-				msg +=i+". "+"Module: "+rs.getString("DocType")+" and ID: "+ rs.getString("DocID")+".<br/>";
+				msg +=i+". "+"Module: "+rs.getString("DocType")+" and ID: "+ rs.getString("DocID")+".\n";
 			}			
 			if(!msg.equals("")){
-				msg = "Operation not allowed. The transaction in module: "+rType+" with id: "+rId+" is link to:<br>"+msg;
+				msg = "Operation not allowed. The transaction in module: "+rType+" with id: "+rId+" is link to:\n"+msg;
 			}			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -220,7 +220,7 @@ public class PostTransactionServiceImpl implements PostTransactionService{
 			CallableStatement cstmt = (CallableStatement) con.prepareCall(sql);
 			cstmt.setString(1, transId);
 			cstmt.setInt(2, clone);
-			if(cstmt.execute()){
+			if(cstmt.executeUpdate()>0){
 				return true;
 			}
 		} catch (Exception e) {

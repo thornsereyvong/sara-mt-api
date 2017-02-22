@@ -277,35 +277,8 @@
 			
 			var self = this;
 			
-			app.factory('appService', function($http) {
-				 return {
-					 voidTrans: function(transType, transId) {
-						 return $http({
-					 			method: 'POST',
-							    url: "${pageContext.request.contextPath}/rest/post-transaction/void",
-							    headers: {
-							    	'Accept': 'application/json',
-							        'Content-Type': 'application/json'
-							    },
-							    data : {
-								    "transType" : transType,
-								    "transId" : transId
-								}
-							}).then(function(response) {
-								if(response.MESSAGE = "FAILED"){
-								 	if(confirm(response.MSG)){
-								 		return true;
-								 	}else{
-								 		return false;
-								 	}
-								}
-							});	
-					 }
-				 }
-			});
-			
 			app.controller('postTranCon',['$scope','$http',function($scope, $http){	
-				$scope.statusVoid = false;	
+					
 				$scope.btnFilterData = function(){					
 					var transType = getValueStringById("tranType");
 					var datafilter = getValueStringById("datafilter");
@@ -416,10 +389,10 @@
 					$scope.listTransaction(1);
 				}
 				
+				
+				// void transaction
 				$scope.btnVoidData = function(){
-					myService($http);
-					
-					/* var tr = $("#data-content-post tr");
+					var tr = $("#data-content-post tr");
 					var listTrans = [];
 					for(var i=0; i<tr.length;i++){
 						var ckr = $("#ckr"+i);
@@ -432,71 +405,164 @@
 					var transType = getValueStringById("tranType");
 					if(listTrans.length>0){
 						for(var i=0; i<listTrans.length;i++){
-							//alert($scope.voidfn(transType, listTrans[i].transId));
-							/* if($scope.voidfn(transType, listTrans[i].transId)){
-								alert("continue")
+							var last = false;
+							if(i==(listTrans.length-1)){
+								last = true;
+							}
+							var status = voidTrans(transType,listTrans[i].transId,last);
+							if(status){
 								continue;
 							}else{
 								break;
-							} */
+							}
 							
-							/* var myDataPromise = myService.getData();
-						    myDataPromise.then(function(result) { 
-								dis(result)
-						    }); 
-							myFunction($scope, myService);
 						}
-						
-					} */
+					}
+					$scope.listTransaction(0);
 				}
 				
-				$scope.voidfn = function(transType, transId){					
-					$http({
-			 			method: 'POST',
-					    url: "${pageContext.request.contextPath}/rest/post-transaction/void",
-					    headers: {
-					    	'Accept': 'application/json',
-					        'Content-Type': 'application/json'
-					    },
-					    data : {
-						    "transType" : transType,
-						    "transId" : transId
+				// void and clone transaction
+				$scope.btnVoidNCloneData = function(){
+					var tr = $("#data-content-post tr");
+					var listTrans = [];
+					for(var i=0; i<tr.length;i++){
+						var ckr = $("#ckr"+i);
+						if(ckr.is(':checked')){
+							if($scope.trans[i].transStatus == "Posted" && $scope.trans[i].transName != "GL Entries"){
+								listTrans.push($scope.trans[i]);
+							}
 						}
-					}).success(function(response) {
-						if(response.MESSAGE = "FAILED"){
-						 	if(confirm(response.MSG)){
-						 		return true;
-						 	}else{
-						 		return false;
-						 	}
+					}
+					var transType = getValueStringById("tranType");
+					if(listTrans.length>0){
+						for(var i=0; i<listTrans.length;i++){
+							var last = false;
+							if(i==(listTrans.length-1)){
+								last = true;
+							}
+							var status = voidTransAndClone(transType,listTrans[i].transId,last);
+							if(status){
+								continue;
+							}else{
+								break;
+							}
+							
 						}
-					});	
-					
+					}
+					$scope.listTransaction(0);
 				}
 				
-				$scope.msg = function(msg){
-					swal({
-					  	title: "Are you sure?",
-					  	text: msg,
-					  	type: "warning",
-					  	html:true,
-					  	showCancelButton: true,
-					  	confirmButtonColor: "#DD6B55",
-					  	confirmButtonText: "Yes, delete it!",
-					  	closeOnConfirm: false
-					},
-					function(isConfirm){
-				 		if (isConfirm) {
-				   			return false;
-				  		} else {
-				    		return true;
-				  		}
-					});
+				//post transaction
+				$scope.btnVoidNCloneData = function(){
+					var tr = $("#data-content-post tr");
+					var listTrans = [];
+					for(var i=0; i<tr.length;i++){
+						var ckr = $("#ckr"+i);
+						if(ckr.is(':checked')){
+							if($scope.trans[i].transStatus == "Posted" && $scope.trans[i].transName != "GL Entries"){
+								listTrans.push($scope.trans[i]);
+							}
+						}
+					}
+					var transType = getValueStringById("tranType");
+					if(listTrans.length>0){
+						for(var i=0; i<listTrans.length;i++){
+							var last = false;
+							if(i==(listTrans.length-1)){
+								last = true;
+							}
+							var status = voidTransAndClone(transType,listTrans[i].transId,last);
+							if(status){
+								continue;
+							}else{
+								break;
+							}
+							
+						}
+					}
+					$scope.listTransaction(0);
 				}
 				
 			}]);
 			
-			
+			function voidTrans(transType, transId,last){
+				var content = JSON.parse($.ajax({ 
+					url: "${pageContext.request.contextPath}/rest/post-transaction/void",
+					method: "POST",
+					async: false,
+					data : JSON.stringify({
+						    "transType" : transType,
+						    "transId" : transId
+					}),
+					beforeSend: function(xhr) {
+					    xhr.setRequestHeader("Accept", "application/json");
+					    xhr.setRequestHeader("Content-Type", "application/json");
+				    },
+				}).responseText);
+				if(content.MESSAGE == "FAILED"){
+					if(confirm(content.MSG)){
+				 		return true;
+				 	}else{
+				 		return false;
+				 	}
+				}else{
+					if(last)
+						confirm("The post transaction was successful voided.");					
+					return true;
+				}
+			}
+			function voidTransAndClone(transType, transId,last){
+				var content = JSON.parse($.ajax({ 
+					url: "${pageContext.request.contextPath}/rest/post-transaction/void-and-clone",
+					method: "POST",
+					async: false,
+					data : JSON.stringify({
+						    "transType" : transType,
+						    "transId" : transId
+					}),
+					beforeSend: function(xhr) {
+					    xhr.setRequestHeader("Accept", "application/json");
+					    xhr.setRequestHeader("Content-Type", "application/json");
+				    },
+				}).responseText);
+				if(content.MESSAGE == "FAILED"){
+					if(confirm(content.MSG)){
+				 		return true;
+				 	}else{
+				 		return false;
+				 	}
+				}else{
+					if(last)
+						confirm("The post transaction was successful voided.");					
+					return true;
+				}
+			}
+			function postTrans(transType, transId,last){
+				var content = JSON.parse($.ajax({ 
+					url: "${pageContext.request.contextPath}/rest/post-transaction/post",
+					method: "POST",
+					async: false,
+					data : JSON.stringify({
+						    "transType" : transType,
+						    "transId" : transId
+					}),
+					beforeSend: function(xhr) {
+					    xhr.setRequestHeader("Accept", "application/json");
+					    xhr.setRequestHeader("Content-Type", "application/json");
+				    },
+				}).responseText);
+				if(content.MESSAGE == "FAILED"){
+					if(confirm(content.MSG)){
+				 		return true;
+				 	}else{
+				 		return false;
+				 	}
+				}else{
+					if(last)
+						confirm("The post transaction was successful posted.");					
+					return true;
+				}
+			}
 			$(function(){
 				
 				$('#fromdate').val(moment().format('YYYY-MM-DD'));  
