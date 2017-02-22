@@ -58,7 +58,7 @@ public class AuthorizationGroupServiceImpl implements AuthorizationGroupService 
 		return null;
 	}
 
-	
+
 	@Override
 	public Map<String, Object> createAuthorizationGroup(AuthorizationGroup authoriGroup , MeDataSource dataSoruce)	throws SQLException {
 		

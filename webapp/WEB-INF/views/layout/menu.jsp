@@ -12,10 +12,11 @@
 			</li>
 			
 			<li class="treeview ${mAuthoriAct}" >
-				<a href="#"><img src="${pageContext.request.contextPath}/resources/images/module/authorization1.png" class="image-responsive"> &nbsp;&nbsp;<span>Authorization Matrix</span><i class="fa fa-angle-left pull-right"></i></a>
+				<a href="#"><img src="${pageContext.request.contextPath}/resources/images/module/authorization1.png" class="image-responsive"> &nbsp;&nbsp;<span>Authorization </span><i class="fa fa-angle-left pull-right"></i></a>
 				<ul class="treeview-menu ${mAuthorOpen}">
-					<li class="${mAuthorGroup}"><a href="${pageContext.request.contextPath}/group"><i class="fa fa-circle-o"></i> Group</a></li>
-					<li><a href="${pageContext.request.contextPath}/approval"><i class="fa fa-circle-o"></i> Approval</a></li>
+					<li class="${mAuthor}"><a href="${pageContext.request.contextPath}/authorization"><i class="fa fa-circle-o"></i>Authorization</a></li>
+					<li class="${mAuthorGroup}"><a href="${pageContext.request.contextPath}/authorization/group"><i class="fa fa-circle-o"></i>Authorization Group</a></li>
+					<li><a href="${pageContext.request.contextPath}/authorizaton/approval"><i class="fa fa-circle-o"></i>Authorization Approval</a></li>
 				</ul>
 			</li>
 			

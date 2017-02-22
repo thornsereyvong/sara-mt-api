@@ -26,13 +26,22 @@ public class MainController {
 		return "login";
 	}
 	
-	@RequestMapping(value = {"/group"}, method = RequestMethod.GET)
+	@RequestMapping(value = {"/authorization/group"}, method = RequestMethod.GET)
 	public String group(ModelMap model, HttpServletRequest request){
 		model.addAttribute("title", "Group");
 		model.addAttribute("mAuthoriAct", "active");
 		model.addAttribute("mAuthorOpen","open");
 		model.addAttribute("mAuthorGroup","active");
 		return "authorization/group";
+	}
+	
+	@RequestMapping(value = {"/authorization"}, method = RequestMethod.GET)
+	public String Authorizatoingroup(ModelMap model, HttpServletRequest request){
+		model.addAttribute("title", "Authorization");
+		model.addAttribute("mAuthoriAct", "active");
+		model.addAttribute("mAuthorOpen","open");
+		model.addAttribute("mAuthor","active");
+		return "authorization/authorization";
 	}
 	
 	@RequestMapping(value = {"/post-transaction"}, method = RequestMethod.GET)

@@ -20,11 +20,11 @@
 
 		<div class="content-wrapper" ng-controller="authoriCon">
 			<section class="content-header">
-				<h1>Authorization Group</h1>
+				<h1>Authorization</h1>
 				<ol class="breadcrumb">
 					<li><a href="${pageContext.request.contextPath}"><i
 							class="fa fa-home"></i> Home</a></li>
-					<li><a href="#">Authorization Group</a></li>
+					<li><a href="#">Authorization</a></li>
 				</ol>
 			</section>
 			<section class="content ng-scope" >
@@ -39,43 +39,43 @@
 					</div>
 					<div class="box-body">
 						<div class="col-sm-12">
-							<div class="tablecontainer table-responsive" data-ng-init="listAuthorizationGroup()">
+							<div class="tablecontainer table-responsive" data-ng-init="listAuthorization()">
 								<table class="table table-hover">
 									<thead>
 										<tr>
-											<th style="cursor: pointer;" ng-click="sort('authorGroupId')">Authorization Group ID
-												<span class="glyphicon sort-icon" ng-show="sortKey=='authorGroupId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+											<th style="cursor: pointer;" ng-click="sort('authId')">Authorization ID
+												<span class="glyphicon sort-icon" ng-show="sortKey=='authId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authGroupName')">Authorization Group Name
-												<span class="glyphicon sort-icon" ng-show="sortKey=='authGroupName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+											<th style="cursor: pointer;" ng-click="sort('authName')">Authorization Name
+												<span class="glyphicon sort-icon" ng-show="sortKey=='authName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authorGroupDesc')">Authorization Group Description
-												<span class="glyphicon sort-icon" ng-show="sortKey=='authorGroupDesc'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+											<th style="cursor: pointer;" ng-click="sort('authType')">Authorization Type
+												<span class="glyphicon sort-icon" ng-show="sortKey=='authType'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authGroupCount')">Count Employee
-												<span class="glyphicon sort-icon" ng-show="sortKey=='authGroupCount'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
-											</th>
+											<!-- <th style="cursor: pointer;" ng-click="sort('authCount')">Count Employee
+												<span class="glyphicon sort-icon" ng-show="sortKey=='authCount'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+											</th> -->
 											<th style="width: 175px;"></th>
 										</tr>
 									</thead>
 									<tbody>
 										<tbody>
 											
-											<tr pagination-id="listAuthGroup" dir-paginate="data in authGroup |orderBy:sortKey:reverse |filter:search |itemsPerPage:10"  >
-												<td ng-cloak>{{data.authGroupId}}</td>
-												<td ng-cloak>{{data.authGroupName}}</td>
-												<td ng-cloak>{{data.authGroupDesc}}</td>
-												<td ng-cloak>{{data.authGroupCount}}</td>
+											<tr pagination-id="listauth" dir-paginate="data in auth |orderBy:sortKey:reverse |filter:search |itemsPerPage:10"  >
+												<td ng-cloak>{{data.authId}}</td>
+												<td ng-cloak>{{data.authName}}</td>
+												<td ng-cloak>{{data.authType}}</td>
+												<!-- <td ng-cloak>{{data.authCount}}</td> -->
 												<td ng-cloak >
-													<button class="btn btn-danger" ng-click="deleteAuthGroup(data.authGroupId)"><i class="glyphicon glyphicon-trash"></i> Delete</button>
-													<button class="btn btn-info"  data-toggle="modal" data-target="#myModal" ng-click="getAuthGroupByID(data.authGroupId)"  data-toggle="modal" data-target="#myModalEdit"><i class="glyphicon glyphicon-pencil"></i> Edit</button>
+													<button class="btn btn-danger" ng-click="deleteauth(data.authId)"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+													<button class="btn btn-info"  data-toggle="modal" data-target="#myModal" ng-click="getauthByID(data.authId)"  data-toggle="modal" data-target="#myModalEdit"><i class="glyphicon glyphicon-pencil"></i> Edit</button>
 												</td>							
 											</tr> 
 									
 									</tbody>
 								</table>
 								<dir-pagination-controls 
-									pagination-id="listAuthGroup"
+									pagination-id="listauth"
 									max-size="10" 
 									direction-links="true"
 									boundary-links="true"> 
@@ -228,9 +228,9 @@
 				$scope.getEvent = function(){
 					var getEv = getValueStringById("btn_save");
 					if(getEv == "Create"){
-						$scope.createAuthGroup();
+						$scope.createauth();
 					}else{
-						$scope.updateAuthGroup();
+						$scope.updateauth();
 					}
 				
 				}	
@@ -280,45 +280,45 @@
 					});
 				}
 
-				$scope.listAuthorizationGroup = function(){
+				$scope.listAuthorization = function(){
 					$http({
 			 			method: 'GET',
-					    url: "${pageContext.request.contextPath}/rest/authorizationgroup/list",
+					    url: "${pageContext.request.contextPath}/rest/authorization/list",
 					    headers: {
 					    	'Accept': 'application/json',
 					        'Content-Type': 'application/json'
 					    }	    
 					}).success(function(response) {
-						$scope.authGroup = [];
+						$scope.auth = [];
 						if(response.MESSAGE == "SUCCESS"){
-							$scope.authGroup = response.DATA;
+							$scope.auth = response.DATA;
 						}
 					});
 				}
 				
-				$scope.createAuthGroup = function(){
+				$scope.createauth = function(){
 					var listEmpDetail = [];
 					
 					for(var i=0; i< Object.keys($scope.emps).length ;i++){		
 						
 						if($scope.emps[i].statusCheck == true){	
-							listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empID});
+							listEmpDetail.push({"authEmpId":$scope.emps[i].empID});
 						}
 						
 					}
 				
 
 						$('#form_group').data('bootstrapValidator').validate();
-						var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
-						if(addAuthGroup){
+						var addauth = $("#form_group").data('bootstrapValidator').validate().isValid();
+						if(addauth){
 							var groupName = getValueStringById("authori_name");
 							var groupDesc = getValueStringById("authori_desc");
 							var stringValue = {
-								    "authGroupName":groupName,"authGroupDesc":groupDesc, "authGroupDetail":listEmpDetail
+								    "authName":groupName,"authDesc":groupDesc, "authDetail":listEmpDetail
 							};
 							$http({
 					 			method: 'POST',
-							    url: "${pageContext.request.contextPath}/rest/authorizationgroup/create",
+							    url: "${pageContext.request.contextPath}/rest/authorization/create",
 							    headers: {
 							    	'Accept': 'application/json',
 							        'Content-Type': 'application/json'
@@ -327,7 +327,7 @@
 							}).success(function(response) {	
 						
 								if(response.MESSAGE == "SUCCESS"){
-									$scope.listAuthorizationGroup();
+									$scope.listAuthorization();
 									$scope.closeModal();
 								}else if(response.MESSAGE == "EXIST"){
 									alert("EXIST");
@@ -339,30 +339,30 @@
 				}
 
 
-				$scope.updateAuthGroup = function(){
+				$scope.updateauth = function(){
 					var tr = $("#data-emp tr");
 					var listEmpDetail = [];
 					for(var i=0; i< Object.keys($scope.emps).length ;i++){		
 						
 						if($scope.emps[i].statusCheck == true){	
-							listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empID});
+							listEmpDetail.push({"authEmpId":$scope.emps[i].empID});
 						}
 						
 					}
 				
 
 						$('#form_group').data('bootstrapValidator').validate();
-						var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
-						if(addAuthGroup){
+						var addauth = $("#form_group").data('bootstrapValidator').validate().isValid();
+						if(addauth){
 							var groupName = getValueStringById("authori_name");
 							var groupDesc = getValueStringById("authori_desc");
 							var stringValue = {
-								    "authGroupId": $scope.authoriID ,"authGroupName":groupName,"authGroupDesc":groupDesc, "authGroupDetail":listEmpDetail
+								    "authId": $scope.authoriID ,"authName":groupName,"authDesc":groupDesc, "authDetail":listEmpDetail
 							};
 							
 							$http({
 					 			method: 'POST',
-							    url: "${pageContext.request.contextPath}/rest/authorizationgroup/edit",
+							    url: "${pageContext.request.contextPath}/rest/authorization/edit",
 							    headers: {
 							    	'Accept': 'application/json',
 							        'Content-Type': 'application/json'
@@ -371,7 +371,7 @@
 							}).success(function(response) {	
 								
 								if(response.MESSAGE == "SUCCESS"){
-									$scope.listAuthorizationGroup();
+									$scope.listAuthorization();
 									$scope.closeModal();
 								}else if(response.MESSAGE == "EXIST"){
 									alert("EXIST");
@@ -382,10 +382,10 @@
 					
 				}
 
-				$scope.deleteAuthGroup = function(authID){
+				$scope.deleteauth = function(authID){
 					$http({
 			 			method: 'DELETE',
-					    url: "${pageContext.request.contextPath}/rest/authorizationgroup/delete/"+authID,
+					    url: "${pageContext.request.contextPath}/rest/authorization/delete/"+authID,
 					    headers: {
 					    	'Accept': 'application/json',
 					        'Content-Type': 'application/json'
@@ -393,32 +393,32 @@
 					}).success(function(response) {
 						if(response.MESSAGE == "SUCCESS"){
 							
-							$scope.listAuthorizationGroup();
+							$scope.listAuthorization();
 						}else{
 					
 						}
 					});
 				}
 
-				$scope.getAuthGroupByID = function(authID){
+				$scope.getauthByID = function(authID){
 					$scope.btn_save = "Edit";
 					$http({
 			 			method: 'GET',
-					    url: "${pageContext.request.contextPath}/rest/authorizationgroup/get/"+authID,
+					    url: "${pageContext.request.contextPath}/rest/authorization/get/"+authID,
 					    headers: {
 					    	'Accept': 'application/json',
 					        'Content-Type': 'application/json'
 					    }	    
 					}).success(function(response) {
-						$scope.authGroupByID = [];
+						$scope.authByID = [];
 						if(response.MESSAGE == "SUCCESS"){
-							$scope.authGroupByID = response.authorizationGroup;
-							$scope.authorizationGroupDetail = response.authorizationGroupDetail;
+							$scope.authByID = response.authorization;
+							$scope.authorizationDetail = response.authorizationDetail;
 							$scope.authoriID =  "";
-							 angular.forEach($scope.authGroupByID, function(value, key){
-									$("#authori_name").val(value.authGroupName);
-									$("#authori_desc").val(value.authGroupDesc);
-									$scope.authoriID = value.authGroupId;
+							 angular.forEach($scope.authByID, function(value, key){
+									$("#authori_name").val(value.authName);
+									$("#authori_desc").val(value.authDesc);
+									$scope.authoriID = value.authId;
 							 });
 
 							$scope.emps = response.Employees;
