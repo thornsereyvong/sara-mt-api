@@ -151,7 +151,7 @@
 											</tr>
 											<tbody id="data-content-post">
 												
-												<tr  ng-repeat="tr in trans">
+												<tr ng-repeat="tr in trans" id="data-row-{{$index}}" ng-click="dataRowClick($index)" >
 													<td class="width-75 text-center">
 														<div class="icheckbox icheckbox-primary"><input name="ckr" ng-click="ckrDetailClick($index)" id="ckr{{$index}}" class="styled" type="checkbox"><label class="cursor-pointer" for="ckr{{$index}}"></label></div>
 													</td>
@@ -276,7 +276,7 @@
 			}]);
 			
 			var self = this;
-			
+			var LastClickRow = 0;
 			app.controller('postTranCon',['$scope','$http',function($scope, $http){	
 					
 				$scope.btnFilterData = function(){					
@@ -350,9 +350,11 @@
 							if(response.MESSAGE == "SUCCESS"){
 								$scope.trans = response.DATA;
 							}
+							LastClickRow = 0;
 						});
 					}else{
 						$scope.trans = [];
+						LastClickRow = 0;
 					}
 				}
 				
@@ -409,7 +411,7 @@
 							if(i==(listTrans.length-1)){
 								last = true;
 							}
-							var status = voidTrans(transType,listTrans[i].transId,last);
+							var status = voidTrans(transType,listTrans[i].transId,listTrans[i].transDate,last);
 							if(status){
 								continue;
 							}else{
@@ -440,7 +442,7 @@
 							if(i==(listTrans.length-1)){
 								last = true;
 							}
-							var status = voidTransAndClone(transType,listTrans[i].transId,last);
+							var status = voidTransAndClone(transType,listTrans[i].transId,listTrans[i].transDate,last);
 							if(status){
 								continue;
 							}else{
@@ -453,13 +455,13 @@
 				}
 				
 				//post transaction
-				$scope.btnVoidNCloneData = function(){
+				$scope.btnPostData = function(){
 					var tr = $("#data-content-post tr");
 					var listTrans = [];
 					for(var i=0; i<tr.length;i++){
 						var ckr = $("#ckr"+i);
 						if(ckr.is(':checked')){
-							if($scope.trans[i].transStatus == "Posted" && $scope.trans[i].transName != "GL Entries"){
+							if($scope.trans[i].transStatus == "Open"){
 								listTrans.push($scope.trans[i]);
 							}
 						}
@@ -471,7 +473,7 @@
 							if(i==(listTrans.length-1)){
 								last = true;
 							}
-							var status = voidTransAndClone(transType,listTrans[i].transId,last);
+							var status = postTrans(transType,listTrans[i].transId,listTrans[i].transDate,last);
 							if(status){
 								continue;
 							}else{
@@ -483,16 +485,46 @@
 					$scope.listTransaction(0);
 				}
 				
+				// open transaction
+				$scope.btnOpenData = function(){
+					var transId = $("#data-row-"+LastClickRow).children().eq(1).text();
+					var transType = getValueStringById("tranType");
+					$http({
+			 			method: 'POST',
+					    url: "${pageContext.request.contextPath}/rest/post-transaction/list-by-id",
+					    headers: {
+					    	'Accept': 'application/json',
+					        'Content-Type': 'application/json'
+					    },
+					    data : {
+					    	"transType" : transType,
+						    "transId" : transId
+						}
+					}).success(function(response) {
+						$scope.transView = [];
+						if(response.MESSAGE == "SUCCESS"){
+							$scope.transView = response.DATA;
+						}
+					});
+				}
+				
+				$scope.dataRowClick = function(index){
+					$("#data-row-"+LastClickRow).attr("class","");
+					$("#data-row-"+index).attr("class","active");
+					LastClickRow = index;
+				}
+				
 			}]);
 			
-			function voidTrans(transType, transId,last){
+			function voidTrans(transType, transId,transDate,last){
 				var content = JSON.parse($.ajax({ 
 					url: "${pageContext.request.contextPath}/rest/post-transaction/void",
 					method: "POST",
 					async: false,
 					data : JSON.stringify({
 						    "transType" : transType,
-						    "transId" : transId
+						    "transId" : transId,
+						    "transDate" : transDate
 					}),
 					beforeSend: function(xhr) {
 					    xhr.setRequestHeader("Accept", "application/json");
@@ -511,14 +543,15 @@
 					return true;
 				}
 			}
-			function voidTransAndClone(transType, transId,last){
+			function voidTransAndClone(transType, transId,transDate,last){
 				var content = JSON.parse($.ajax({ 
 					url: "${pageContext.request.contextPath}/rest/post-transaction/void-and-clone",
 					method: "POST",
 					async: false,
 					data : JSON.stringify({
 						    "transType" : transType,
-						    "transId" : transId
+						    "transId" : transId,
+						    "transDate" : transDate
 					}),
 					beforeSend: function(xhr) {
 					    xhr.setRequestHeader("Accept", "application/json");
@@ -537,14 +570,15 @@
 					return true;
 				}
 			}
-			function postTrans(transType, transId,last){
+			function postTrans(transType, transId,transDate,last){
 				var content = JSON.parse($.ajax({ 
 					url: "${pageContext.request.contextPath}/rest/post-transaction/post",
 					method: "POST",
 					async: false,
 					data : JSON.stringify({
 						    "transType" : transType,
-						    "transId" : transId
+						    "transId" : transId,
+						    "transDate" : transDate
 					}),
 					beforeSend: function(xhr) {
 					    xhr.setRequestHeader("Accept", "application/json");
@@ -567,7 +601,7 @@
 				
 				$('#fromdate').val(moment().format('YYYY-MM-DD'));  
 			    $('#todate').val(moment().format('YYYY-MM-DD'));
-				
+			    
 				$("#datafilter").change(function(){
 					var action = $("#datafilter").val();
 					switch(action) {
