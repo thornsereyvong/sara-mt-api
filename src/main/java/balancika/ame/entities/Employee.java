@@ -17,7 +17,6 @@ public class Employee {
 		this.statusCheck = statusCheck;
 	}
 	
-	
 	public String getEmpID() {
 		return empID;
 	}

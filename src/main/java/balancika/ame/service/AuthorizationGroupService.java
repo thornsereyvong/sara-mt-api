@@ -15,4 +15,5 @@ public interface AuthorizationGroupService {
 	Map<String, Object> createAuthorizationGroup(AuthorizationGroup authoriGroup, MeDataSource dataSoruce) throws SQLException;
 	Map<String, Object> deleteAuthorizationGroup(MeDataSource dataSource,String ID) throws SQLException;
 	Map<String, Object> getAuthorizationGroup(String ID, MeDataSource dataSource) throws SQLException;
+	Map<String, Object> updateAuthorizationGroup(AuthorizationGroup authoriGroup, MeDataSource dataSource) throws SQLException;
 }
