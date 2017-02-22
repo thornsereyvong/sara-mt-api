@@ -7,7 +7,7 @@
 <jsp:include page="${request.contextPath}/head"></jsp:include>
 
 </head>
-<body class="sidebar-mini wysihtml5-supported skin-red-light" ng-app="authoriGroup">
+<body class="sidebar-mini wysihtml5-supported skin-red-light" ng-app="authorization">
 	<div class="wrapper">
 
 		<jsp:include page="${request.contextPath}/header"></jsp:include>
@@ -92,33 +92,59 @@
 			<div id="errors"></div>
 			<!-- Dialog Create  -->
 			
-			<div data-ng-init="listEmployee()"  data-backdrop="static" class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div   data-backdrop="static" class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 			  <div class="modal-dialog modal-lg" role="document">
 			    <div class="modal-content">
 			      <div class="modal-header">
 			        <button type="button" class="close" data-dismiss="modal" ng-click="closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			        <h4 class="modal-title" id="myModalLabel"><b>[{{btn_save | uppercase}}] Group</b></h4>
+			        <h4 class="modal-title" id="myModalLabel"><b>[{{btn_save | uppercase}}] Authorization</b></h4>
 			      </div>
-			       <form id="form_group">
+			       <form id="form_authori">
 			      <div class="modal-body">
 			     
 			      <div class="clearfix"></div>
 			       
-			       <div class="col-sm-12">
+			       <div class="col-sm-6">
 			       		<label>Authorization Name</label>
 			       		<div class="form-group">
-			       			<input type="text" name="authori_name" id="authori_name" ng-model="authName" class="form-control"> 
+			       			<input type="text" name="authName" id="authName" class="form-control"> 
 			       		</div>
 			       </div>
-			        <div class="clearfix"></div>
-			       <div class="col-sm-12">
-			       		<label>Authorization Description</label>
+			       <div class="col-sm-6">
+			       		<label>Authorization Type</label>
 			       		<div class="form-group">
-			       			<input type="text" name="authori_desc" id="authori_desc" ng-model="authDesc" class="form-control"> 
+			       			<select class="form-control" id="authType" name="authType" ng-change="changeType()" ng-model="sAuthType" >
+			       				<option value="">-- Select Type</option>
+			       				<option value="Individual">Individual</option>
+			       				<option value="Group">Group</option>
+			       			</select>
+			       		</div>
+			       </div>
+			       <div class="clearfix"></div>
+			        <div class="col-sm-6" id="div_andOr">
+			       		<label>Authorization And / Or</label>
+			       		<div class="form-group">
+			       			<select class="form-control"  id="authAndOr" name="authAndOr" ng-change="changeAndOr()" ng-model="sAuthAndOr">
+			       				<option value="">-- Select And / Or --</option>
+			       				<option value="And">And</option>
+			       				<option value="Or">Or</option>
+			       			</select>
 			       		</div>
 			       </div>
 			       
-			      <div class="col-sm-3">
+			        <div class="col-sm-6" id="div_amount">
+			       		<label>Authorization Amount</label>
+			       		<div class="form-group">
+			       			<input type="text" class="form-control" id="authAmount" name="authAmount"> 
+			       		</div>
+			       </div>
+			       
+			       
+			       
+			     <div class="clearfix"></div>
+			     
+			     <div id="div_emp" style="display: none" >
+			     <div class="col-sm-3">
 				  	<form class="form-inline">
 				        <div class="form-group" style="padding-top: 20px;">
 				        	<div class="input-group"> 
@@ -138,8 +164,8 @@
 				        </div>
 				    </form>
 				    <br/>
-				</div>
-			       <div class="col-sm-12" >
+				</div> 
+			      <div class="col-sm-12" data-ng-init="listEmployee()">
 			 			<div class="tablecontainer table-responsive">
 							<table class="table table-hover">
 								<tbody>
@@ -172,8 +198,8 @@
 								boundary-links="true"> 
 							</dir-pagination-controls> 
 						</div>      
+			       </div> 
 			       </div>
-			       
 			       
 			        <div class="clearfix"></div>
 			        
@@ -198,7 +224,7 @@
 
 	<script type="text/javascript">
 				
-			var app = angular.module('authoriGroup', ['angularUtils.directives.dirPagination','angular-loading-bar', 'ngAnimate']).config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+			var app = angular.module('authorization', ['angularUtils.directives.dirPagination','angular-loading-bar', 'ngAnimate']).config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
 			    cfpLoadingBarProvider.includeSpinner = false;
 			}]);
 			var self = this;
@@ -218,12 +244,13 @@
 			            		{ value: "30", label: "30" },
 			            		];
 				$scope.pageSize.row = $scope.pageSize.rows[1].value;
-
+			
 				
 				$scope.sort = function(keyname){
 				    $scope.sortKey = keyname;  
 				    $scope.reverse = !$scope.reverse;
 				};
+
 
 				$scope.getEvent = function(){
 					var getEv = getValueStringById("btn_save");
@@ -243,19 +270,63 @@
 						$("input[name=ckr]").prop('checked', false);
 					}
 				}
+
+				$scope.clearValidate = function(str){
+					
+					$(str+" .form-group").removeClass("has-error").addClass("");
+					$(str+" .form-group").find("i").attr("style","display:none");
+					$(str+" .form-group").find("i").removeClass("glyphicon" ,"glyphicon-remove").addClass("");
+					$(str+" .form-group").find("small").attr("style","display:none");
+					$(str+" .form-group").find("small").attr("data-bv-result","NOT_VALIDATED");
+					
+				}
+
+				$scope.changeType = function(){
+					if($scope.sAuthType == "Individual"){
+						$("#authAndOr").removeAttr("disabled","");
+						$("#div_andOr").css("display","");
+						$("#div_emp").css("display","");
+						$scope.listEmployee();
+						$scope.currentPage = 1;
+						$scope.pageSize.row = $scope.pageSize.rows[1].value;			
+					}else{
+						
+						$("#div_emp").css("display","none");
+						$("#div_andOr").css("display","none");
+						$("#div_amount").css("display","none");
+						$("#authAmount").attr("disabled","disabled");
+						$("#authAndOr").attr("disabled","disabled");
+						$("#authAndOr").val("");
+						$('#form_authori').bootstrapValidator('revalidateField', 'authAndOr');
+						setValueById("authAmount","");
+						$('#form_authori').bootstrapValidator('revalidateField', 'authAmount');
+					
+					}
+				}
+
+				$scope.changeAndOr = function(){
+					var andOr = getValueStringById("authAndOr");
+					if(andOr == "And"){
+						$("#div_amount").css("display","");
+						$("#authAmount").removeAttr("disabled","");
+					}else{
+						$("#div_amount").css("display","none");
+						$("#authAmount").attr("disabled","disabled");
+					}
+				}
 				
 				$scope.ckRowClick = function(index){
 					index--;
 					$scope.emps[index].statusCheck = !$scope.emps[index].statusCheck;
 				}
 
-				
-
-				
 				$scope.closeModal = function(){
-					setValueById("authori_name","");
-					setValueById("authori_desc","");
-					$("#form_group").bootstrapValidator('resetForm', 'true');
+					$("#div_andOr").css("display","none");
+					$("#div_amount").css("display","none");
+					$("#authAmount").attr("disabled","disabled");
+					$("#authAndOr").attr("disabled","disabled");
+					$("#div_emp").css("display","none");
+					$("#form_authori").bootstrapValidator('resetForm', 'true');
 					$("input[name=ckr]").prop('checked', false);
 					$scope.btn_save = "Create";
 					$('#myModal').modal('toggle');
@@ -297,7 +368,10 @@
 				}
 				
 				$scope.createauth = function(){
-					var listEmpDetail = [];
+					$('#form_authori').bootstrapValidator('revalidateField', 'authAndOr');
+					$('#form_authori').bootstrapValidator('revalidateField', 'authAmount');
+					$('#form_authori').data('bootstrapValidator').validate();
+					/* var listEmpDetail = [];
 					
 					for(var i=0; i< Object.keys($scope.emps).length ;i++){		
 						
@@ -308,8 +382,8 @@
 					}
 				
 
-						$('#form_group').data('bootstrapValidator').validate();
-						var addauth = $("#form_group").data('bootstrapValidator').validate().isValid();
+						$('#form_authori').data('bootstrapValidator').validate();
+						var addauth = $("#form_authori").data('bootstrapValidator').validate().isValid();
 						if(addauth){
 							var groupName = getValueStringById("authori_name");
 							var groupDesc = getValueStringById("authori_desc");
@@ -334,7 +408,7 @@
 								}
 								
 							});
-						}
+						} */
 					
 				}
 
@@ -351,8 +425,8 @@
 					}
 				
 
-						$('#form_group').data('bootstrapValidator').validate();
-						var addauth = $("#form_group").data('bootstrapValidator').validate().isValid();
+						$('#form_authori').data('bootstrapValidator').validate();
+						var addauth = $("#form_authori").data('bootstrapValidator').validate().isValid();
 						if(addauth){
 							var groupName = getValueStringById("authori_name");
 							var groupDesc = getValueStringById("authori_desc");
@@ -444,8 +518,14 @@
 
 		
 			$(document).ready(function(){
-
-				$('#form_group').bootstrapValidator({
+				
+				$("#div_andOr").css("display","none");
+				$("#div_amount").css("display","none");
+				$("#authAmount").attr("disabled","disabled");
+				$("#authAndOr").attr("disabled","disabled");
+				
+			
+				$('#form_authori').bootstrapValidator({
 					message: 'This value is not valid',
 					feedbackIcons: {
 						valid: 'glyphicon glyphicon-ok',
@@ -453,32 +533,53 @@
 						validating: 'glyphicon glyphicon-refresh'
 					},
 					fields: {
-						authori_name: {
+						authName: {
 							validators: {
 								notEmpty: {
-									message: 'The authorization group name is required and can not be empty!'
+									message: 'The authorization name is required and can not be empty!'
 								},
 								stringLength: {
 									max: 255,
-									message: 'The authorization group name must be less than 255 characters long.'
+									message: 'The authorization name must be less than 255 characters long.'
 								}
 							}
 						},
-						authori_desc: {
+						authAmount: {
 							validators: {
+								notEmpty: {
+									message: 'The authorization amount is required and can not be empty!'
+								},
 								stringLength: {
 									max: 255,
-									message: 'The authorization group description must be less than 255 characters long.'
+									message: 'The authorization amount must be less than 255 characters long.'
+								},
+								integer: {
+				                    message: 'The value is not an integer',
+				                    // The default separators
+				                    thousandsSeparator: '',
+				                    decimalSeparator: '.'
+				                }
+							}
+						},
+						authType: {
+							validators: {
+								notEmpty: {
+									message: 'The authorization type is required and can not be empty!'
+								}
+							}
+						},
+						authAndOr: {
+							validators: {
+								notEmpty: {
+									message: 'The authorization and \ or is required and can not be empty!'
 								}
 							}
 						}
 						
 					}
 				});
-
-
 				
-			  
+				
 			});
 		
 		</script>		
