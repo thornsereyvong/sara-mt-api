@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import balancika.ame.entities.MeDataSource;
-import balancika.ame.entities.Transaction;
+import balancika.ame.entities.tansaction.Transaction;
 import balancika.ame.service.PostTransactionService;
 
 @RestController
@@ -1126,18 +1126,18 @@ public class PostTransactionController {
 			String sql = "";
 			switch(tran.getTransType()){  
 				case "AP Invoice":
-					sql = "SELECT COUNT(*) as CRow FROM tblPurchase WHERE PostStatus = 'Open' AND PurID = '"+tran.getTransId()+"'";
+					sql = "SELECT COUNT(*) as CRow FROM tblPurchase WHERE PurID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
 						
 					}else{
 						map.put("MESSAGE", "FAILED");
-						
+						map.put("MSG", "The purchase with record id: "+tran.getTransId()+" does not exist.");
 					}					
 					break;
 				case "AP Return Invoice": 
-					sql = "SELECT COUNT(*) as CRow FROM tblPurchase_Return WHERE PostStatus = 'Open' AND RetID = '"+tran.getTransId()+"'";
+					sql = "SELECT COUNT(*) as CRow FROM tblPurchase_Return WHERE RetID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1148,7 +1148,7 @@ public class PostTransactionController {
 					}
 			    	break;
 			    case "AP Debit Note":
-			    	sql = "SELECT COUNT(*) as CRow FROM tblap_drnote WHERE PostStatus = 'Open' AND DrID = '"+tran.getTransId()+"'";
+			    	sql = "SELECT COUNT(*) as CRow FROM tblap_drnote WHERE DrID = '"+tran.getTransId()+"'";
 			    	if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1159,7 +1159,7 @@ public class PostTransactionController {
 					}
 			    	break;
 			    case "AP Payment":
-			    	sql = "SELECT COUNT(*) as CRow FROM tblPayment WHERE PostStatus = 'Open' AND PmtID = '"+tran.getTransId()+"'";
+			    	sql = "SELECT COUNT(*) as CRow FROM tblPayment WHERE PmtID = '"+tran.getTransId()+"'";
 			    	if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1170,7 +1170,7 @@ public class PostTransactionController {
 					}
 			    	break;
 		    	case "AR Invoice":
-		    		sql = "SELECT COUNT(*) as CRow FROM tblSales WHERE PostStatus = 'Open' AND SalID = '"+tran.getTransId()+"'";
+		    		sql = "SELECT COUNT(*) as CRow FROM tblSales WHERE SalID = '"+tran.getTransId()+"'";
 		    		if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1181,7 +1181,7 @@ public class PostTransactionController {
 					}
 			    	break;
 	    		case "AR Return Invoice":
-	    			sql = "SELECT COUNT(*) as CRow FROM tblSales_Return WHERE PostStatus = 'Open' AND RetID = '"+tran.getTransId()+"'";
+	    			sql = "SELECT COUNT(*) as CRow FROM tblSales_Return WHERE RetID = '"+tran.getTransId()+"'";
 	    			if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1192,7 +1192,7 @@ public class PostTransactionController {
 					}
 			    	break;
 	    		case "AR Credit Note":
-	    			sql = "SELECT COUNT(*) as CRow FROM tblCrNote WHERE PostStatus = 'Open' AND CrID = '"+tran.getTransId()+"'";
+	    			sql = "SELECT COUNT(*) as CRow FROM tblCrNote WHERE CrID = '"+tran.getTransId()+"'";
 	    			if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1203,7 +1203,7 @@ public class PostTransactionController {
 					}
 			    	break;
 				case "AR Receipt":
-					sql = "SELECT COUNT(*) as CRow FROM tblReceipt WHERE PostStatus = 'Open' AND RcpID = '"+tran.getTransId()+"'";
+					sql = "SELECT COUNT(*) as CRow FROM tblReceipt WHERE RcpID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1214,7 +1214,7 @@ public class PostTransactionController {
 					}
 			    	break;
 				case "IC Transfer":
-					sql = "SELECT COUNT(*) as CRow FROM tblTransfer WHERE PostStatus = 'Open' AND TrfID = '"+tran.getTransId()+"'";
+					sql = "SELECT COUNT(*) as CRow FROM tblTransfer WHERE TrfID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1225,7 +1225,7 @@ public class PostTransactionController {
 					}
 			    	break;
 				case "IC Internal Usage":
-					sql = "SELECT COUNT(*) as CRow FROM tblIntUsage WHERE PostStatus = 'Open' AND IntID = '"+tran.getTransId()+"'";
+					sql = "SELECT COUNT(*) as CRow FROM tblIntUsage WHERE IntID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1236,7 +1236,7 @@ public class PostTransactionController {
 					}
 			    	break;
 				case "IC Adjustment":
-					sql = "SELECT COUNT(*) as CRow FROM tblAdjustment WHERE PostStatus = 'Open' AND AdjID = '"+tran.getTransId()+"'";
+					sql = "SELECT COUNT(*) as CRow FROM tblAdjustment WHERE AdjID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1247,7 +1247,7 @@ public class PostTransactionController {
 					}
 			    	break;
 				case "Cash Transfer":
-					sql = "SELECT COUNT(*) as CRow FROM tblMoney_Company_Transfer WHERE PostStatus = 'Open' AND TrID = '"+tran.getTransId()+"'";
+					sql = "SELECT COUNT(*) as CRow FROM tblMoney_Company_Transfer WHERE TrID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1258,7 +1258,7 @@ public class PostTransactionController {
 					}
 			    	break;
 				case "Cash Advance":
-					sql = "SELECT COUNT(*) as CRow FROM tblCashAdvance WHERE PostStatus = 'Open' AND CaID = '"+tran.getTransId()+"'";
+					sql = "SELECT COUNT(*) as CRow FROM tblCashAdvance WHERE CaID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1269,7 +1269,7 @@ public class PostTransactionController {
 					}
 			    	break;
 				case "Cash Advance Clearance":
-					sql = "SELECT COUNT(*) as CRow FROM tblClearance_History WHERE PostStatus = 'Open' AND ClID = '"+tran.getTransId()+"'";
+					sql = "SELECT COUNT(*) as CRow FROM tblClearance_History WHERE ClID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						
@@ -1280,7 +1280,7 @@ public class PostTransactionController {
 					}
 			    	break;
 				case "GL Entries":
-					sql = "SELECT COUNT(*) as CRow FROM tblJournal WHERE PostStatus = 'Open' AND JID = '"+tran.getTransId()+"'";
+					sql = "SELECT COUNT(*) as CRow FROM tblJournal WHERE JID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
 						map.put("MESSAGE", "SUCCESS");
 						

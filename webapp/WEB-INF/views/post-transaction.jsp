@@ -150,8 +150,7 @@
 												<th>Post Status</th>
 											</tr>
 											<tbody id="data-content-post">
-												
-												<tr ng-repeat="tr in trans" id="data-row-{{$index}}" ng-click="dataRowClick($index)" >
+												<tr ng-repeat="tr in trans" id="data-row-{{$index}}" ng-class="{0:'active'}[$index]" ng-click="dataRowClick($index)" >
 													<td class="width-75 text-center">
 														<div class="icheckbox icheckbox-primary"><input name="ckr" ng-click="ckrDetailClick($index)" id="ckr{{$index}}" class="styled" type="checkbox"><label class="cursor-pointer" for="ckr{{$index}}"></label></div>
 													</td>
@@ -489,6 +488,7 @@
 				$scope.btnOpenData = function(){
 					var transId = $("#data-row-"+LastClickRow).children().eq(1).text();
 					var transType = getValueStringById("tranType");
+					alert(transId);
 					$http({
 			 			method: 'POST',
 					    url: "${pageContext.request.contextPath}/rest/post-transaction/list-by-id",
@@ -503,7 +503,55 @@
 					}).success(function(response) {
 						$scope.transView = [];
 						if(response.MESSAGE == "SUCCESS"){
-							$scope.transView = response.DATA;
+							$scope.transView = response.DATA;				
+							switch(transType) {
+								case "AP Invoice":
+														
+									break;
+								case "AP Return Invoice": 
+									
+							    	break;
+							    case "AP Debit Note":
+							    	
+							    	break;
+							    case "AP Payment":
+							    	
+							    	break;
+						    	case "AR Invoice":
+						    		
+							    	break;
+					    		case "AR Return Invoice":
+					    			
+							    	break;
+					    		case "AR Credit Note":
+					    			
+							    	break;
+								case "AR Receipt":
+									
+							    	break;
+								case "IC Transfer":
+									
+							    	break;
+								case "IC Internal Usage":
+									
+							    	break;
+								case "IC Adjustment":
+									
+							    	break;
+								case "Cash Transfer":
+									
+							    	break;
+								case "Cash Advance":
+									
+							    	break;
+								case "Cash Advance Clearance":
+									
+							    	break;
+								case "GL Entries":
+									
+							    	break;
+							    default:
+							}
 						}
 					});
 				}
@@ -597,11 +645,9 @@
 					return true;
 				}
 			}
-			$(function(){
-				
+			$(function(){				
 				$('#fromdate').val(moment().format('YYYY-MM-DD'));  
-			    $('#todate').val(moment().format('YYYY-MM-DD'));
-			    
+			    $('#todate').val(moment().format('YYYY-MM-DD'));			    
 				$("#datafilter").change(function(){
 					var action = $("#datafilter").val();
 					switch(action) {

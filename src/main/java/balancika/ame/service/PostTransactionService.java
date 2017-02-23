@@ -3,7 +3,8 @@ package balancika.ame.service;
 import java.util.List;
 import org.springframework.stereotype.Repository;
 import balancika.ame.entities.MeDataSource;
-import balancika.ame.entities.Transaction;
+import balancika.ame.entities.tansaction.Transaction;
+
 
 @Repository
 public interface PostTransactionService {

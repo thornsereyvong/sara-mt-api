@@ -9,7 +9,7 @@ import com.mysql.jdbc.CallableStatement;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import balancika.ame.entities.MeDataSource;
-import balancika.ame.entities.Transaction;
+import balancika.ame.entities.tansaction.Transaction;
 import balancika.ame.service.PostTransactionService;
 import balancika.ame.utilities.DBConnection;
 

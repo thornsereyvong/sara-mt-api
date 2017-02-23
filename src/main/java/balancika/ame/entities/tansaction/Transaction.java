@@ -1,4 +1,4 @@
-package balancika.ame.entities;
+package balancika.ame.entities.tansaction;
 
 public class Transaction {
 	
