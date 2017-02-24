@@ -133,6 +133,7 @@
 								<div class="col-sm-12"><hr style="margin-top: 3px;" /></div>
 								
 							</div> -->
+							
 							<div class="row">
 								<div class="col-sm-12">
 									<div class="tablecontainer table-responsive"> 
@@ -171,9 +172,7 @@
 					</div>
 				</section>		
 					
-				<section class="content-footer">
-					
-				</section>	
+				<section class="content-footer"></section>	
 				
 				
 				<input type="hidden" id="btnFilterM" data-backdrop="static" data-keyboard="false" data-toggle="modal" data-target="#frmFilterPost" />
@@ -260,6 +259,90 @@
 						</div>
 					</div>
 				</div>
+				
+				<div class="modal fade modal-default" id="frmPurchaseInvoice" role="dialog">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><b>PURCHASE INVOICE</b></h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<form id="frmFilterPostTrans">
+									<div class="col-md-12">
+										<div class="row">
+											<div class="col-sm-12">
+												<div class="col-sm-6 col-md-4 col-xs-12">
+													<label class="font-label">Transaction Date</label>
+													<div class="form-group">
+														<select style="width:100%"  class="form-control select2-small" name="datafilter" id="datafilter">
+															<option value="All">All</option>
+															<option value="range">Range</option>
+															<option selected value="today">Today</option>
+															<option value="this period">This Period</option>
+															<option value="this year">This Year</option>
+														</select>
+													</div>
+												</div>
+												<div class="col-sm-6 col-md-4 col-xs-12">
+													<label class="font-label">From Date</label>
+													<div class="form-group">
+								                  		<div class="input-group">
+									                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+									                    	<input type="text" class="form-control pull-right date" readonly="readonly" name="fromdate" id="fromdate">
+									                  	</div>
+							                		</div>
+												</div>
+												<div class="col-sm-6 col-md-4 col-xs-12">
+													<label class="font-label">To Date</label>
+													<div class="form-group">
+								                  		<div class="input-group">
+									                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+									                    	<input type="text" class="form-control pull-right date" readonly="readonly" name="todate" id="todate">
+									                  	</div>
+							                		</div>
+												</div>
+												<div class="clearfix"></div>
+												<div class="col-sm-6 col-md-4 col-xs-12">
+													<label class="font-label">Filter Type</label>
+													<div class="form-group">
+														<select style="width:100%" class="form-control select2-small" name="filterType" id="filterType">
+															<option selected value="All">All</option>
+															<option value="Entry No">Entry No</option>
+															<option value="Journal Type">Journal Type</option>
+															<option value="Reference">Reference</option>
+															<option value="Remark">Remark</option>
+															<option value="Vendor ID">Vendor ID</option>
+															<option value="Vendor Name">Vendor Name</option>
+															<option value="Customer ID">Customer ID</option>
+															<option value="Customer Name">Customer Name</option>
+															<option value="Employee ID">Employee ID</option>
+															<option value="Employee Name">Employee Name</option>
+															<option value="Total Amount">Total Amount</option>
+														</select>
+													</div>
+												</div>
+												<div class="col-sm-6 col-md-8 col-xs-12">
+													<label class="font-label">&nbsp;</label>
+													<div class="form-group">
+														<input type="text" class="form-control" name="filterVal" id="filterVal">
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									</form>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
 				
 				<div id="errors"></div>
 			</div>
@@ -507,7 +590,7 @@
 								$scope.transView = response.DATA;				
 								switch(transType) {
 									case "AP Invoice":
-															
+										$("#frmPurchaseInvoice").modal({static});					
 										break;
 									case "AP Return Invoice": 
 										

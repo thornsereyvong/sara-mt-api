@@ -23,7 +23,10 @@ public class Class {
 	public void setInactive(int inactive) {
 		this.inactive = inactive;
 	}
-	
-	
-	
+	public Class(String classId, String className, int inactive) {
+		super();
+		this.classId = classId;
+		this.className = className;
+		this.inactive = inactive;
+	}
 }

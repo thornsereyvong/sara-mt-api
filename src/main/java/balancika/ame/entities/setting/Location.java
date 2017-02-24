@@ -6,6 +6,7 @@ public class Location {
 	String locationName;
 	String address;
 	String remark;
+	
 	public String getSystemCodeId() {
 		return systemCodeId;
 	}
@@ -35,6 +36,15 @@ public class Location {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	public Location() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public Location(String locationId, String locationName) {
+		super();
+		this.locationId = locationId;
+		this.locationName = locationName;
 	}
 	
 	

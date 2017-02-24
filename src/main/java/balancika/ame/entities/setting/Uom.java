@@ -2,7 +2,7 @@ package balancika.ame.entities.setting;
 
 public class Uom {
 	String systemCodeId;
-	String UomId;
+	String uomId;
 	String description;
 	String remark;
 	
@@ -13,10 +13,10 @@ public class Uom {
 		this.systemCodeId = systemCodeId;
 	}
 	public String getUomId() {
-		return UomId;
+		return uomId;
 	}
 	public void setUomId(String uomId) {
-		UomId = uomId;
+		this.uomId = uomId;
 	}
 	public String getDescription() {
 		return description;
@@ -29,6 +29,15 @@ public class Uom {
 	}
 	public void setRemark(String remark) {
 		this.remark = remark;
+	}
+	public Uom() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public Uom(String uomId, String description) {
+		super();
+		this.uomId = uomId;
+		this.description = description;
 	}
 	
 }
