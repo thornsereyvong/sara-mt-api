@@ -20,7 +20,7 @@
 					</ol>
 				</section>
 				<section class="content" >
-					<div class="box box-danger">						
+					<div class="box box-danger">			
 						<div class="box-header">
 							<div class="col-sm-12">
 								<button style="margin-top: 10px;" ng-click="btnOpenData()" class="btn btn-default"><i class="fa fa-folder-open"></i> Open</button>
@@ -489,71 +489,73 @@
 					var transId = $("#data-row-"+LastClickRow).children().eq(1).text();
 					var transType = getValueStringById("tranType");
 					alert(transId);
-					$http({
-			 			method: 'POST',
-					    url: "${pageContext.request.contextPath}/rest/post-transaction/list-by-id",
-					    headers: {
-					    	'Accept': 'application/json',
-					        'Content-Type': 'application/json'
-					    },
-					    data : {
-					    	"transType" : transType,
-						    "transId" : transId
-						}
-					}).success(function(response) {
-						$scope.transView = [];
-						if(response.MESSAGE == "SUCCESS"){
-							$scope.transView = response.DATA;				
-							switch(transType) {
-								case "AP Invoice":
-														
-									break;
-								case "AP Return Invoice": 
-									
-							    	break;
-							    case "AP Debit Note":
-							    	
-							    	break;
-							    case "AP Payment":
-							    	
-							    	break;
-						    	case "AR Invoice":
-						    		
-							    	break;
-					    		case "AR Return Invoice":
-					    			
-							    	break;
-					    		case "AR Credit Note":
-					    			
-							    	break;
-								case "AR Receipt":
-									
-							    	break;
-								case "IC Transfer":
-									
-							    	break;
-								case "IC Internal Usage":
-									
-							    	break;
-								case "IC Adjustment":
-									
-							    	break;
-								case "Cash Transfer":
-									
-							    	break;
-								case "Cash Advance":
-									
-							    	break;
-								case "Cash Advance Clearance":
-									
-							    	break;
-								case "GL Entries":
-									
-							    	break;
-							    default:
+					if(transId != "" && transType != ""){
+						$http({
+				 			method: 'POST',
+						    url: "${pageContext.request.contextPath}/rest/post-transaction/list-by-id",
+						    headers: {
+						    	'Accept': 'application/json',
+						        'Content-Type': 'application/json'
+						    },
+						    data : {
+						    	"transType" : transType,
+							    "transId" : transId
 							}
-						}
-					});
+						}).success(function(response) {
+							$scope.transView = [];
+							if(response.MESSAGE == "SUCCESS"){
+								$scope.transView = response.DATA;				
+								switch(transType) {
+									case "AP Invoice":
+															
+										break;
+									case "AP Return Invoice": 
+										
+								    	break;
+								    case "AP Debit Note":
+								    	
+								    	break;
+								    case "AP Payment":
+								    	
+								    	break;
+							    	case "AR Invoice":
+							    		
+								    	break;
+						    		case "AR Return Invoice":
+						    			
+								    	break;
+						    		case "AR Credit Note":
+						    			
+								    	break;
+									case "AR Receipt":
+										
+								    	break;
+									case "IC Transfer":
+										
+								    	break;
+									case "IC Internal Usage":
+										
+								    	break;
+									case "IC Adjustment":
+										
+								    	break;
+									case "Cash Transfer":
+										
+								    	break;
+									case "Cash Advance":
+										
+								    	break;
+									case "Cash Advance Clearance":
+										
+								    	break;
+									case "GL Entries":
+										
+								    	break;
+								    default:
+								}
+							}
+						});
+					}
 				}
 				
 				$scope.dataRowClick = function(index){
