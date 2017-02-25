@@ -10,7 +10,7 @@ public class PurchaseInvoice {
 	private String purchaseId;
 	private String reference;
 	private  Date purchaseDate;
-	private  Date durDate;
+	private  Date dueDate;
 	private  String purchaseType;
 	private  String postStatus;
 	private  Vendor vendor;
@@ -44,11 +44,11 @@ public class PurchaseInvoice {
 	public void setPurchaseDate(Date purchaseDate) {
 		this.purchaseDate = purchaseDate;
 	}
-	public Date getDurDate() {
-		return durDate;
+	public Date getDueDate() {
+		return dueDate;
 	}
-	public void setDurDate(Date durDate) {
-		this.durDate = durDate;
+	public void setDueDate(Date dueDate) {
+		this.dueDate = dueDate;
 	}
 	public String getTransactionType() {
 		return purchaseType;

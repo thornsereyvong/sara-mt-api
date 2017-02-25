@@ -3,6 +3,9 @@ package balancika.ame.service.impl;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
+import org.springframework.stereotype.Repository;
+
 import com.mysql.jdbc.Connection;
 import balancika.ame.entities.MeDataSource;
 import balancika.ame.entities.maintain.Item;
@@ -15,8 +18,9 @@ import balancika.ame.entities.tansaction.PurchaseInvoiceDetail;
 import balancika.ame.service.PurchaseInvoiceService;
 import balancika.ame.utilities.DBConnection;
 
+@Repository
 public class PurchaseInvoiceServiceImpl implements PurchaseInvoiceService{
-
+	
 	@Override
 	public PurchaseInvoice getPurchaseInvoice(PurchaseInvoice purchase, MeDataSource dataSource) {
 		
@@ -35,7 +39,7 @@ public class PurchaseInvoiceServiceImpl implements PurchaseInvoiceService{
 					pur.setPurchaseId(rs.getString("PurID"));
 					pur.setReference(rs.getString("PurReference"));
 					pur.setPurchaseDate(rs.getDate("PurDate"));
-					pur.setDurDate(rs.getDate("DurDate"));
+					pur.setDueDate(rs.getDate("DueDate"));
 					pur.setRemark(rs.getString("remark"));
 					pur.setPostStatus(rs.getString("PostStatus"));
 					pur.setPurchaseType(rs.getString("PurType"));
@@ -54,7 +58,7 @@ public class PurchaseInvoiceServiceImpl implements PurchaseInvoiceService{
 				purDetail.setLineNo(rs.getInt("LineNo"));
 				purDetail.setItem(new Item(rs.getString("ItemID"), rs.getString("ItemName")));
 				purDetail.setLocation(new Location(rs.getString("LocationID"), ""));
-				purDetail.setClassCode(new Class(rs.getString("ClassID1"), "", 0));
+				purDetail.setClassCode(new Class(rs.getString("ClassDetailID"), "", 0));
 				purDetail.setUom(new Uom(rs.getString("UomID"), ""));
 				purDetail.setPurQty(rs.getDouble("PurQty"));
 				purDetail.setUnitCost(rs.getDouble("UnitCost"));
@@ -66,7 +70,7 @@ public class PurchaseInvoiceServiceImpl implements PurchaseInvoiceService{
 				purDetail.setStaxPer(rs.getDouble("STaxPer"));
 				purDetail.setVatDol(rs.getDouble("VTaxDol"));
 				purDetail.setVatPer(rs.getDouble("VTaxPer"));
-				purDetail.setDisDol(rs.getDouble("NetTotalAmt1"));
+				purDetail.setDisDol(rs.getDouble("NetTotalAmtDetail"));
 				purDetailList.add(purDetail);
 			}
 			pur.setPurchaseDetail(purDetailList);

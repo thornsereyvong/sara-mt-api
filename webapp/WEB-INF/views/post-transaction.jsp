@@ -269,37 +269,50 @@
 							</div>
 							<div class="modal-body">
 								<div class="row">
-									<form id="frmFilterPostTrans">
+									
 									<div class="col-md-12">
 										<div class="row">
 											<div class="col-sm-12">
 												<div class="col-sm-6 col-md-4 col-xs-12">
-													<label class="font-label">Transaction Date</label>
+													<label class="font-label">Entry No</label>
 													<div class="form-group">
-														<select style="width:100%"  class="form-control select2-small" name="datafilter" id="datafilter">
-															<option value="All">All</option>
-															<option value="range">Range</option>
-															<option selected value="today">Today</option>
-															<option value="this period">This Period</option>
-															<option value="this year">This Year</option>
-														</select>
+														<input type="text" value="{{purchaseInvoice.purchaseId}}" disabled class="form-control" >
 													</div>
 												</div>
 												<div class="col-sm-6 col-md-4 col-xs-12">
-													<label class="font-label">From Date</label>
+													<label class="font-label">Post Status</label>
+													<div class="form-group">
+														<input type="text" value="{{purchaseInvoice.postStatus}}" disabled class="form-control" >
+													</div>
+												</div>
+												<div class="col-sm-6 col-md-4 col-xs-12">
+													<label class="font-label">Purchase Type</label>
+													<div class="form-group">
+														<input type="text" value="{{purchaseInvoice.purchaseType}}" disabled class="form-control" >
+													</div>
+												</div>
+												
+												<div class="col-sm-6 col-md-4 col-xs-12">
+													<label class="font-label">Purchase Date</label>
 													<div class="form-group">
 								                  		<div class="input-group">
 									                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
-									                    	<input type="text" class="form-control pull-right date" readonly="readonly" name="fromdate" id="fromdate">
+									                    	<input type="text" disabled class="form-control pull-right date" value="{{purchaseInvoice.purchaseDate}}" readonly="readonly" name="fromdate" id="fromdate">
 									                  	</div>
 							                		</div>
+												</div>
+												<div class="col-sm-6 col-md-4 col-xs-12">
+													<label class="font-label">Reference</label>
+													<div class="form-group">
+														<input type="text" value="{{purchaseInvoice.reference}}" disabled class="form-control" >
+													</div>
 												</div>
 												<div class="col-sm-6 col-md-4 col-xs-12">
 													<label class="font-label">To Date</label>
 													<div class="form-group">
 								                  		<div class="input-group">
 									                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
-									                    	<input type="text" class="form-control pull-right date" readonly="readonly" name="todate" id="todate">
+									                    	<input type="text" disabled class="form-control pull-right date" value="{{purchaseInvoice.DueDate}}" class="form-control pull-right date" readonly="readonly" name="todate" id="todate">
 									                  	</div>
 							                		</div>
 												</div>
@@ -332,7 +345,7 @@
 											</div>
 										</div>
 									</div>
-									</form>
+									
 								</div>
 							</div>
 							<div class="modal-footer">
@@ -571,7 +584,6 @@
 				$scope.btnOpenData = function(){
 					var transId = $("#data-row-"+LastClickRow).children().eq(1).text();
 					var transType = getValueStringById("tranType");
-					alert(transId);
 					if(transId != "" && transType != ""){
 						$http({
 				 			method: 'POST',
@@ -586,11 +598,13 @@
 							}
 						}).success(function(response) {
 							$scope.transView = [];
+							$scope.purchaseInvoice = [];
 							if(response.MESSAGE == "SUCCESS"){
 								$scope.transView = response.DATA;				
 								switch(transType) {
 									case "AP Invoice":
-										$("#frmPurchaseInvoice").modal({static});					
+										$scope.purchaseInvoice = response.DATA;
+										$("#frmPurchaseInvoice").modal({backdrop: 'static', keyboard: false});				
 										break;
 									case "AP Return Invoice": 
 										

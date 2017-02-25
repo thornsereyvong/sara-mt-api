@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import balancika.ame.entities.MeDataSource;
+import balancika.ame.entities.tansaction.PurchaseInvoice;
 import balancika.ame.entities.tansaction.Transaction;
 import balancika.ame.service.PostTransactionService;
+import balancika.ame.service.PurchaseInvoiceService;
 
 @RestController
 @RequestMapping("/rest/post-transaction/")
@@ -24,6 +26,9 @@ public class PostTransactionController {
 	
 	@Autowired
 	private PostTransactionService post;
+	
+	@Autowired
+	private PurchaseInvoiceService purService;
 	
 	@RequestMapping(value = {"/list"}, method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> listTransaction(@RequestBody Transaction tran,HttpServletRequest req){
@@ -1128,13 +1133,22 @@ public class PostTransactionController {
 				case "AP Invoice":
 					sql = "SELECT COUNT(*) as CRow FROM tblPurchase WHERE PurID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
-						map.put("MESSAGE", "SUCCESS");
-						
-						
+						PurchaseInvoice pur = new PurchaseInvoice();
+						pur.setPurchaseId(tran.getTransId());
+						PurchaseInvoice purchase = purService.getPurchaseInvoice(pur, dataSource);						
+						if(purchase != null){
+							map.put("MESSAGE", "SUCCESS");
+							map.put("STATUS", HttpStatus.OK.value());
+							map.put("DATA", purchase);
+							return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+						}else{
+							map.put("MESSAGE", "FAILED");
+							//map.put("MSG", "The purchase with record id: "+tran.getTransId()+" does not exist.");
+						}
 					}else{
 						map.put("MESSAGE", "FAILED");
 						map.put("MSG", "The purchase with record id: "+tran.getTransId()+" does not exist.");
-					}					
+					}
 					break;
 				case "AP Return Invoice": 
 					sql = "SELECT COUNT(*) as CRow FROM tblPurchase_Return WHERE RetID = '"+tran.getTransId()+"'";
