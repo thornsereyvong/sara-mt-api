@@ -269,83 +269,69 @@
 							</div>
 							<div class="modal-body">
 								<div class="row">
-									
-									<div class="col-md-12">
-										<div class="row">
-											<div class="col-sm-12">
-												<div class="col-sm-6 col-md-4 col-xs-12">
-													<label class="font-label">Entry No</label>
-													<div class="form-group">
-														<input type="text" value="{{purchaseInvoice.purchaseId}}" disabled class="form-control" >
-													</div>
-												</div>
-												<div class="col-sm-6 col-md-4 col-xs-12">
-													<label class="font-label">Post Status</label>
-													<div class="form-group">
-														<input type="text" value="{{purchaseInvoice.postStatus}}" disabled class="form-control" >
-													</div>
-												</div>
-												<div class="col-sm-6 col-md-4 col-xs-12">
-													<label class="font-label">Purchase Type</label>
-													<div class="form-group">
-														<input type="text" value="{{purchaseInvoice.purchaseType}}" disabled class="form-control" >
-													</div>
-												</div>
-												
-												<div class="col-sm-6 col-md-4 col-xs-12">
-													<label class="font-label">Purchase Date</label>
-													<div class="form-group">
-								                  		<div class="input-group">
-									                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
-									                    	<input type="text" disabled class="form-control pull-right date" value="{{purchaseInvoice.purchaseDate}}" readonly="readonly" name="fromdate" id="fromdate">
-									                  	</div>
-							                		</div>
-												</div>
-												<div class="col-sm-6 col-md-4 col-xs-12">
-													<label class="font-label">Reference</label>
-													<div class="form-group">
-														<input type="text" value="{{purchaseInvoice.reference}}" disabled class="form-control" >
-													</div>
-												</div>
-												<div class="col-sm-6 col-md-4 col-xs-12">
-													<label class="font-label">To Date</label>
-													<div class="form-group">
-								                  		<div class="input-group">
-									                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
-									                    	<input type="text" disabled class="form-control pull-right date" value="{{purchaseInvoice.DueDate}}" class="form-control pull-right date" readonly="readonly" name="todate" id="todate">
-									                  	</div>
-							                		</div>
-												</div>
-												<div class="clearfix"></div>
-												<div class="col-sm-6 col-md-4 col-xs-12">
-													<label class="font-label">Filter Type</label>
-													<div class="form-group">
-														<select style="width:100%" class="form-control select2-small" name="filterType" id="filterType">
-															<option selected value="All">All</option>
-															<option value="Entry No">Entry No</option>
-															<option value="Journal Type">Journal Type</option>
-															<option value="Reference">Reference</option>
-															<option value="Remark">Remark</option>
-															<option value="Vendor ID">Vendor ID</option>
-															<option value="Vendor Name">Vendor Name</option>
-															<option value="Customer ID">Customer ID</option>
-															<option value="Customer Name">Customer Name</option>
-															<option value="Employee ID">Employee ID</option>
-															<option value="Employee Name">Employee Name</option>
-															<option value="Total Amount">Total Amount</option>
-														</select>
-													</div>
-												</div>
-												<div class="col-sm-6 col-md-8 col-xs-12">
-													<label class="font-label">&nbsp;</label>
-													<div class="form-group">
-														<input type="text" class="form-control" name="filterVal" id="filterVal">
-													</div>
-												</div>
-											</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Entry No</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseInvoice.purchaseId}}" disabled class="form-control" >
 										</div>
 									</div>
-									
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Post Status</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseInvoice.postStatus}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Purchase Type</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseInvoice.purchaseType}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Reference</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseInvoice.reference}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Purchase Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{purchaseInvoice.purchaseDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Due Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{purchaseInvoice.dueDate}}" class="form-control pull-right date" readonly="readonly">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Vendor</label>
+										<div class="form-group">
+											<input type="text" value="[{{purchaseInvoice.vendor.vendorId}}] {{purchaseInvoice.vendor.vendorName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Class</label>
+										<div class="form-group">
+											<input type="text" value="[{{purchaseInvoice.classCode.classId}}] {{purchaseInvoice.classCode.className}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<label class="font-label">Remark</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseInvoice.remark}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-md-12 table-responsive no-padding">
+										
+									</div>
 								</div>
 							</div>
 							<div class="modal-footer">
@@ -597,6 +583,9 @@
 							    "transId" : transId
 							}
 						}).success(function(response) {
+							
+						//	dis(response.DATA)
+							
 							$scope.transView = [];
 							$scope.purchaseInvoice = [];
 							if(response.MESSAGE == "SUCCESS"){
