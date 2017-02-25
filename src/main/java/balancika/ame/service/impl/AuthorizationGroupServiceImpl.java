@@ -44,8 +44,7 @@ public class AuthorizationGroupServiceImpl implements AuthorizationGroupService 
 				authGroup.setAuthGroupId(rs.getString("AuthGroup_ID"));
 				authGroup.setAuthGroupName(rs.getString("AuthGroup_Name"));
 				authGroup.setAuthGroupDesc(rs.getString("AuthGroup_Description"));
-				authGroup.setAuthGroupCount(rs.getString("Count"));
-				
+				authGroup.setAuthGroupCount(rs.getString("Count"));	
 				arrauthGro.add(authGroup);
 			}
 			rs.close();			
