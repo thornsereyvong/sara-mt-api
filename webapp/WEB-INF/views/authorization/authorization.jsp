@@ -7,7 +7,7 @@
 <jsp:include page="${request.contextPath}/head"></jsp:include>
 
 </head>
-<body class="sidebar-mini wysihtml5-supported skin-red-light" ng-app="authorization">
+<body class="sidebar-mini wysihtml5-supported skin-red-light" ng-app="authorization" >
 	<div class="wrapper">
 
 		<jsp:include page="${request.contextPath}/header"></jsp:include>
@@ -18,7 +18,7 @@
 		
 		</style>
 
-		<div class="content-wrapper" ng-controller="authoriCon">
+		<div class="content-wrapper" ng-controller="authoriCon" id="authorizationApp">
 			<section class="content-header">
 				<h1>Authorization</h1>
 				<ol class="breadcrumb">
@@ -31,7 +31,7 @@
 				<div class="box box-danger">
 					<div class="box-header">
 						<div class="col-sm-12">
-							<button style="margin-top: 10px;" data-toggle="modal" data-target="#myModal" class="btn btn-default">
+							<button style="margin-top: 10px;" ng-click="btn_createEv()" class="btn btn-default">
 								<i class="glyphicon glyphicon-plus"></i> Create
 							</button>
 							
@@ -142,13 +142,71 @@
 			       
 			       
 			     <div class="clearfix"></div>
-			     
+			     <div id="div_group" style="display: none">
+			     <div class="col-sm-3">
+				  	<form class="form-inline">
+				        <div class="form-group" style="padding-top: 20px;">
+				        	<div class="input-group"> 
+				        		<input type="text" ng-model="searchAuthGroup" class="form-control" placeholder="Search">
+				        	</div>
+				        </div>
+				    </form>
+				    <br/>
+				</div>
+				<div class="col-sm-2">
+				  	<form class="form-inline">
+				        <div class="form-group" style="padding-top: 20px;">
+				        	<label>Row: </label>
+				        	<div class="input-group">
+				        		<select class="form-control" ng-model="pageSize.row" id ="row" ng-options="obj.value as obj.label for obj in pageSize.rows"></select>
+				        	</div>
+				        </div>
+				    </form>
+				    <br/>
+				</div> 
+			     	<div class="col-sm-12">
+			     		<table class="table">
+			     			<thead>
+			     				<tr>
+			     					<th></th>
+			     					<th style="width:120px">Authorization Id</th>
+			     					<th style="width:150px">Authorization Name</th>
+			     					<th style="width:180px">Authorization Employee</th>	
+			     					<th style="wdith:30px;">Authorization And/Or</th>
+			     					<th style="width:160px;">Authorization Amount</th>
+			     				</tr>
+			     			</thead>
+			     			<tbody id="table_group">
+			     				<tr pagination-id="listAuthorizationGroups" dir-paginate="trs in authorizationGroup |orderBy:sortKey:reverse |filter:searchAuthGroup |itemsPerPage:pageSize.row" current-page="currentPage" >
+										<td class="width-75 text-center">
+											<div class="icheckbox icheckbox-primary">
+												<input ng-checked="trs.statusCheck" name="ckrAuth" id="ckrAuth{{$index}}" ng-click="ckRowClickAuth(($index + 1) + (currentPage - 1) * pageSize.row)" class="styled" type="checkbox">
+												<label class="cursor-pointer" for="ckrAuth{{$index}}"></label>
+											</div>
+										</td>
+										<td ng-cloak>{{trs.authGroupId}}</td>
+										<td ng-cloak>{{trs.authGroupName}}</td>	
+										<td ng-cloak>{{trs.authGroupCount}}</td>	
+										<td ng-cloak><select class="form-control"  id="chrAuthAndOr{{$index}}" name="nameAuthAndOr{{$index}}" ><option value="">-- And / Or --</option><option value="And">And</option><option value="Or">Or</option></select></td>	
+										<td ng-cloak><input type="text"  id="chrAuthAmount{{$index}}" name="nameAuthAmount{{$index}}" class="form-control"></td>					
+									</tr> 
+			     			</tbody>
+			     			
+			     		</table>
+			     		<dir-pagination-controls 
+							    pagination-id="listAuthorizationGroups"
+								max-size="pageSize.row" 
+								direction-links="true"
+								boundary-links="true"> 
+							</dir-pagination-controls> 
+			     	</div>
+			     </div>
 			     <div id="div_emp" style="display: none" >
 			     <div class="col-sm-3">
 				  	<form class="form-inline">
 				        <div class="form-group" style="padding-top: 20px;">
 				        	<div class="input-group"> 
-				        		<input type="text" pagination-id="listEmployeeCreate" ng-model="search" class="form-control" placeholder="Search">
+				        		<input type="text" pagination-id="listEmployeeCreate" ng-model="searchEmp" class="form-control" placeholder="Search">
 				        	</div>
 				        </div>
 				    </form>
@@ -179,7 +237,7 @@
 									</tr>
 								</tbody>
 								<tbody id="data-emp">
-									<tr pagination-id="listEmployeeCreate" dir-paginate="tr in emps |orderBy:sortKey:reverse |filter:search |itemsPerPage:pageSize.row" current-page="currentPage" >
+									<tr pagination-id="listEmployeeCreate" dir-paginate="tr in emps |orderBy:sortKey:reverse |filter:searchEmp |itemsPerPage:pageSize.row" current-page="currentPage" >
 												<td class="width-75 text-center">
 													<div class="icheckbox icheckbox-primary">
 														<input ng-checked="tr.statusCheck" name="ckr" id="ckr{{$index}}" ng-click="ckRowClick(($index + 1) + (currentPage - 1) * pageSize.row)" class="styled" type="checkbox">
@@ -262,15 +320,32 @@
 				
 				}	
 				
-				$scope.ckrAll = function(){					
+				$scope.ckRowClick = function(index){
+					index--;
+					$scope.emps[index].statusCheck = !$scope.emps[index].statusCheck;
+				}
+
+				$scope.ckRowClickAuth = function(index){
+					index--;
+					$scope.authorizationGroup[index].statusCheck = !$scope.authorizationGroup[index].statusCheck;
+			
+				}
+				
+				/* $scope.ckrAll = function(){					
 					var ckrAll = $("#ckrAll");
 					if(ckrAll.is(':checked')){
 						$("input[name=ckr]").prop('checked', true);
 					}else{
 						$("input[name=ckr]").prop('checked', false);
 					}
-				}
+				} */
 
+				$scope.btn_createEv = function(){
+					$('#myModal').modal('toggle');
+					$scope.sAuthType = "";
+					$scope.listAuthorizationGroup();
+				}
+				
 				$scope.clearValidate = function(str){
 					
 					$(str+" .form-group").removeClass("has-error").addClass("");
@@ -281,16 +356,44 @@
 					
 				}
 
+			
+				
+
+				$scope.listAuthorizationGroup = function(){
+					$http({
+			 			method: 'GET',
+					    url: "${pageContext.request.contextPath}/rest/authorizationgroup/list",
+					    headers: {
+					    	'Accept': 'application/json',
+					        'Content-Type': 'application/json'
+					    }	    
+					}).success(function(response) {
+						$scope.authorizationGroup = [];
+						if(response.MESSAGE == "SUCCESS"){
+							$scope.authorizationGroup = response.DATA;	
+						}
+					});
+				}
+				
+
 				$scope.changeType = function(){
+					$scope.sAuthAndOr = "";
+					$(".select2").select2();
+					$scope.listAuthorizationGroup();
 					if($scope.sAuthType == "Individual"){
+						$("#div_group").css("display","none");
 						$("#authAndOr").removeAttr("disabled","");
 						$("#div_andOr").css("display","");
 						$("#div_emp").css("display","");
 						$scope.listEmployee();
 						$scope.currentPage = 1;
-						$scope.pageSize.row = $scope.pageSize.rows[1].value;			
-					}else{
+						$scope.pageSize.row = $scope.pageSize.rows[1].value;	
+								
+					}else if($scope.sAuthType == "Group"){
+
+						$scope.listAuthorizationGroup();
 						
+						$("#div_group").css("display","");
 						$("#div_emp").css("display","none");
 						$("#div_andOr").css("display","none");
 						$("#div_amount").css("display","none");
@@ -301,6 +404,18 @@
 						setValueById("authAmount","");
 						$('#form_authori').bootstrapValidator('revalidateField', 'authAmount');
 					
+					}else{
+
+						$("#div_emp").css("display","none");
+						$("#div_andOr").css("display","none");
+						$("#div_amount").css("display","none");
+						$("#authAmount").attr("disabled","disabled");
+						$("#authAndOr").attr("disabled","disabled");
+						$("#authAndOr").val("");
+						$('#form_authori').bootstrapValidator('revalidateField', 'authAndOr');
+						setValueById("authAmount","");
+						$('#form_authori').bootstrapValidator('revalidateField', 'authAmount');
+						
 					}
 				}
 
@@ -315,12 +430,11 @@
 					}
 				}
 				
-				$scope.ckRowClick = function(index){
-					index--;
-					$scope.emps[index].statusCheck = !$scope.emps[index].statusCheck;
-				}
+				
 
 				$scope.closeModal = function(){
+					setValueById("authType","");
+					$('#form_authori').bootstrapValidator("resetForm",true);
 					$("#div_andOr").css("display","none");
 					$("#div_amount").css("display","none");
 					$("#authAmount").attr("disabled","disabled");
@@ -351,6 +465,9 @@
 					});
 				}
 
+
+				
+				
 				$scope.listAuthorization = function(){
 					$http({
 			 			method: 'GET',
@@ -363,6 +480,7 @@
 						$scope.auth = [];
 						if(response.MESSAGE == "SUCCESS"){
 							$scope.auth = response.DATA;
+							
 						}
 					});
 				}
@@ -516,9 +634,89 @@
 		
 		<script type="text/javascript">
 
+		/* 
+			var indexAuth = 1;
+			
+			function changeAuthItem(){
+
+			}
+
+			function changeAuthAndOr(){
+
+			}
+
+			function listDataAuthGro(){
+				$.ajax({
+					type: "GET",
+					url: "${pageContext.request.contextPath}/rest/authorizationgroup/list",
+					success: function(response){
+						var listAuth;
+					    if(response.MESSAGE == "SUCCESS"){
+					    	listAuth = response.DATA;
+						} 	
+						return listAuth;
+					}
+				});	
+			}
+
+			dis(listDataAuthGro());
+			
+			function rowDataAuthGroup(){
+				var stringItem = "2";
+				
+				var itemAuthGroup = "<option value=''>-- Select Authorization Group --</option>";
+				
+				//alert(listAuth);
+				$(".select2").select2();
+			     for(var i=0; i < listAuth.length; i++){
+			    	itemAuthGroup += "<option value='"+listAuth[i].authGroupId+"'>["+listAuth[i].authGroupId+"] "+listAuth[i].authGroupName+"</option>";
+				 }
+				var itemAuthGroupAdd = "<select class='form-control select2' name='itemAuthGroupList[]' onchange='changeAuthItem("+indexAuth+")' id='itemAuthGroup"+indexAuth+"'>"+itemAuthGroup+"</select>";
+				var itemAuthAndOr = "<select name='itemAddAuthAndOr[]' onchange='changeAuthAndOr("+indexAuth+")' id='itemAuthAndOr"+indexAuth+"'  class='form-control'><option value=''>-- Authorization And / Or --</option><option value='And'>And</option><option value='Or'>Or</option></select>";
+				var ItemAuthAmount = "<input  type='text' class='form-control' id='itemAuthAmount"+indexAuth+"' name='itemAddAuthAmount[]'  />";
+				
+				stringItem =      "<tr id='ind"+indexAuth+"' data-index='"+indexAuth+"'>"+
+										"<td><buttom type='button' class='btn btn-warning' onclick='removeItemAuthGroup(\"ind"+indexAuth+"\")' /><i class='fa fa-times' aria-hidden='true'></i></buttom></td>"+
+										"<td>"+itemAuthGroupAdd+"</td>"+
+										"<td></td>"+
+										"<td>"+itemAuthAndOr+"</td>"+
+										"<td>"+ItemAuthAmount+"</td>"+
+									"</tr>";
+				
+				$(".select2").select2();
+				indexAuth++;
+				
+				return stringItem;	
+				
+			}
+
+			
+			
+			function AddItemAuthGroup(){
+				$("#table_group").append(rowDataAuthGroup());
+			}
+			function removeItemAuthGroup(ID){
+				$("#"+ID).remove();
+			}
+			
+			function ItemAuthGroupList(){
+				var auth = $("#authType").val();
+				$(".select2").select2();
+				if(auth == "Group"){
+					
+					AddItemAuthGroup();
+				}
+			}
+				
+			*/
+			
 		
 			$(document).ready(function(){
+
+				$("#authType").change(function(){		
+				});
 				
+				$(".select2").select2();
 				$("#div_andOr").css("display","none");
 				$("#div_amount").css("display","none");
 				$("#authAmount").attr("disabled","disabled");

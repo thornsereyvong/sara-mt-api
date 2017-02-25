@@ -52,7 +52,7 @@
 											<th style="cursor: pointer;" ng-click="sort('authorGroupDesc')">Authorization Group Description
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authorGroupDesc'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authGroupCount')">Count Employee
+											<th style="cursor: pointer;" ng-click="sort('authGroupCount')">Authorization Employee
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authGroupCount'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
 											<th style="width: 175px;"></th>

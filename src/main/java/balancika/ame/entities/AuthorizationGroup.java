@@ -9,6 +9,13 @@ public class AuthorizationGroup {
 	private String authGroupName;
 	private String authGroupDesc;
 	private String authGroupCount;
+	private boolean statusCheck = false;
+	public boolean isStatusCheck() {
+		return statusCheck;
+	}
+	public void setStatusCheck(boolean statusCheck) {
+		this.statusCheck = statusCheck;
+	}
 	private List<AuthorizationGroupDetail> authGroupDetail;
 	
 	public String getAuthGroupId() {
