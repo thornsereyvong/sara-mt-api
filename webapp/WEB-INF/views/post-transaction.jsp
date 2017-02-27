@@ -341,8 +341,6 @@
 					</div>
 				</div>
 				
-				
-				
 				<div id="errors"></div>
 			</div>
 			<jsp:include page="${request.contextPath}/foot"></jsp:include>
