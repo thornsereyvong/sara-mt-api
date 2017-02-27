@@ -28,9 +28,10 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/bootstrap/css/build.css">
 <style type="text/css">
 	.cursor_move{ cursor: move; }
-	.width-100{ width: 100px; }
-	.width-80{ width: 80px; }
-	.width-90{ width: 80px; }
+	.width-120{ width: 300px !important; }
+	.width-100{ width: 100px !important; }
+	.width-80{ width: 80px !important; }
+	.width-90{ width: 90px !important; }
 	.requrie{color: #b9292d;}
 	.select2{ width: 100%; }
 	.iText-right{ text-align:right !important; }

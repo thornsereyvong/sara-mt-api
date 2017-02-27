@@ -329,8 +329,47 @@
 											<input type="text" value="{{purchaseInvoice.remark}}" disabled class="form-control" >
 										</div>
 									</div>
-									<div class="col-md-12 table-responsive no-padding">
-										
+									<div class="col-sm-12 table-responsive">
+										<table class="table table-hover">
+											<tr>
+												<th style="width:200px;">Item ID</th>
+												<th class="width-120">Item Name</th>
+												<th class="width-120">Location ID</th>
+												<th class="width-120">Class ID</th>
+												<th class="width-120">UOM</th>
+												<th class="width-120">Quantity</th>
+												<th class="width-120">Unit Cost</th>
+												<th class="width-120">Price Factor</th>
+												<th class="width-120">Total Amount</th>
+												<th class="width-120">Discount %</th>
+												<th class="width-120">Discount $</th>
+												<th class="width-120">VAT %</th>
+												<th class="width-120">VAT $</th>
+												<th class="width-120">ST %</th>
+												<th class="width-120">ST $</th>
+												<th class="width-120">Net Total Amount</th>
+											</tr>
+											<tbody>
+												<tr ng-repeat="tr in purchaseInvoice.purchaseDetail" >
+													<td style="width:200px;">{{tr.item.itemId}}</td>
+													<td class="width-120" ng-cloak>{{tr.item.itemName}}</td>
+													<td class="width-120" ng-cloak>{{tr.location.locationId}}</td>
+													<td class="width-120" ng-cloak>{{tr.classCode.classId}}</td>
+													<td class="width-120" ng-cloak>{{tr.uom.uomId}}</td>
+													<td class="width-120" ng-cloak>{{tr.purQty | number:4}}</td>
+													<td class="width-120" ng-cloak>{{tr.unitCost | number:6}}</td>
+													<td class="width-120" ng-cloak>{{tr.factor | number:4}}</td>
+													<td class="width-120" ng-cloak>{{tr.totalCost | number:6}}</td>
+													<td class="width-120" ng-cloak>{{tr.disPer | number:5}}</td>
+													<td class="width-120" ng-cloak>{{tr.disDol | number:2}}</td>
+													<td class="width-120" ng-cloak>{{tr.vatPer | number:5}}</td>
+													<td class="width-120" ng-cloak>{{tr.vatDol | number:2}}</td>
+													<td class="width-120" ng-cloak>{{tr.staxPer | number:5}}</td>
+													<td class="width-120" ng-cloak>{{tr.staxDol | number:2}}</td>
+													<td class="width-120" ng-cloak>{{tr.netTotalAmt | number:2}}</td>
+												</tr>
+											</tbody>
+										</table>
 									</div>
 								</div>
 							</div>
@@ -581,8 +620,6 @@
 							    "transId" : transId
 							}
 						}).success(function(response) {
-							
-						//	dis(response.DATA)
 							
 							$scope.transView = [];
 							$scope.purchaseInvoice = [];

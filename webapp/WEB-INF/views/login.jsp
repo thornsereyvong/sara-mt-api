@@ -97,7 +97,7 @@
 						},
 					}).success(function(response) {		
 						$scope.databases = response.DATA;
-						setTimeout(function(){ 	$("#company").val("balancikapos_class12345CRM NEW 2017"); },1000);							
+						setTimeout(function(){ 	$("#company").val("Lab Balancika AME (Main)"); },1000);							
 					});
 				};
 			}]);
