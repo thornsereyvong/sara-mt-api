@@ -50,6 +50,8 @@ public class PurchaseInvoiceServiceImpl implements PurchaseInvoiceService{
 					pur.setTotalVAT(rs.getDouble("TotalVTax"));
 					pur.setNetTotalAmt(rs.getDouble("NetTotalAmt"));
 					pur.setTotalTax(rs.getDouble("TotalTax"));
+					pur.setTotalAmt(rs.getDouble("TotalAmt"));
+					pur.setPmtToDate(rs.getDouble("PmtToDate"));
 					pur.setClassCode(new Class(rs.getString("ClassID"), rs.getString("ClassName"), 0));
 					pur.setVendor(new Vendor(rs.getString("vendID"), rs.getString("VendName")));
 				}
@@ -70,7 +72,7 @@ public class PurchaseInvoiceServiceImpl implements PurchaseInvoiceService{
 				purDetail.setStaxPer(rs.getDouble("STaxPer"));
 				purDetail.setVatDol(rs.getDouble("VTaxDol"));
 				purDetail.setVatPer(rs.getDouble("VTaxPer"));
-				purDetail.setDisDol(rs.getDouble("NetTotalAmtDetail"));
+				purDetail.setNetTotalAmt(rs.getDouble("NetTotalAmtDetail"));
 				purDetailList.add(purDetail);
 			}
 			pur.setPurchaseDetail(purDetailList);
