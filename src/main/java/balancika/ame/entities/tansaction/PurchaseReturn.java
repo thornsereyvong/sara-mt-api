@@ -6,12 +6,10 @@ import java.util.List;
 import balancika.ame.entities.maintain.Vendor;
 import balancika.ame.entities.setting.Class;
 
-public class PurchaseInvoice {
-	private String purchaseId;
+public class PurchaseReturn {
+	private String purchaseReturnId;
 	private String reference;
-	private  Date purchaseDate;
-	private  Date dueDate;
-	private  String purchaseType;
+	private  Date purchaseReturnDate;
 	private  String postStatus;
 	private  Vendor vendor;
 	private  String remark;
@@ -24,27 +22,12 @@ public class PurchaseInvoice {
 	private double totalVAT;
 	private double netTotalAmt;
 	private double totalTax;
-	private double pmtToDate;
-	List<PurchaseInvoiceDetail> purchaseDetail;
-	
-	
-	public double getPmtToDate() {
-		return pmtToDate;
+	private List<PurchaseReturnDetail> purchaseReturnDetail;
+	public String getPurchaseReturnId() {
+		return purchaseReturnId;
 	}
-	public void setPmtToDate(double pmtToDate) {
-		this.pmtToDate = pmtToDate;
-	}
-	public double getTotalAmt() {
-		return totalAmt;
-	}
-	public void setTotalAmt(double totalAmt) {
-		this.totalAmt = totalAmt;
-	}
-	public String getPurchaseId() {
-		return purchaseId;
-	}
-	public void setPurchaseId(String purchaseId) {
-		this.purchaseId = purchaseId;
+	public void setPurchaseReturnId(String purchaseReturnId) {
+		this.purchaseReturnId = purchaseReturnId;
 	}
 	public String getReference() {
 		return reference;
@@ -52,24 +35,12 @@ public class PurchaseInvoice {
 	public void setReference(String reference) {
 		this.reference = reference;
 	}
-	public Date getPurchaseDate() {
-		return purchaseDate;
+	public Date getPurchaseReturnDate() {
+		return purchaseReturnDate;
 	}
-	public void setPurchaseDate(Date purchaseDate) {
-		this.purchaseDate = purchaseDate;
+	public void setPurchaseReturnDate(Date purchaseReturnDate) {
+		this.purchaseReturnDate = purchaseReturnDate;
 	}
-	public Date getDueDate() {
-		return dueDate;
-	}
-	public void setDueDate(Date dueDate) {
-		this.dueDate = dueDate;
-	}
-	public String getTransactionType() {
-		return purchaseType;
-	}
-	public void setTransactionType(String transactionType) {
-		this.purchaseType = transactionType;
-	}	
 	public String getPostStatus() {
 		return postStatus;
 	}
@@ -81,12 +52,6 @@ public class PurchaseInvoice {
 	}
 	public void setVendor(Vendor vendor) {
 		this.vendor = vendor;
-	}
-	public String getPurchaseType() {
-		return purchaseType;
-	}
-	public void setPurchaseType(String purchaseType) {
-		this.purchaseType = purchaseType;
 	}
 	public String getRemark() {
 		return remark;
@@ -111,6 +76,12 @@ public class PurchaseInvoice {
 	}
 	public void setDisInvPer(double disInvPer) {
 		this.disInvPer = disInvPer;
+	}
+	public double getTotalAmt() {
+		return totalAmt;
+	}
+	public void setTotalAmt(double totalAmt) {
+		this.totalAmt = totalAmt;
 	}
 	public double getTotalDis() {
 		return totalDis;
@@ -142,13 +113,12 @@ public class PurchaseInvoice {
 	public void setTotalTax(double totalTax) {
 		this.totalTax = totalTax;
 	}
-	public List<PurchaseInvoiceDetail> getPurchaseDetail() {
-		return purchaseDetail;
+	public List<PurchaseReturnDetail> getPurchaseReturnDetail() {
+		return purchaseReturnDetail;
 	}
-	public void setPurchaseDetail(List<PurchaseInvoiceDetail> purchaseDetail) {
-		this.purchaseDetail = purchaseDetail;
+	public void setPurchaseReturnDetail(List<PurchaseReturnDetail> purchaseReturnDetail) {
+		this.purchaseReturnDetail = purchaseReturnDetail;
 	}
-	
 	
 	
 }

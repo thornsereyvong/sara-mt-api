@@ -371,6 +371,43 @@
 											</tbody>
 										</table>
 									</div>
+									
+									<div class="clearfix"></div>
+									<br>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Purchase</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseInvoice.totalAmt | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Invoice Discount</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseInvoice.disInvDol | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Net Invoice</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseInvoice.netTotalAmt | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Payment to Date</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseInvoice.pmtToDate | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Net Amount Due</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseInvoice.netTotalAmt | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
 								</div>
 							</div>
 							<div class="modal-footer">
@@ -620,7 +657,7 @@
 							    "transId" : transId
 							}
 						}).success(function(response) {
-							
+							dis(response.DATA)
 							$scope.transView = [];
 							$scope.purchaseInvoice = [];
 							if(response.MESSAGE == "SUCCESS"){
