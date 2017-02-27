@@ -5,11 +5,34 @@ import java.util.List;
 
 public class AuthorizationGroup {
 
+	
 	private String authGroupId;
 	private String authGroupName;
 	private String authGroupDesc;
 	private String authGroupCount;
 	private boolean statusCheck = false;
+	private String andOrCheck = "";
+	private String amountCheck = "";
+	private int ItemNumber;
+	
+	public int getItemNumber() {
+		return ItemNumber;
+	}
+	public void setItemNumber(int itemNumber) {
+		ItemNumber = itemNumber;
+	}
+	public String getAndOrCheck() {
+		return andOrCheck;
+	}
+	public void setAndOrCheck(String andOrCheck) {
+		this.andOrCheck = andOrCheck;
+	}
+	public String getAmountCheck() {
+		return amountCheck;
+	}
+	public void setAmountCheck(String amountCheck) {
+		this.amountCheck = amountCheck;
+	}
 	public boolean isStatusCheck() {
 		return statusCheck;
 	}

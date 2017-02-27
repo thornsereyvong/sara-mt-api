@@ -35,7 +35,7 @@ public class PurchaseInvoiceController {
 			map.put("STATUS", HttpStatus.OK.value());
 			map.put("DATA", purchase);
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
-		}	
+		}		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);

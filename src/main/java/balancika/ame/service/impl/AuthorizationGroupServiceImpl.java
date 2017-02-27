@@ -38,6 +38,7 @@ public class AuthorizationGroupServiceImpl implements AuthorizationGroupService 
 			cstmt.setString(2, para2);	
 			ResultSet rs = cstmt.executeQuery();
 			ArrayList<AuthorizationGroup> arrauthGro = new ArrayList<AuthorizationGroup>();
+			int i = 1;
 			while(rs.next()){
 				authGroup = new AuthorizationGroup();
 				
@@ -45,7 +46,10 @@ public class AuthorizationGroupServiceImpl implements AuthorizationGroupService 
 				authGroup.setAuthGroupName(rs.getString("AuthGroup_Name"));
 				authGroup.setAuthGroupDesc(rs.getString("AuthGroup_Description"));
 				authGroup.setAuthGroupCount(rs.getString("Count"));	
+				authGroup.setItemNumber(i);
 				arrauthGro.add(authGroup);
+				
+				i++;
 			}
 			rs.close();			
 			return arrauthGro;

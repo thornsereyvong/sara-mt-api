@@ -33,8 +33,7 @@
 						<div class="col-sm-12">
 							<button style="margin-top: 10px;" data-toggle="modal" data-target="#myModal" class="btn btn-default">
 								<i class="glyphicon glyphicon-plus"></i> Create
-							</button>
-							
+							</button>	
 						</div>
 					</div>
 					<div class="box-body">
