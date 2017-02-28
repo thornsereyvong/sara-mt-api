@@ -113,7 +113,7 @@
 			       <div class="col-sm-6">
 			       		<label>Authorization Type</label>
 			       		<div class="form-group">
-			       			<select class="form-control" id="authType" name="authType" ng-change="changeType()" ng-model="sAuthType" >
+			       			<select class="form-control " id="authType" name="authType" ng-change="changeType()" ng-model="sAuthType" >
 			       				<option value="">-- Select Type</option>
 			       				<option value="Individual">Individual</option>
 			       				<option value="Group">Group</option>
@@ -134,8 +134,8 @@
 			       
 			        <div class="col-sm-6" id="div_amount">
 			       		<label>Authorization Amount</label>
-			       		<div class="form-group">
-			       			<input type="text" class="form-control" id="authAmount" name="authAmount"> 
+			       		<div class="form-group" id="divAthAmountIndividual">
+			       			<input type="text" class="form-control" ng-model="authAmount" ng-change="changeAuthAmountIndi()"  id="authAmount" name="authAmount"> 
 			       		</div>
 			       </div>
 			       
@@ -187,8 +187,20 @@
 										<td ng-cloak>{{trs.authGroupId}}</td>
 										<td ng-cloak>{{trs.authGroupName}}</td>	
 										<td ng-cloak>{{trs.authGroupCount}}</td>	
-										<td ng-cloak><select class="form-control"  id="chrAuthAndOr{{$index}}" name="nameAuthAndOr{{$index}}" ><option value="">-- And / Or --</option><option value="And">And</option><option value="Or">Or</option></select></td>	
-										<td ng-cloak><input type="text"  id="chrAuthAmount{{$index}}" name="nameAuthAmount{{$index}}" class="form-control"></td>					
+										<td ng-cloak>
+											<div class="form-group" style="margin-bottom: 0;" id="divAuthAndOr{{trs.itemNumber}}">
+												<select class="form-control" style='padding-right: 18.5px;' ng-change="andOrCheckAg(trs.itemNumber)"; ng-model="trs.andOrCheck" id="chrAuthAndOr{{trs.itemNumber}}" data-index="{{$index}}" name="nameAuthAndOr{{trs.itemNumber}}" >
+													<option value="">-- And / Or --</option>
+													<option value="And">And</option>
+													<option value="Or">Or</option>
+												</select>
+											</div>
+										</td>	
+										<td ng-cloak>
+											<div class="form-group" style="margin-bottom: 0;" id="divAuthAmount{{trs.itemNumber}}">
+												<input type="text" ng-disabled="((trs.statusCheck == true) && trs.andOrCheck == 'Or')" ng-change="amountCheckAg(trs.itemNumber)" ng-model="trs.amountCheck" id="chrAuthAmount{{trs.itemNumber}}" data-index="{{$index}}" name="nameAuthAmount{{trs.itemNumber}}" class="form-control">
+											</div>
+										</td>					
 									</tr> 
 			     			</tbody>
 			     			
@@ -309,6 +321,31 @@
 				    $scope.reverse = !$scope.reverse;
 				};
 
+				$scope.setErrorField = function(id,message){
+					
+					var i = '<i class="form-control-feedback bv-no-label glyphicon glyphicon-remove" data-bv-icon-for="'+id+'" style="display: block;"></i>';
+					var small = '<small class="help-block" data-bv-validator="notEmpty" data-bv-for="'+id+'" data-bv-result="INVALID" style="">'+message+'</small>';
+					$("#"+id).find("i").remove();
+					$("#"+id).find("small").remove();
+					$("#"+id).removeClass("form-group has-feedback has-success").addClass("form-group has-feedback has-error");
+					$("#"+id).append(i+ small);
+				}
+
+				$scope.setSuccessField = function(id){
+					var i = '<i class="form-control-feedback bv-no-label glyphicon glyphicon-ok" data-bv-icon-for="'+id+'" style="display: block;"></i>';
+					//var small = '<small class="help-block" data-bv-validator="notEmpty" data-bv-for="salStartDate" data-bv-result="INVALID" style="">The start date greater this month ! </small>';
+					$("#"+id).find("i").remove();
+					$("#"+id).find("small").remove();
+					$("#"+id).removeClass("form-group has-feedback has-error").addClass("form-group has-feedback has-success");
+					$("#"+id).append(i);
+				}
+
+				$scope.setNomallField = function(id){
+					$("#"+id).removeClass("has-error");
+					$("#"+id).removeClass("has-success");
+					$("#"+id).find("i").remove();
+					$("#"+id).find("small").remove();
+				}
 
 				$scope.getEvent = function(){
 					var getEv = getValueStringById("btn_save");
@@ -323,12 +360,39 @@
 				$scope.ckRowClick = function(index){
 					index--;
 					$scope.emps[index].statusCheck = !$scope.emps[index].statusCheck;
+
+					var countObjEmp = Object.keys($scope.emps).length;
+					var countStatus = 0;
+					for(var i=0;i < countObjEmp ;i++){
+						if($scope.emps[i].statusCheck == true){
+							countStatus++;
+						}	
+					}
+					if(isNaN($scope.authAmount)){
+						$scope.setErrorField("divAthAmountIndividual","The authorization amount can not input string !");
+					}else{
+						
+						if(parseInt(countStatus) < parseInt($scope.authAmount)){
+							$scope.setErrorField("divAthAmountIndividual","Please check employee equal or greater than authorization amount  !");
+						}else{
+							$scope.setSuccessField("divAthAmountIndividual");
+						}
+					}
+					
 				}
 
 				$scope.ckRowClickAuth = function(index){
 					index--;
 					$scope.authorizationGroup[index].statusCheck = !$scope.authorizationGroup[index].statusCheck;
-			
+					if($scope.authorizationGroup[index].statusCheck == true){
+						$scope.authorizationGroup[index].andOrCheck = "";
+						$scope.authorizationGroup[index].amountCheck = "";
+					}else{
+						$scope.authorizationGroup[index].andOrCheck = "";
+						$scope.authorizationGroup[index].amountCheck = "";
+						$scope.setNomallField("divAuthAndOr"+$scope.authorizationGroup[index].itemNumber);
+						$scope.setNomallField("divAuthAmount"+$scope.authorizationGroup[index].itemNumber);
+					}
 				}
 				
 				/* $scope.ckrAll = function(){					
@@ -359,23 +423,9 @@
 			
 				
 
-				$scope.listAuthorizationGroup = function(){
-					$http({
-			 			method: 'GET',
-					    url: "${pageContext.request.contextPath}/rest/authorizationgroup/list",
-					    headers: {
-					    	'Accept': 'application/json',
-					        'Content-Type': 'application/json'
-					    }	    
-					}).success(function(response) {
-						$scope.authorizationGroup = [];
-						if(response.MESSAGE == "SUCCESS"){
-							$scope.authorizationGroup = response.DATA;	
-						}
-					});
-				}
 				
-
+				
+	
 				$scope.changeType = function(){
 					$scope.sAuthAndOr = "";
 					$(".select2").select2();
@@ -447,48 +497,63 @@
 					$scope.currentPage = 1;
 					$scope.pageSize.row = $scope.pageSize.rows[1].value;
 					$scope.listEmployee();
+					$("#div_emp").css("display","none");
+					$("#div_group").css("display","none");
+					$scope.setNomallField("divAthAmountIndividual");
 				}
-
-				$scope.listEmployee = function(){
-					$http({
-			 			method: 'GET',
-					    url: "${pageContext.request.contextPath}/rest/employee/list",
-					    headers: {
-					    	'Accept': 'application/json',
-					        'Content-Type': 'application/json'
-					    }	    
-					}).success(function(response) {
-						$scope.emps = [];
-						if(response.MESSAGE == "SUCCESS"){
-							$scope.emps = response.DATA;
-						}
-					});
-				}
-
 
 				
-				
-				$scope.listAuthorization = function(){
-					$http({
-			 			method: 'GET',
-					    url: "${pageContext.request.contextPath}/rest/authorization/list",
-					    headers: {
-					    	'Accept': 'application/json',
-					        'Content-Type': 'application/json'
-					    }	    
-					}).success(function(response) {
-						$scope.auth = [];
-						if(response.MESSAGE == "SUCCESS"){
-							$scope.auth = response.DATA;
-							
-						}
-					});
-				}
 				
 				$scope.createauth = function(){
 					$('#form_authori').bootstrapValidator('revalidateField', 'authAndOr');
 					$('#form_authori').bootstrapValidator('revalidateField', 'authAmount');
+
+					
+					
+
+					
 					$('#form_authori').data('bootstrapValidator').validate();
+					var addauth = $("#form_authori").data('bootstrapValidator').validate().isValid();
+					if(addauth){
+						
+						if($scope.sAuthType == "Individual"){
+							
+							
+							
+						}else if($scope.sAuthType == "Group"){
+							var countObj = Object.keys($scope.authorizationGroup).length;
+							for(var i = 0; i < countObj; i++){	
+						
+								if($scope.authorizationGroup[i].statusCheck == true){
+									if($scope.authorizationGroup[i].andOrCheck == "And"){
+										$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber);
+										if($scope.authorizationGroup[i].amountCheck != ""){
+											if (isNaN($scope.authorizationGroup[i].amountCheck)) {
+												$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount can not input string !");
+											}else{
+												
+												if(parseInt($scope.authorizationGroup[i].amountCheck) < parseInt($scope.authorizationGroup[i].authGroupCount)){
+													$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount can not small than employee in group "+ $scope.authorizationGroup[i].authGroupName+" string");
+												}else{
+													$scope.setSuccessField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber);
+												}
+											}	
+										}else {
+											$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount is required and can not be empty!");
+										}
+									}else if($scope.authorizationGroup[i].andOrCheck == "Or"){
+										$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber);
+										
+									}else{
+										$scope.setErrorField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber,"The authorization and \ or is required and can not be empty!");
+									}
+								}
+								
+							}//close for object 
+							
+						}//close auth group
+						
+					}
 					/* var listEmpDetail = [];
 					
 					for(var i=0; i< Object.keys($scope.emps).length ;i++){		
@@ -530,6 +595,89 @@
 					
 				}
 
+				
+
+				$scope.changeAuthAmountIndi = function(){
+					if($scope.authAmount == ""){
+						$scope.setErrorField("divAthAmountIndividual","The authorization amount is required and can not be empty!");
+					}else if($scope.authAmount != ""){
+						
+						var countObjEmp = Object.keys($scope.emps).length;
+						var countStatus = 0;
+						for(var i=0;i < countObjEmp ;i++){
+							if($scope.emps[i].statusCheck == true){
+								countStatus++;
+							}	
+						}
+					
+						if(isNaN($scope.authAmount)){
+							$scope.setErrorField("divAthAmountIndividual","The authorization amount can not input string !");
+						}else{
+							
+							if(parseInt(countStatus) >= parseInt($scope.authAmount)){	
+								$scope.setSuccessField("divAthAmountIndividual");
+							}else{
+								$scope.setErrorField("divAthAmountIndividual","Please check employee equal or greater than authorization amount  !");				
+							}
+						}
+						
+						
+					}else{
+
+					}
+				}
+				
+				$scope.andOrCheckAg = function(item){
+					var countObj = Object.keys($scope.authorizationGroup).length;
+					var itemID = $("#chrAuthAndOr"+item).val();
+						if($scope.authorizationGroup[item-1].statusCheck == true){
+							if($scope.authorizationGroup[item-1].andOrCheck == "And"){
+								$scope.authorizationGroup[item-1].amountCheck = "";
+								$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[item-1].itemNumber);
+							}else if($scope.authorizationGroup[item-1].andOrCheck == "Or"){
+								$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[item-1].itemNumber);
+								$scope.setNomallField("divAuthAmount"+$scope.authorizationGroup[item-1].itemNumber);
+								$scope.authorizationGroup[item-1].amountCheck = "";
+							}else {
+								$scope.setErrorField("divAuthAndOr"+$scope.authorizationGroup[item-1].itemNumber,"The authorization and \ or is required and can not be empty!");
+							}
+						}else{
+							if($scope.authorizationGroup[item-1].andOrCheck == ""){
+								$scope.setNomallField("divAuthAndOr"+$scope.authorizationGroup[item-1].itemNumber);
+							}
+						}
+					
+				}
+
+			
+
+				$scope.amountCheckAg = function(item){
+					var itemID = "";
+					var itemID = $("#chrAuthAmount"+item).val();
+					if($scope.authorizationGroup[item-1].statusCheck == true){
+						if($scope.authorizationGroup[item-1].andOrCheck == "And"){
+							if($scope.authorizationGroup[item-1].amountCheck != ""){
+								if (isNaN($scope.authorizationGroup[item-1].amountCheck)) {
+									$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[item-1].itemNumber,"The authorization amount can not input string !");
+								}else{
+									
+									if(parseInt($scope.authorizationGroup[item-1].amountCheck) < parseInt($scope.authorizationGroup[item-1].authGroupCount)){
+										$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[item-1].itemNumber,"The authorization amount can not small than employee in group "+ $scope.authorizationGroup[item-1].authGroupName+" string");
+									}else{
+										$scope.setSuccessField("divAuthAmount"+$scope.authorizationGroup[item-1].itemNumber);
+									}
+								}	
+							}else {
+								$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[item-1].itemNumber,"The authorization amount is required and can not be empty!");
+							}
+						}
+					}else{
+						if($scope.authorizationGroup[item-1].amountCheck == ""){
+							$scope.setNomallField("divAuthAmount"+$scope.authorizationGroup[item-1].itemNumber);
+						}
+					}
+					
+				}
 
 				$scope.updateauth = function(){
 					var tr = $("#data-emp tr");
@@ -619,8 +767,57 @@
 					});
 				}
 
+				$scope.listEmployee = function(){
+					$http({
+			 			method: 'GET',
+					    url: "${pageContext.request.contextPath}/rest/employee/list",
+					    headers: {
+					    	'Accept': 'application/json',
+					        'Content-Type': 'application/json'
+					    }	    
+					}).success(function(response) {
+						$scope.emps = [];
+						if(response.MESSAGE == "SUCCESS"){
+							$scope.emps = response.DATA;
+						}
+					});
+				}
 
 
+				
+				
+				$scope.listAuthorization = function(){
+					$http({
+			 			method: 'GET',
+					    url: "${pageContext.request.contextPath}/rest/authorization/list",
+					    headers: {
+					    	'Accept': 'application/json',
+					        'Content-Type': 'application/json'
+					    }	    
+					}).success(function(response) {
+						$scope.auth = [];
+						if(response.MESSAGE == "SUCCESS"){
+							$scope.auth = response.DATA;
+							
+						}
+					});
+				}
+
+				$scope.listAuthorizationGroup = function(){
+					$http({
+			 			method: 'GET',
+					    url: "${pageContext.request.contextPath}/rest/authorizationgroup/list",
+					    headers: {
+					    	'Accept': 'application/json',
+					        'Content-Type': 'application/json'
+					    }	    
+					}).success(function(response) {
+						$scope.authorizationGroup = [];
+						if(response.MESSAGE == "SUCCESS"){
+							$scope.authorizationGroup = response.DATA;	
+						}
+					});
+				}
 
 
 				
@@ -633,7 +830,7 @@
 		</script>	
 		
 		<script type="text/javascript">
-
+			
 		/* 
 			var indexAuth = 1;
 			
@@ -742,7 +939,7 @@
 								}
 							}
 						},
-						authAmount: {
+						/* authAmount: {
 							validators: {
 								notEmpty: {
 									message: 'The authorization amount is required and can not be empty!'
@@ -758,7 +955,7 @@
 				                    decimalSeparator: '.'
 				                }
 							}
-						},
+						}, */
 						authType: {
 							validators: {
 								notEmpty: {
