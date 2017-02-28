@@ -6,11 +6,10 @@ import java.util.List;
 import balancika.ame.entities.maintain.Vendor;
 import balancika.ame.entities.setting.Class;
 
-public class PurchaseReturn {
-	private String purchaseReturnId;
-	private String purchaseId;
+public class DebitNote {
+	private String entryId;
 	private String reference;
-	private  Date purchaseReturnDate;
+	private  Date debitNoteDate;
 	private  String postStatus;
 	private  Vendor vendor;
 	private  String remark;
@@ -25,26 +24,13 @@ public class PurchaseReturn {
 	private double totalTax;
 	private double totalAppPay;
 	private double netTotalInvoice;
-	private List<PurchaseReturnDetail> purchaseReturnDetail;
+	private List<DebitNoteDetail> debitNoteDetail;
 	
-	
-	public double getNetTotalInvoice() {
-		return netTotalInvoice;
+	public String getEntryId() {
+		return entryId;
 	}
-	public void setNetTotalInvoice(double netTotalInvoice) {
-		this.netTotalInvoice = netTotalInvoice;
-	}
-	public String getPurchaseReturnId() {
-		return purchaseReturnId;
-	}
-	public void setPurchaseReturnId(String purchaseReturnId) {
-		this.purchaseReturnId = purchaseReturnId;
-	}
-	public String getPurchaseId() {
-		return purchaseId;
-	}
-	public void setPurchaseId(String purchaseId) {
-		this.purchaseId = purchaseId;
+	public void setEntryId(String entryId) {
+		this.entryId = entryId;
 	}
 	public String getReference() {
 		return reference;
@@ -52,11 +38,11 @@ public class PurchaseReturn {
 	public void setReference(String reference) {
 		this.reference = reference;
 	}
-	public Date getPurchaseReturnDate() {
-		return purchaseReturnDate;
+	public Date getDebitNoteDate() {
+		return debitNoteDate;
 	}
-	public void setPurchaseReturnDate(Date purchaseReturnDate) {
-		this.purchaseReturnDate = purchaseReturnDate;
+	public void setDebitNoteDate(Date debitNoteDate) {
+		this.debitNoteDate = debitNoteDate;
 	}
 	public String getPostStatus() {
 		return postStatus;
@@ -130,17 +116,23 @@ public class PurchaseReturn {
 	public void setTotalTax(double totalTax) {
 		this.totalTax = totalTax;
 	}
-	public List<PurchaseReturnDetail> getPurchaseReturnDetail() {
-		return purchaseReturnDetail;
-	}
-	public void setPurchaseReturnDetail(List<PurchaseReturnDetail> purchaseReturnDetail) {
-		this.purchaseReturnDetail = purchaseReturnDetail;
-	}
 	public double getTotalAppPay() {
 		return totalAppPay;
 	}
 	public void setTotalAppPay(double totalAppPay) {
 		this.totalAppPay = totalAppPay;
+	}
+	public double getNetTotalInvoice() {
+		return netTotalInvoice;
+	}
+	public void setNetTotalInvoice(double netTotalInvoice) {
+		this.netTotalInvoice = netTotalInvoice;
+	}
+	public List<DebitNoteDetail> getDebitNoteDetail() {
+		return debitNoteDetail;
+	}
+	public void setDebitNoteDetail(List<DebitNoteDetail> debitNoteDetail) {
+		this.debitNoteDetail = debitNoteDetail;
 	}
 	
 	

@@ -417,6 +417,299 @@
 					</div>
 				</div>
 				
+				<div class="modal fade modal-default" id="frmPurchaseReturnInvoice" role="dialog">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><b>PURCHASE RETURN INVOICE</b></h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Entry No</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseReturnInvoice.purchaseReturnId}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Post Status</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseReturnInvoice.postStatus}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Purchase Invoice No.</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseReturnInvoice.purchaseId}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Reference</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseReturnInvoice.reference}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Return Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{purchaseReturnInvoice.purchaseReturnDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6">
+										<label class="font-label">Vendor</label>
+										<div class="form-group">
+											<input type="text" value="[{{purchaseReturnInvoice.vendor.vendorId}}] {{purchaseReturnInvoice.vendor.vendorName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Class</label>
+										<div class="form-group">
+											<input type="text" value="[{{purchaseReturnInvoice.classCode.classId}}] {{purchaseReturnInvoice.classCode.className}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<label class="font-label">Remark</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseReturnInvoice.remark}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12 table-responsive">
+										<table class="table table-hover">
+											<tr>
+												<th>Item ID</th>
+												<th>Item Name</th>
+												<th>Location ID</th>
+												<th>Class ID</th>
+												<th>UOM</th>
+												<th>Quantity</th>
+												<th>Unit Cost</th>
+												<th>Price Factor</th>
+												<th>Total Amount</th>
+												<th>Discount %</th>
+												<th>Discount $</th>
+												<th>VAT %</th>
+												<th>VAT $</th>
+												<th>ST %</th>
+												<th>ST $</th>
+												<th>Net Total Amount</th>
+											</tr>
+											<tbody>
+												<tr ng-repeat="tr in purchaseReturnInvoice.purchaseReturnDetail" >
+													<td ng-cloak>{{tr.item.itemId}}</td>
+													<td ng-cloak>{{tr.item.itemName}}</td>
+													<td ng-cloak>{{tr.location.locationId}}</td>
+													<td ng-cloak>{{tr.classCode.classId}}</td>
+													<td ng-cloak>{{tr.uom.uomId}}</td>
+													<td ng-cloak>{{tr.retQty | number:4}}</td>
+													<td ng-cloak>{{tr.unitCost | number:6}}</td>
+													<td ng-cloak>{{tr.factor | number:4}}</td>
+													<td ng-cloak>{{tr.totalCost | number:6}}</td>
+													<td ng-cloak>{{tr.disPer | number:5}}</td>
+													<td ng-cloak>{{tr.disDol | number:2}}</td>
+													<td ng-cloak>{{tr.vatPer | number:5}}</td>
+													<td ng-cloak>{{tr.vatDol | number:2}}</td>
+													<td ng-cloak>{{tr.staxPer | number:5}}</td>
+													<td ng-cloak>{{tr.staxDol | number:2}}</td>
+													<td ng-cloak>{{tr.netTotalAmt | number:2}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									
+									<div class="clearfix"></div>
+									<br>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Return Purchase</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseReturnInvoice.totalAmt | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Invoice Discount</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseReturnInvoice.disInvDol | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Net Invoice</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseReturnInvoice.netTotalInvoice | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Applied Payment</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseReturnInvoice.totalAppPay | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Net Amount Due</label>
+										<div class="form-group">
+											<input type="text" value="{{purchaseReturnInvoice.netTotalAmt | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade modal-default" id="frmAPDebitNote" role="dialog">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><b>AP DEBIT NOTE</b></h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Entry No</label>
+										<div class="form-group">
+											<input type="text" value="{{apDebitNote.entryId}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Post Status</label>
+										<div class="form-group">
+											<input type="text" value="{{apDebitNote.postStatus}}" disabled class="form-control" >
+										</div>
+									</div>
+									
+									<div class="col-sm-6">
+										<label class="font-label">Reference</label>
+										<div class="form-group">
+											<input type="text" value="{{apDebitNote.reference}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Debit Note Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{apDebitNote.debitNoteDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6">
+										<label class="font-label">Vendor</label>
+										<div class="form-group">
+											<input type="text" value="[{{apDebitNote.vendor.vendorId}}] {{apDebitNote.vendor.vendorName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Class</label>
+										<div class="form-group">
+											<input type="text" value="[{{apDebitNote.classCode.classId}}] {{apDebitNote.classCode.className}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<label class="font-label">Remark</label>
+										<div class="form-group">
+											<input type="text" value="{{apDebitNote.remark}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12 table-responsive">
+										<table class="table table-hover">
+											<tr>
+												<th>Item ID</th>
+												<th>Item Name</th>
+												<th>Location ID</th>
+												<th>Class ID</th>
+												<th>UOM</th>
+												<th>Quantity</th>
+												<th>Unit Cost</th>
+												<th>Price Factor</th>
+												<th>Total Amount</th>
+												<th>Discount %</th>
+												<th>Discount $</th>
+												<th>VAT %</th>
+												<th>VAT $</th>
+												<th>ST %</th>
+												<th>ST $</th>
+												<th>Net Total Amount</th>
+											</tr>
+											<tbody>
+												<tr ng-repeat="tr in apDebitNote.debitNoteDetail" >
+													<td ng-cloak>{{tr.item.itemId}}</td>
+													<td ng-cloak>{{tr.item.itemName}}</td>
+													<td ng-cloak>{{tr.location.locationId}}</td>
+													<td ng-cloak>{{tr.classCode.classId}}</td>
+													<td ng-cloak>{{tr.uom.uomId}}</td>
+													<td ng-cloak>{{tr.qty | number:4}}</td>
+													<td ng-cloak>{{tr.unitCost | number:6}}</td>
+													<td ng-cloak>{{tr.factor | number:4}}</td>
+													<td ng-cloak>{{tr.totalCost | number:6}}</td>
+													<td ng-cloak>{{tr.disPer | number:5}}</td>
+													<td ng-cloak>{{tr.disDol | number:2}}</td>
+													<td ng-cloak>{{tr.vatPer | number:5}}</td>
+													<td ng-cloak>{{tr.vatDol | number:2}}</td>
+													<td ng-cloak>{{tr.staxPer | number:5}}</td>
+													<td ng-cloak>{{tr.staxDol | number:2}}</td>
+													<td ng-cloak>{{tr.netTotalAmt | number:2}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									
+									<div class="clearfix"></div>
+									<br>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Return Purchase</label>
+										<div class="form-group">
+											<input type="text" value="{{apDebitNote.totalAmt | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Invoice Discount</label>
+										<div class="form-group">
+											<input type="text" value="{{apDebitNote.disInvDol | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Net Invoice</label>
+										<div class="form-group">
+											<input type="text" value="{{apDebitNote.netTotalInvoice | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Applied Payment</label>
+										<div class="form-group">
+											<input type="text" value="{{apDebitNote.totalAppPay | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Net Amount Due</label>
+										<div class="form-group">
+											<input type="text" value="{{apDebitNote.netTotalAmt | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
 				<div id="errors"></div>
 			</div>
 			<jsp:include page="${request.contextPath}/foot"></jsp:include>
@@ -660,18 +953,21 @@
 							dis(response.DATA)
 							$scope.transView = [];
 							$scope.purchaseInvoice = [];
-							if(response.MESSAGE == "SUCCESS"){
-								$scope.transView = response.DATA;				
+							$scope.purchaseReturnInvoice = [];
+							$scope.apDebitNote = [];
+							if(response.MESSAGE == "SUCCESS"){			
 								switch(transType) {
 									case "AP Invoice":
 										$scope.purchaseInvoice = response.DATA;
 										$("#frmPurchaseInvoice").modal({backdrop: 'static', keyboard: false});				
 										break;
 									case "AP Return Invoice": 
-										
+										$scope.purchaseReturnInvoice = response.DATA;
+										$("#frmPurchaseReturnInvoice").modal({backdrop: 'static', keyboard: false});
 								    	break;
 								    case "AP Debit Note":
-								    	
+								    	$scope.apDebitNote = response.DATA;
+										$("#frmAPDebitNote").modal({backdrop: 'static', keyboard: false});
 								    	break;
 								    case "AP Payment":
 								    	
