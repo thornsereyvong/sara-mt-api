@@ -15,7 +15,21 @@ public class APPaymentDetail {
 	private String jId;
 	private Class classCode;
 	private double appliedAmt;
+	private double amountDue;
+	private double netAmountDue;
 	
+	public double getAmountDue() {
+		return amountDue;
+	}
+	public void setAmountDue(double amountDue) {
+		this.amountDue = amountDue;
+	}
+	public double getNetAmountDue() {
+		return netAmountDue;
+	}
+	public void setNetAmountDue(double netAmountDue) {
+		this.netAmountDue = netAmountDue;
+	}
 	public String getPmtId() {
 		return pmtId;
 	}
@@ -82,7 +96,5 @@ public class APPaymentDetail {
 	public void setPurchase(PurchaseInvoice purchase) {
 		this.purchase = purchase;
 	}
-	
-	
 	
 }
