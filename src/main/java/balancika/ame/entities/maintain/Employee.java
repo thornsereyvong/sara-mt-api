@@ -41,10 +41,13 @@ public class Employee {
 	public void setEmpEmail(String empEmail) {
 		this.empEmail = empEmail;
 	}
-	
-	
-	
-	
-	
+	public Employee() {
+		super();
+	}
+	public Employee(String empID, String empName) {
+		super();
+		this.empID = empID;
+		this.empName = empName;
+	}
 	
 }
