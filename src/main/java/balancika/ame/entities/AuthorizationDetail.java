@@ -1,6 +1,5 @@
 package balancika.ame.entities;
 
-import java.util.List;
 
 public class AuthorizationDetail {
 	
@@ -9,14 +8,9 @@ public class AuthorizationDetail {
 	private String authGroupId;
 	private String authGroupAndOr;
 	private String authGroupAmount;
-	private List<AuthorizationDetail> authDetail;
+
 	
-	public List<AuthorizationDetail> getAuthDetail() {
-		return authDetail;
-	}
-	public void setAuthDetail(List<AuthorizationDetail> authDetail) {
-		this.authDetail = authDetail;
-	}
+
 	public String getAuthId() {
 		return authId;
 	}

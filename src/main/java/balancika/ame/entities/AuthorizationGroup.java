@@ -15,6 +15,7 @@ public class AuthorizationGroup {
 	private String amountCheck = "";
 	private int ItemNumber;
 	
+	
 	public int getItemNumber() {
 		return ItemNumber;
 	}

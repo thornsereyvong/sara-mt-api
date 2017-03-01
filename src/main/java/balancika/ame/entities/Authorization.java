@@ -1,12 +1,22 @@
 package balancika.ame.entities;
 
+import java.util.List;
+
 public class Authorization {
 	private String authId;
 	private String authName;
 	private String authType;
 	private String authAndOr;
 	private String authAmount;
+	private List<AuthorizationDetail> authorizationDetail;
 	
+	
+	public List<AuthorizationDetail> getAuthorizationDetail() {
+		return authorizationDetail;
+	}
+	public void setAuthorizationDetail(List<AuthorizationDetail> authorizationDetail) {
+		this.authorizationDetail = authorizationDetail;
+	}
 	public String getAuthId() {
 		return authId;
 	}
