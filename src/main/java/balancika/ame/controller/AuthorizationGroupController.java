@@ -44,6 +44,7 @@ public class AuthorizationGroupController {
 			map.put("DATA", auth);
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
+	
 		
 		map.put("MESSAGE", "FAILED");
 		map.put("STATUS", HttpStatus.NOT_FOUND.value());
@@ -62,20 +63,15 @@ public class AuthorizationGroupController {
 				map.put("MESSAGE", "FAILED");
 				map.put("STATUS", HttpStatus.NOT_FOUND.value());
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
-			}else if(m.get("MESSAGE").equals("exist")){
-				map.put("MESSAGE", "EXIST");
-				map.put("STATUS", HttpStatus.OK.value());
-				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}else{
-				map.put("MESSAGE", "SUCCESS");
+				map.put("MESSAGE", m.get("MESSAGE"));
+				map.put("DESCRIPTION", m.get("DESCRIPTION"));
 				map.put("STATUS", HttpStatus.OK.value());
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}
 			
-		
-			
 		}catch (Exception e) {
-			map.put("message", "fail");
+			map.put("MESSAGE", "fail");
 			e.printStackTrace();
 		}
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.CREATED);
@@ -91,23 +87,20 @@ public class AuthorizationGroupController {
 		try {
 			
 			Map<String, Object> m = authService.updateAuthorizationGroup(authGroup, dataSource);
-			System.out.println(m);
+
 			if(m.get("MESSAGE") == null || m.get("MESSAGE").equals("")){
 				map.put("MESSAGE", "FAILED");
 				map.put("STATUS", HttpStatus.NOT_FOUND.value());
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
-			}else if(m.get("MESSAGE").equals("exist")){
-				map.put("MESSAGE", "EXIST");
-				map.put("STATUS", HttpStatus.OK.value());
-				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}else{
-				map.put("MESSAGE", "SUCCESS");
+				map.put("MESSAGE", m.get("MESSAGE"));
+				map.put("DESCRIPTION", m.get("DESCRIPTION"));
 				map.put("STATUS", HttpStatus.OK.value());
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}
 			
 		}catch (Exception e) {
-			map.put("message", "fail");
+			map.put("MESSAGE", "fail");
 			e.printStackTrace();
 		}
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.CREATED);
@@ -128,7 +121,8 @@ public class AuthorizationGroupController {
 				map.put("STATUS", HttpStatus.NOT_FOUND.value());
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}else{
-				map.put("MESSAGE", "SUCCESS");
+				map.put("MESSAGE", m.get("MESSAGE"));
+				map.put("DESCRIPTION", m.get("DESCRIPTION"));
 				map.put("STATUS", HttpStatus.OK.value());
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}
@@ -136,7 +130,7 @@ public class AuthorizationGroupController {
 		
 			
 		}catch (Exception e) {
-			map.put("message", "fail");
+			map.put("MESSAGE", "fail");
 			e.printStackTrace();
 		}
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);
@@ -150,6 +144,7 @@ public class AuthorizationGroupController {
 		try {
 			
 			map = authService.getAuthorizationGroup(ID, dataSource);
+			
 			if(map.get("MESSAGE") == null || map.get("MESSAGE").equals("FAIL")){
 				map.put("MESSAGE", "FAILED");
 				map.put("STATUS", HttpStatus.NOT_FOUND.value());
@@ -162,7 +157,7 @@ public class AuthorizationGroupController {
 			
 			
 		}catch (Exception e) {
-			map.put("message", "fail");
+			map.put("MESSAGE", "fail");
 			e.printStackTrace();
 		}
 		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.OK);

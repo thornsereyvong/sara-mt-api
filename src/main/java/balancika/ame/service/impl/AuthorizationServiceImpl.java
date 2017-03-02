@@ -261,9 +261,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 		        ResultSet rs4 = cstmt.getResultSet();
 		        List<AuthorizationGroup> TempArrAuthGro = new ArrayList<AuthorizationGroup>();
 		        int itemNumber =0;
+		        
 				while (rs4.next()) {
 					itemNumber++;
 					AuthorizationGroup arryAuthGroup = new AuthorizationGroup();
+					
 					boolean dataCheckGr = true;
 		        	
 		        	if(rs4.getString("AuthGroup_ID").equals(rs4.getString("Auth_GroupID")))
@@ -271,12 +273,11 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 		        	else
 		        		dataCheckGr = false;
 		        	
-		        	String groAndOr = "";
-		        	if(rs4.getString("Auth_GroupAmount").equals(null)){
-		        		groAndOr = "";
+		        	String checkAndOrAmount = "";
+		        	if(rs4.getString("Auth_GroupAndOr").equals("Or")){
+		        		checkAndOrAmount = "";
 		        	}else{
-		        		
-		        		
+		        		checkAndOrAmount = rs4.getString("Auth_GroupAmount");
 		        	}
 		        	
 					arryAuthGroup.setAuthGroupId(rs4.getString("AuthGroup_ID"));
@@ -284,7 +285,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 					arryAuthGroup.setAuthGroupDesc(rs4.getString("AuthGroup_Description"));
 					arryAuthGroup.setAuthGroupCount(rs4.getString("Count"));
 					arryAuthGroup.setAndOrCheck(rs4.getString("Auth_GroupAndOr"));
-					arryAuthGroup.setAmountCheck(rs4.getString("Auth_GroupAmount"));
+					arryAuthGroup.setAmountCheck(checkAndOrAmount);
 					arryAuthGroup.setStatusCheck(dataCheckGr);
 					arryAuthGroup.setItemNumber(itemNumber);
 					TempArrAuthGro.add(arryAuthGroup);
@@ -301,6 +302,92 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 			e.printStackTrace();
 		}
 		
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> updateAuthorization(MeDataSource dataSource, Authorization authori) throws SQLException {
+		try (Connection con = DBConnection.getConnection(dataSource)){
+			
+			CallableStatement cstmt = null;
+			
+			String AuthID = authori.getAuthId();
+			String AuthName = authori.getAuthName();
+			String Auth = "";
+			Auth += "Auth_ID='" + authori.getAuthId() + "',";
+			Auth += "Auth_Name='" + authori.getAuthName() + "',";
+			Auth += "Auth_Type='" + authori.getAuthType() + "',";
+			Auth += "Auth_AndOr='" + authori.getAuthAndOr() + "',";
+			if(authori.getAuthAndOr().toLowerCase().equals("and")){
+				Auth += "Auth_Amount='" + authori.getAuthAmount() + "'";
+			}else{
+				Auth += "Auth_Amount='" + 1 + "'";
+			}	
+			
+			String AuthDetail = "";
+			String AuthGroupID = "";
+			String AuthGroupAmount="";
+			if(authori.getAuthorizationDetail() != null){
+				for(AuthorizationDetail authorisationDetail : authori.getAuthorizationDetail()){
+					AuthDetail += "(";
+					AuthDetail += "'TempAuth_ID',";
+					AuthDetail += "'" + authorisationDetail.getAuthEmpId() + "',";
+					AuthDetail += "'" + authorisationDetail.getAuthGroupId() + "',";
+					AuthDetail += "'" + authorisationDetail.getAuthGroupAndOr() + "',";
+					if(authorisationDetail.getAuthGroupAndOr().toLowerCase().equals("and")){
+						AuthDetail += "'" + authorisationDetail.getAuthGroupAmount() + "'";
+					}else{
+						AuthDetail += "'" + 1 + "'";
+					}
+					AuthDetail += "),";
+					AuthGroupID += authorisationDetail.getAuthGroupId() + ",";
+					AuthGroupAmount += "" + authorisationDetail.getAuthGroupAmount() + ",";
+				}
+				if (AuthDetail != "") {
+					AuthDetail = AuthDetail.substring(0, AuthDetail.length() - 1);
+				}
+			}
+			
+			
+			
+			String sql = "{call spHRMUpdateAuthorisation(?,?,?,?,?,?,?,?,?,?)}";
+			cstmt = (CallableStatement) con.prepareCall(sql);
+			cstmt.setString(1, dataSource.getUserid());	
+			cstmt.setString(2, AuthID);
+			cstmt.setString(3, AuthName);
+			cstmt.setString(4, Auth);	
+			cstmt.setString(5, AuthDetail);
+			cstmt.setString(6, authori.getAuthType());	
+			cstmt.setString(7, authori.getAuthAmount());
+			cstmt.setLong(8,  authori.getAuthorizationDetail().size());	
+			cstmt.setString(9, AuthGroupID);
+			cstmt.setString(10, AuthGroupAmount);	
+			boolean results = cstmt.execute();
+			Map<String, Object> m = new HashMap<String, Object>();
+			while(results){
+				ResultSet rs = cstmt.getResultSet();
+				
+				 while (rs.next()) {
+					 m.put("MESSAGE", rs.getString("Exist"));
+		         }	 
+		         rs.close();
+		        
+		        results = cstmt.getMoreResults();
+		        ResultSet rs2 = cstmt.getResultSet();
+		        
+		        while (rs2.next()) {
+		        	 m.put("DESCRIPTION", rs2.getString("alert"));
+		         }	 
+		         rs.close();
+		         
+		         return m;
+			}
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	
 		return null;
 	}
 

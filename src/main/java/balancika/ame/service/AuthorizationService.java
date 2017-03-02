@@ -12,4 +12,5 @@ public interface AuthorizationService {
 	Map<String, Object> createAuthorization(MeDataSource dataSource, Authorization authori) throws SQLException;
 	Map<String, Object> deleteAuthorization(MeDataSource dataSource, String authId) throws SQLException;
 	Map<String, Object> getByIdAuthorization(MeDataSource dataSource, String authId) throws SQLException;
+	Map<String, Object> updateAuthorization(MeDataSource dataSource,  Authorization authori) throws SQLException;
 }

@@ -37,7 +37,7 @@
     <script src="${pageContext.request.contextPath}/resources/plugins/fastclick/fastclick.min.js"></script>
     <script src="${pageContext.request.contextPath}/resources/dist/js/app.min.js"></script>
     <script src="${pageContext.request.contextPath}/resources/dist/js/demo.js"></script>
-    
+    <script src="${pageContext.request.contextPath}/resources/jquery_confirm/jquery-confirm.js"></script>
     <script src="${pageContext.request.contextPath}/resources/js.mine/function.mine.js"></script>
   	<script>
     	$(function () {    	 
