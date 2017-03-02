@@ -1030,7 +1030,608 @@
 					</div>
 				</div>
 				
+				<div class="modal fade modal-default" id="frmAPInvoiceReturn" role="dialog">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><b>AP INVOICE RETURN</b></h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Entry No</label>
+										<div class="form-group">
+											<input type="text" value="{{apInvoiceReturn.saleReturnId}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Post Status</label>
+										<div class="form-group">
+											<input type="text" value="{{apInvoiceReturn.postStatus}}" disabled class="form-control" >
+										</div>
+									</div>									
+									<div class="col-sm-6">
+										<label class="font-label">Reference</label>
+										<div class="form-group">
+											<input type="text" value="{{apInvoiceReturn.reference}}" disabled class="form-control" >
+										</div>
+									</div>								
+									<div class="col-sm-6">
+										<label class="font-label">Sale Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{apInvoiceReturn.saleDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Due Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{apInvoiceReturn.dueDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Customer</label>
+										<div class="form-group">
+											<input type="text" value="[{{apInvoiceReturn.customer.custId}}] {{apInvoiceReturn.customer.custName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Price Code</label>
+										<div class="form-group">
+											<input type="text" value="[{{apInvoiceReturn.priceCode.priceCode}}] {{apInvoiceReturn.priceCode.des}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Ship To</label>
+										<div class="form-group">
+											<input type="text" value="{{apInvoiceReturn.shipTo}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Sale Rep. ID</label>
+										<div class="form-group">
+											<input type="text" value="[{{apInvoiceReturn.employee.empID}}] {{apInvoiceReturn.employee.empName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Class</label>
+										<div class="form-group">
+											<input type="text" value="[{{apInvoiceReturn.classCode.classId}}] {{apInvoiceReturn.classCode.className}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Sale Invoice No.</label>
+										<div class="form-group">
+											<input type="text" value="{{apInvoiceReturn.saleId}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Remark</label>
+										<div class="form-group">
+											<input type="text" value="{{apInvoiceReturn.remark}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12 table-responsive">
+										<table class="table table-hover">
+											<tr>
+												<th>Item ID</th>
+												<th>Item Name</th>
+												<th>Location ID</th>
+												<th>Class ID</th>
+												<th>UOM</th>
+												<th>Sale Qty</th>
+												<th>Return To Date</th>
+												<th>Return Qty</th>
+												<th>Unit Cost</th>
+												<th>Price Factor</th>
+												<th>Total Amount</th>
+												<th>Discount %</th>
+												<th>Discount $</th>
+												<th>VAT %</th>
+												<th>VAT $</th>
+												<th>ST %</th>
+												<th>ST $</th>
+												<th>Net Total Amount</th>
+											</tr>
+											<tbody>
+												<tr ng-repeat="tr in apInvoiceReturn.saleReturnDetail" >
+													<td ng-cloak>{{tr.item.itemId}}</td>
+													<td ng-cloak>{{tr.item.itemName}}</td>
+													<td ng-cloak>{{tr.location.locationId}}</td>
+													<td ng-cloak>{{tr.classCode.classId}}</td>
+													<td ng-cloak>{{tr.uom.uomId}}</td>
+													<td ng-cloak>{{tr.salQty | number:4}}</td>
+													<td ng-cloak>{{(tr.salQty-tr.qty) | number:4}}</td>
+													<td ng-cloak>{{tr.qty | number:4}}</td>
+													<td ng-cloak>{{tr.unitPrice | number:6}}</td>
+													<td ng-cloak>{{tr.factor | number:4}}</td>
+													<td ng-cloak>{{tr.totalAmt | number:6}}</td>
+													<td ng-cloak>{{tr.disPer | number:5}}</td>
+													<td ng-cloak>{{tr.disDol | number:2}}</td>
+													<td ng-cloak>{{tr.vtaxPer | number:5}}</td>
+													<td ng-cloak>{{tr.vtaxDol | number:2}}</td>
+													<td ng-cloak>{{tr.staxPer | number:5}}</td>
+													<td ng-cloak>{{tr.staxDol | number:2}}</td>
+													<td ng-cloak>{{tr.netTotalAmt | number:2}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									
+									<div class="clearfix"></div>
+									<br>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Discount</label>
+										<div class="form-group">
+											<input type="text" value="{{apInvoice.totalDis | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Net Total Amount</label>
+										<div class="form-group">
+											<input type="text" value="{{apInvoice.netTotalAmt | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Specific Tax</label>
+										<div class="form-group">
+											<input type="text" value="{{apInvoice.totalSTax | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Payment To Date</label>
+										<div class="form-group">
+											<input type="text" value="{{apInvoice.pmtToDate | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">VAT</label>
+										<div class="form-group">
+											<input type="text" value="{{apInvoice.totalVTax | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Net Amount Due</label>
+										<div class="form-group">
+											<input type="text" value="{{apInvoice.netTotalAmt-apInvoice.pmtToDate | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
+							</div>
+						</div>
+					</div>
+				</div>
 				
+				
+				<div class="modal fade modal-default" id="frmARCdn" role="dialog">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><b>AR CREDIT NOTE</b></h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Entry No</label>
+										<div class="form-group">
+											<input type="text" value="{{arCdn.entryId}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Post Status</label>
+										<div class="form-group">
+											<input type="text" value="{{arCdn.postStatus}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Reference</label>
+										<div class="form-group">
+											<input type="text" value="{{arCdn.reference}}" disabled class="form-control" >
+										</div>
+									</div>								
+									<div class="col-sm-6">
+										<label class="font-label">Credit Note Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{arCdn.creditNoteDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									
+									<div class="col-sm-6">
+										<label class="font-label">Customer</label>
+										<div class="form-group">
+											<input type="text" value="[{{arCdn.customer.custId}}] {{apInvoice.customer.custName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Price Code</label>
+										<div class="form-group">
+											<input type="text" value="[{{arCdn.priceCode.priceCode}}] {{apInvoice.priceCode.des}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Ship To</label>
+										<div class="form-group">
+											<input type="text" value="{{arCdn.shipTo}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Sale Rep. ID</label>
+										<div class="form-group">
+											<input type="text" value="[{{arCdn.employee.empID}}] {{arCdn.employee.empName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Class</label>
+										<div class="form-group">
+											<input type="text" value="[{{arCdn.classCode.classId}}] {{arCdn.classCode.className}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Remark</label>
+										<div class="form-group">
+											<input type="text" value="{{arCdn.remark}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12 table-responsive">
+										<table class="table table-hover">
+											<tr>
+												<th>Item ID</th>
+												<th>Item Name</th>
+												<th>Location ID</th>
+												<th>Class ID</th>
+												<th>UOM</th>
+												<th>Quantity</th>
+												<th>Unit Cost</th>
+												<th>Price Factor</th>
+												<th>Total Amount</th>
+												<th>Discount %</th>
+												<th>Discount $</th>
+												<th>VAT %</th>
+												<th>VAT $</th>
+												<th>ST %</th>
+												<th>ST $</th>
+												<th>Net Total Amount</th>
+											</tr>
+											<tbody>
+												<tr ng-repeat="tr in arCdn.creditNoteDetail" >
+													<td ng-cloak>{{tr.item.itemId}}</td>
+													<td ng-cloak>{{tr.item.itemName}}</td>
+													<td ng-cloak>{{tr.location.locationId}}</td>
+													<td ng-cloak>{{tr.classCode.classId}}</td>
+													<td ng-cloak>{{tr.uom.uomId}}</td>
+													<td ng-cloak>{{tr.qty | number:4}}</td>
+													<td ng-cloak>{{tr.unitPrice | number:6}}</td>
+													<td ng-cloak>{{tr.factor | number:4}}</td>
+													<td ng-cloak>{{tr.totalAmt | number:6}}</td>
+													<td ng-cloak>{{tr.disPer | number:5}}</td>
+													<td ng-cloak>{{tr.disDol | number:2}}</td>
+													<td ng-cloak>{{tr.vtaxPer | number:5}}</td>
+													<td ng-cloak>{{tr.vtaxDol | number:2}}</td>
+													<td ng-cloak>{{tr.staxPer | number:5}}</td>
+													<td ng-cloak>{{tr.staxDol | number:2}}</td>
+													<td ng-cloak>{{tr.netTotalAmt | number:2}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									
+									<div class="clearfix"></div>
+									<br>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Discount</label>
+										<div class="form-group">
+											<input type="text" value="{{arCdn.totalDis | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Net Total Amount</label>
+										<div class="form-group">
+											<input type="text" value="{{arCdn.netTotalAmt | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Specific Tax</label>
+										<div class="form-group">
+											<input type="text" value="{{arCdn.totalSTax | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Payment To Date</label>
+										<div class="form-group">
+											<input type="text" value="{{arCdn.pmtToDate | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">VAT</label>
+										<div class="form-group">
+											<input type="text" value="{{arCdn.totalVTax | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Net Amount Due</label>
+										<div class="form-group">
+											<input type="text" value="{{arCdn.netTotalAmt-apInvoice.pmtToDate | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade modal-default" id="frmARReceipt" role="dialog">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><b>AR Receipt</b></h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Entry No</label>
+										<div class="form-group">
+											<input type="text" value="{{arReceipt.rcpId}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Post Status</label>
+										<div class="form-group">
+											<input type="text" value="{{arReceipt.postStatus}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Payment Type</label>
+										<div class="form-group">
+											<input type="text" value="{{arReceipt.rcpType}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Reference</label>
+										<div class="form-group">
+											<input type="text" value="{{arReceipt.reference}}" disabled class="form-control" >
+										</div>
+									</div>								
+									<div class="col-sm-6">
+										<label class="font-label">Payment Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{arReceipt.rcpDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Cash Account ID</label>
+										<div class="form-group">
+											<input type="text" value="[{{arReceipt.account.accountId}}] {{arReceipt.account.accountName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Customer</label>
+										<div class="form-group">
+											<input type="text" value="[{{arReceipt.customer.custId}}] {{arReceipt.customer.custName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Class</label>
+										<div class="form-group">
+											<input type="text" value="[{{arReceipt.classCode.classId}}] {{arReceipt.classCode.className}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<label class="font-label">Remark</label>
+										<div class="form-group">
+											<input type="text" value="{{arReceipt.remark}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12 table-responsive">
+										<table class="table table-hover">
+											<tr>
+												<th>Line No</th>
+												<th>Sale ID</th>
+												<th>Reference</th>
+												<th>Sale Date</th>
+												<th>Original Amount</th>
+												<th>Receipt To Date</th>
+												<th>Amount Due</th>
+												<th>Net Amount Due</th>
+												<th>Description</th>
+												<th>Discount</th>
+												<th>Payment To Cash Account</th>
+												<th>Applied Payments</th>
+											</tr>
+											<tbody>
+												<tr ng-repeat="tr in arReceipt.receiptDetail" >
+													<td ng-cloak>{{$index+1}}</td>
+													<td ng-cloak>{{tr.sale.saleId}}</td>
+													<td ng-cloak>{{tr.sale.reference}}</td>
+													<td ng-cloak>{{tr.sale.saleDate}}</td>
+													<td ng-cloak>{{tr.sale.netTotalAmt | number:2}}</td>
+													<td ng-cloak>{{-tr.sale.pmtToDate | number:2}}</td>
+													<td ng-cloak>{{tr.amountDue | number:2}}</td>
+													<td ng-cloak>{{tr.netAmountDue | number:2}}</td>
+													<td ng-cloak>{{tr.transDescription}}</td>
+													<td ng-cloak>{{tr.discount | number:2}}</td>
+													<td ng-cloak>{{tr.pmtAmount | number:2}}</td>
+													<td ng-cloak>{{tr.appliedAmt | number:2}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									
+									<div class="clearfix"></div>
+									<br>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Pay Invoice</label>
+										<div class="form-group">
+											<input type="text" value="{{arReceipt.TotalDiscount + getTotalCashReceipt() | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Discount</label>
+										<div class="form-group">
+											<input type="text" value="{{arReceipt.totalDiscount | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Cash</label>
+										<div class="form-group">
+											<input type="text" value="{{getTotalCashReceipt() | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Payment</label>
+										<div class="form-group">
+											<input type="text" value="{{(getTotalCashReceipt()+getTotalReceiptApplied()) | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade modal-default" id="frmICTransfer" role="dialog">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><b>IC TRANSFER</b></h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Entry No</label>
+										<div class="form-group">
+											<input type="text" value="{{icTransfer.trfId}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Post Status</label>
+										<div class="form-group">
+											<input type="text" value="{{icTransfer.postStatus}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Transfer To Consignment</label>
+										<div class="form-group">
+											<input type="text" value="{{icTransfer.consignment ==1 ? '[YES]':'[NO]'}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Reference</label>
+										<div class="form-group">
+											<input type="text" value="{{icTransfer.reference}}" disabled class="form-control" >
+										</div>
+									</div>								
+									<div class="col-sm-6">
+										<label class="font-label">Transfer Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{icTransfer.trfDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									
+									<div class="col-sm-6">
+										<label class="font-label">Customer</label>
+										<div class="form-group">
+											<input type="text" value="[{{icTransfer.customer.custId}}] {{arReceipt.customer.custName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Location</label>
+										<div class="form-group">
+											<input type="text" value="[{{icTransfer.location.locationId}}] {{icTransfer.location.locationName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Remark</label>
+										<div class="form-group">
+											<input type="text" value="{{icTransfer.trfDescription}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Retail Price Code</label>
+										<div class="form-group">
+											<input type="text" value="{{icTransfer.pRetail}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Wholesale Price Code </label>
+										<div class="form-group">
+											<input type="text" value="{{icTransfer.pWholeSale}}" disabled class="form-control" >
+										</div>
+									</div>
+									
+									<div class="col-sm-12 table-responsive">
+										<table class="table table-hover">
+											<tr>
+												<th>Item ID</th>
+												<th>Item Name</th>
+												<th>From Location ID</th>
+												<th>To Location ID</th>
+												<th>Uom ID</th>
+												<th>Quantity</th>
+												<th>Retail Price</th>
+												<th>Wholesale Prcie</th>
+											</tr>
+											<tbody>
+												<tr ng-repeat="tr in icTransfer.trfDetail" >
+													<td ng-cloak>{{tr.item.itemId}}</td>
+													<td ng-cloak>{{tr.item.itemName}}</td>
+													<td ng-cloak>{{tr.fLocation.locationId}}</td>
+													<td ng-cloak>{{tr.tLocation.locationId}}</td>
+													<td ng-cloak>{{tr.uom.uomId}}</td>
+													<td ng-cloak>{{tr.trfQty | number:2}}</td>
+													<td ng-cloak>{{tr.retailPrice | number:2}}</td>
+													<td ng-cloak>{{tr.wholeSalePrice | number:2}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
+							</div>
+						</div>
+					</div>
+				</div>
 				
 				<div id="errors"></div>
 			</div>
@@ -1273,10 +1874,6 @@
 							}
 						}).success(function(response) {
 							dis(response.DATA)
-							$scope.transView = [];
-							$scope.purchaseInvoice = [];
-							$scope.purchaseReturnInvoice = [];
-							$scope.apDebitNote = [];
 							if(response.MESSAGE == "SUCCESS"){			
 								switch(transType) {
 									case "AP Invoice":
@@ -1300,16 +1897,20 @@
 										$("#frmAPInvoice").modal({backdrop: 'static', keyboard: false});
 								    	break;
 						    		case "AR Return Invoice":
-						    			
+						    			$scope.apInvoiceReturn = response.DATA;
+										$("#frmAPInvoiceReturn").modal({backdrop: 'static', keyboard: false});
 								    	break;
 						    		case "AR Credit Note":
-						    			
+						    			$scope.arCdn = response.DATA;
+										$("#frmARCdn").modal({backdrop: 'static', keyboard: false});
 								    	break;
 									case "AR Receipt":
-										
+										$scope.arReceipt = response.DATA;
+										$("#frmARReceipt").modal({backdrop: 'static', keyboard: false});										
 								    	break;
 									case "IC Transfer":
-										
+										$scope.icTransfer = response.DATA;
+										$("#frmICTransfer").modal({backdrop: 'static', keyboard: false});
 								    	break;
 									case "IC Internal Usage":
 										
@@ -1343,7 +1944,7 @@
 				}
 				
 				$scope.getTotalCash = function(){
-					if (typeof ($scope.apPayment.apPaymentDetail) === 'undefined') {
+					if (typeof ($scope.apPayment) === 'undefined') {
 			            return 0;
 			        }
 					var x = 0;	
@@ -1354,7 +1955,30 @@
 					}
 					return x;
 				}
-				
+				$scope.getTotalCashReceipt = function(){
+					if (typeof ($scope.arReceipt) === 'undefined') {
+			            return 0;
+			        }
+					var x = 0;	
+					if($scope.arReceipt.receiptDetail != null){
+						for(var i=0;i<$scope.arReceipt.receiptDetail.length;i++){
+							x += Number($scope.arReceipt.receiptDetail[i].pmtAmount);
+						}
+					}
+					return x;
+				}
+				$scope.getTotalReceiptApplied = function(){
+					if (typeof ($scope.arReceipt) === 'undefined') {
+			            return 0;
+			        }
+					var x = 0;
+					if($scope.arReceipt.receiptDetail != null){
+						for(var i=0;i<$scope.arReceipt.receiptDetail.length;i++){
+							x += Number($scope.arReceipt.receiptDetail[i].appliedAmt);
+						}
+					}
+					return x;
+				}
 				
 			}]);
 			

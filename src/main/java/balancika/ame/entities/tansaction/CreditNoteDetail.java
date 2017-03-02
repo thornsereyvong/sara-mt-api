@@ -5,8 +5,8 @@ import balancika.ame.entities.setting.Class;
 import balancika.ame.entities.setting.Location;
 import balancika.ame.entities.setting.Uom;
 
-public class SaleReturnDetail {
-	private String saleReturnId;
+public class CreditNoteDetail {
+	private String entryId;
 	private int lineNo;
 	private Item item;
 	private Uom uom;
@@ -37,19 +37,11 @@ public class SaleReturnDetail {
 	private String des;
 	private double factor;
 	private double disInv;
-	private double salQty;
-	
-	public double getSalQty() {
-		return salQty;
+	public String getEntryId() {
+		return entryId;
 	}
-	public void setSalQty(double salQty) {
-		this.salQty = salQty;
-	}
-	public String getSaleReturnId() {
-		return saleReturnId;
-	}
-	public void setSaleReturnId(String saleReturnId) {
-		this.saleReturnId = saleReturnId;
+	public void setEntryId(String entryId) {
+		this.entryId = entryId;
 	}
 	public int getLineNo() {
 		return lineNo;
@@ -231,5 +223,7 @@ public class SaleReturnDetail {
 	public void setDisInv(double disInv) {
 		this.disInv = disInv;
 	}
-
+	
+	
+	
 }

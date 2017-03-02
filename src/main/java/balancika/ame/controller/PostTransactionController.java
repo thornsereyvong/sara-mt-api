@@ -13,16 +13,24 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import balancika.ame.entities.MeDataSource;
 import balancika.ame.entities.tansaction.APPayment;
+import balancika.ame.entities.tansaction.ARReceipt;
+import balancika.ame.entities.tansaction.CreditNote;
 import balancika.ame.entities.tansaction.DebitNote;
+import balancika.ame.entities.tansaction.ICTransfer;
 import balancika.ame.entities.tansaction.PurchaseInvoice;
 import balancika.ame.entities.tansaction.PurchaseReturn;
 import balancika.ame.entities.tansaction.Sale;
+import balancika.ame.entities.tansaction.SaleReturn;
 import balancika.ame.entities.tansaction.Transaction;
 import balancika.ame.service.APPaymentService;
+import balancika.ame.service.ARReceiptService;
+import balancika.ame.service.CreditNoteService;
 import balancika.ame.service.DebitNoteService;
+import balancika.ame.service.ICTransferService;
 import balancika.ame.service.PostTransactionService;
 import balancika.ame.service.PurchaseInvoiceService;
 import balancika.ame.service.PurchaseReturnService;
+import balancika.ame.service.SaleReturnService;
 import balancika.ame.service.SaleService;
 
 @RestController
@@ -49,6 +57,18 @@ public class PostTransactionController {
 	
 	@Autowired
 	private SaleService saleService;
+	
+	@Autowired
+	private SaleReturnService saleReturnService;
+	
+	@Autowired
+	private CreditNoteService cdnService;
+	
+	@Autowired
+	private ARReceiptService rcpService;
+	
+	@Autowired
+	private ICTransferService trfService;
 	
 	@RequestMapping(value = {"/list"}, method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> listTransaction(@RequestBody Transaction tran,HttpServletRequest req){
@@ -1255,45 +1275,81 @@ public class PostTransactionController {
 	    		case "AR Return Invoice":
 	    			sql = "SELECT COUNT(*) as CRow FROM tblSales_Return WHERE RetID = '"+tran.getTransId()+"'";
 	    			if(post.checkExist(sql, dataSource)){
-						map.put("MESSAGE", "SUCCESS");
-						
-						
+						SaleReturn sr = new SaleReturn();
+						sr.setSaleReturnId(tran.getTransId());
+						SaleReturn sale = saleReturnService.getSaleReturn(sr, dataSource);
+						if(sale != null){
+		    				map.put("MESSAGE", "SUCCESS");
+							map.put("STATUS", HttpStatus.OK.value());
+							map.put("DATA", sale);
+							return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		    			}else{
+		    				map.put("MESSAGE", "FAILED");
+							map.put("MSG", "The AP Invoice Return with record id: "+tran.getTransId()+" does not exist.");
+		    			}						
 					}else{
 						map.put("MESSAGE", "FAILED");
-						
+						map.put("MSG", "The AP Invoice Return with record id: "+tran.getTransId()+" does not exist.");
 					}
 			    	break;
 	    		case "AR Credit Note":
 	    			sql = "SELECT COUNT(*) as CRow FROM tblCrNote WHERE CrID = '"+tran.getTransId()+"'";
 	    			if(post.checkExist(sql, dataSource)){
-						map.put("MESSAGE", "SUCCESS");
-						
-						
+						CreditNote cdn = new CreditNote();
+						cdn.setEntryId(tran.getTransId());
+						CreditNote credit = cdnService.getCreditNote(cdn, dataSource);
+						if(credit != null){
+		    				map.put("MESSAGE", "SUCCESS");
+							map.put("STATUS", HttpStatus.OK.value());
+							map.put("DATA", credit);
+							return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		    			}else{
+		    				map.put("MESSAGE", "FAILED");
+							map.put("MSG", "The AR Credit Note with record id: "+tran.getTransId()+" does not exist.");
+		    			}
 					}else{
 						map.put("MESSAGE", "FAILED");
-						
+						map.put("MSG", "The AR Credit Note with record id: "+tran.getTransId()+" does not exist.");
 					}
 			    	break;
 				case "AR Receipt":
 					sql = "SELECT COUNT(*) as CRow FROM tblReceipt WHERE RcpID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
-						map.put("MESSAGE", "SUCCESS");
-						
-						
+						ARReceipt rcp = new ARReceipt();
+						rcp.setRcpId(tran.getTransId());
+						ARReceipt receipt = rcpService.getARReceipt(rcp, dataSource);
+						if(receipt != null){
+		    				map.put("MESSAGE", "SUCCESS");
+							map.put("STATUS", HttpStatus.OK.value());
+							map.put("DATA", receipt);
+							return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		    			}else{
+		    				map.put("MESSAGE", "FAILED");
+							map.put("MSG", "The AR Receipt with record id: "+tran.getTransId()+" does not exist.");
+		    			}
 					}else{
 						map.put("MESSAGE", "FAILED");
-						
+						map.put("MSG", "The AR Receipt with record id: "+tran.getTransId()+" does not exist.");
 					}
 			    	break;
 				case "IC Transfer":
 					sql = "SELECT COUNT(*) as CRow FROM tblTransfer WHERE TrfID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
-						map.put("MESSAGE", "SUCCESS");
-						
-						
+						ICTransfer trf = new ICTransfer();
+						trf.setTrfId(tran.getTransId());
+						ICTransfer transfer = trfService.getICTransfer(trf, dataSource);
+						if(transfer != null){
+		    				map.put("MESSAGE", "SUCCESS");
+							map.put("STATUS", HttpStatus.OK.value());
+							map.put("DATA", transfer);
+							return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+		    			}else{
+		    				map.put("MESSAGE", "FAILED");
+							map.put("MSG", "The IC Transfer with record id: "+tran.getTransId()+" does not exist.");
+		    			}
 					}else{
 						map.put("MESSAGE", "FAILED");
-						
+						map.put("MSG", "The IC Transfer with record id: "+tran.getTransId()+" does not exist.");
 					}
 			    	break;
 				case "IC Internal Usage":
