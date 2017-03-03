@@ -137,7 +137,6 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 				
 				 while (rs.next()) {
 					 m.put("MESSAGE", rs.getString("ID"));
-					 System.out.println(rs.getString("ID"));
 		         }	 
 		         rs.close();
 		        
@@ -147,7 +146,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 		        while (rs2.next()) {
 		        	 m.put("DESCRIPTION", rs2.getString("alert"));
 		         }	 
-		         rs.close();
+		         rs2.close();
 		         
 		         return m;
 			}
@@ -170,13 +169,28 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 			cstmt = (CallableStatement) con.prepareCall(sql);
 			cstmt.setString(1, dataSource.getUserid());	
 			cstmt.setString(2, authId);
-			if(cstmt.executeUpdate() > 0){
-				m.put("MESSAGE", "SUCCESS");
-			}else{
-				m.put("MESSAGE", "FAIL");
+			boolean results = cstmt.execute();
+			
+			while(results){
+				ResultSet rs = cstmt.getResultSet();
+				
+				 while (rs.next()) {
+					 m.put("MESSAGE", rs.getString("Message"));
+		         }	 
+		         rs.close();
+		        
+		        results = cstmt.getMoreResults();
+		        ResultSet rs2 = cstmt.getResultSet();
+		        
+		        while (rs2.next()) {
+		        	 m.put("DESCRIPTION", rs2.getString("alert"));
+		         }	 
+		         rs.close();
+		         
+		         return m;
 			}
 			
-			return m;
+		
 			
 		} catch (Exception e) {
 			e.printStackTrace();

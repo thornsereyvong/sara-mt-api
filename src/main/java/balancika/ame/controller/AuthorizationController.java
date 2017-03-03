@@ -62,12 +62,9 @@ public class AuthorizationController {
 				map.put("MESSAGE", "FAILED");
 				map.put("STATUS", HttpStatus.NOT_FOUND.value());
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
-			}else if(m.get("MESSAGE").equals("exist")){
-				map.put("MESSAGE", "EXIST");
-				map.put("STATUS", HttpStatus.OK.value());
-				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}else{
-				map.put("MESSAGE", "SUCCESS");
+				map.put("MESSAGE", m.get("MESSAGE"));
+				map.put("DESCRIPTION", m.get("DESCRIPTION"));
 				map.put("STATUS", HttpStatus.OK.value());
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}
@@ -94,6 +91,7 @@ public class AuthorizationController {
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}else{
 				map.put("MESSAGE", m.get("MESSAGE"));
+				map.put("DESCRIPTION", m.get("DESCRIPTION"));
 				map.put("STATUS", HttpStatus.OK.value());
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}	
@@ -119,7 +117,8 @@ public class AuthorizationController {
 				map.put("STATUS", HttpStatus.NOT_FOUND.value());
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}else{
-				map.put("MESSAGE", "SUCCESS");
+				map.put("MESSAGE",  m.get("MESSAGE"));
+				map.put("DESCRIPTION", m.get("DESCRIPTION"));
 				map.put("STATUS", HttpStatus.OK.value());
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}
@@ -146,6 +145,7 @@ public class AuthorizationController {
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}else{
 				map.put("MESSAGE", "SUCCESS");
+				map.put("DESCRIPTION", map.get("DESCRIPTION"));
 				map.put("STATUS", HttpStatus.OK.value());
 				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 			}

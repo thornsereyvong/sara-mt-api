@@ -529,11 +529,11 @@
 					        cancelAction: {
 					        	text: 'Cancel Action',
 						         action : function () {
-						        	$.alert({
+						        	/* $.alert({
 			                            title: '<h3 class="text-center">Action Cancel !</h3>',
 			                            type: 'red' ,
 			                            content: "<hr>", 
-			                       });
+			                       }); */
 						        }
 					        }
 					    }

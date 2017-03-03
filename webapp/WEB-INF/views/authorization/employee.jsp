@@ -37,19 +37,28 @@
 						</div>
 					</div>
 					<div class="box-body">
+						<div class="col-md-3 col-sm-3">
+							<label>Employee</label>
+							<div class="form-group">
+								<select class="form-control select2" ng-model="mEmp" ng-change="changeEmp()" >
+									<option value="">-- Select Employee --</option>
+									<option ng-repeat="op in emps" value="{{op.empID}}" ng-cloak>[{{op.empID}}] {{op.empName}}</option>
+								</select>
+							</div>
+						</div>
 						<div class="col-sm-12">
-							<div class="tablecontainer table-responsive" data-ng-init="listAuthorizationGroup()">
+							<div class="tablecontainer table-responsive">
 								<table class="table table-hover">
 									<thead>
 										<tr>
-											<th style="cursor: pointer;" ng-click="sort('authorGroupId')">Authorization Process
-												<span class="glyphicon sort-icon" ng-show="sortKey=='authorGroupId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+											<th style="cursor: pointer;" ng-click="sort('authProcess')">Authorization Process
+												<span class="glyphicon sort-icon" ng-show="sortKey=='authProcess'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authGroupName')">Authorization Id
-												<span class="glyphicon sort-icon" ng-show="sortKey=='authGroupName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+											<th style="cursor: pointer;" ng-click="sort('authId')">Authorization Id
+												<span class="glyphicon sort-icon" ng-show="sortKey=='authId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authorGroupDesc')">Authorization Name
-												<span class="glyphicon sort-icon" ng-show="sortKey=='authorGroupDesc'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
+											<th style="cursor: pointer;" ng-click="sort('authName')">Authorization Name
+												<span class="glyphicon sort-icon" ng-show="sortKey=='authName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
 											
 											<th style="width: 175px;"></th>
@@ -57,20 +66,20 @@
 									</thead>
 									<tbody>
 										<tbody>
-											<tr pagination-id="listAuthGroup" dir-paginate="data in authGroup |orderBy:sortKey:reverse |filter:search |itemsPerPage:10"  >
-												<td ng-cloak>{{data.authGroupId}}</td>
-												<td ng-cloak>{{data.authGroupName}}</td>
-												<td ng-cloak>{{data.authGroupDesc}}</td>
+											<tr pagination-id="listAuthEmp" dir-paginate="data in authEmployeeId |orderBy:sortKey:reverse |filter:search |itemsPerPage:10"  >
+												<td ng-cloak>{{data.authProcess}}</td>
+												<td ng-cloak>{{data.authId}}</td>
+												<td ng-cloak>{{data.authName}}</td>
 												<td ng-cloak >
-													<button class="btn btn-danger" ng-click="deleteAuthGroup(data.authGroupId)"><i class="glyphicon glyphicon-trash"></i> Delete</button>
-													<button class="btn btn-info"  data-toggle="modal" data-target="#myModal" ng-click="getAuthGroupByID(data.authGroupId)"  data-toggle="modal" data-target="#myModalEdit"><i class="glyphicon glyphicon-pencil"></i> Edit</button>
+													<button class="btn btn-default btn-sm" ng-click="deleteAuthEmployeeById(data.empId,data.authProcess,data.authId)"><i class="glyphicon glyphicon-trash"></i></button>
+													
 												</td>							
 											</tr> 
 									
 									</tbody>
 								</table>
 								<dir-pagination-controls 
-									pagination-id="listAuthGroup"
+									pagination-id="listAuthEmp"
 									max-size="10" 
 									direction-links="true"
 									boundary-links="true"> 
@@ -275,20 +284,27 @@
 					});
 				}
 
-				$scope.listAuthorizationGroup = function(){
+				$scope.listEmployee();
+
+				$scope.changeEmp = function(){
+					
 					$http({
 			 			method: 'GET',
-					    url: "${pageContext.request.contextPath}/rest/authorizationgroup/list",
+					    url: "${pageContext.request.contextPath}/rest/authorizationemployee/get-employee/"+$scope.mEmp,
 					    headers: {
 					    	'Accept': 'application/json',
 					        'Content-Type': 'application/json'
-					    }	    
-					}).success(function(response) {
-						$scope.authGroup = [];
-						if(response.MESSAGE == "SUCCESS"){
-							$scope.authGroup = response.DATA;
+					    } 
+					}).success(function(response) {	
+					
+						if(response.MESSAGE == "sucess"){
+							$scope.authEmployeeId = response.DATA;		
+						}else{
+							
 						}
+						
 					});
+					
 				}
 				
 				$scope.createAuthGroup = function(){
@@ -322,7 +338,7 @@
 							}).success(function(response) {	
 						
 								if(response.MESSAGE == "SUCCESS"){
-									$scope.listAuthorizationGroup();
+									$scope.listAuthorizationEmployee();
 									$scope.closeModal();
 								}else if(response.MESSAGE == "EXIST"){
 									alert("EXIST");
@@ -366,7 +382,7 @@
 							}).success(function(response) {	
 								
 								if(response.MESSAGE == "SUCCESS"){
-									$scope.listAuthorizationGroup();
+									$scope.listAuthorizationEmployee();
 									$scope.closeModal();
 								}else if(response.MESSAGE == "EXIST"){
 									alert("EXIST");
@@ -377,22 +393,50 @@
 					
 				}
 
-				$scope.deleteAuthGroup = function(authID){
-					$http({
-			 			method: 'DELETE',
-					    url: "${pageContext.request.contextPath}/rest/authorizationgroup/delete/"+authID,
-					    headers: {
-					    	'Accept': 'application/json',
-					        'Content-Type': 'application/json'
-					    }	    
-					}).success(function(response) {
-						if(response.MESSAGE == "SUCCESS"){
+				$scope.deleteAuthEmployeeById = function(empId,process,authID){
+					$.confirm({
+					    title: '<h3 class="text-center">Are you sure you want to delete  this process '+process+' ?</h3>',
+					    type: 'orange',
+					    content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.'+"<hr>",
+					    autoClose: 'cancelAction|8000',
+					    buttons: {
+					    	confirm: {
+					            text: 'Delete',
+					            action: function () {
+					            	$http({
+							 			method: 'POST',
+									    url: "${pageContext.request.contextPath}/rest/authorizationemployee/deleteById/"+empId+"/"+process+"/"+authID,
+									    headers: {
+									    	'Accept': 'application/json',
+									        'Content-Type': 'application/json'
+									    }	    
+									}).success(function(response) {
 							
-							$scope.listAuthorizationGroup();
-						}else{
-					
-						}
+										if(response.MESSAGE == "success"){
+											 $.alert({
+						                            title: '<h3 class="text-center">Success</h3>',
+						                            type: 'green',
+						                            content: response.DESCRIPTION+"<hr>",
+						                     });
+											$scope.changeEmp();
+										}else{
+											$.alert({
+					                            title: '<h3 class="text-center">Fail</h3>',
+					                            type: 'red',
+					                            content: response.DESCRIPTION+"<hr>",
+					                       });
+										}
+									});
+					            }
+					    	},
+					    	cancelAction:{
+								text:"Cancel"
+						    }
+						    	
+					    }
 					});
+					
+					
 				}
 
 				$scope.getAuthGroupByID = function(authID){
