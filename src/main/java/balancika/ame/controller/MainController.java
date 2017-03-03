@@ -35,6 +35,15 @@ public class MainController {
 		return "authorization/group";
 	}
 	
+	@RequestMapping(value = {"/authorization/employee"}, method = RequestMethod.GET)
+	public String employeeAuthorization(ModelMap model, HttpServletRequest request){
+		model.addAttribute("title", "Employee Authorization");
+		model.addAttribute("mAuthoriAct", "active");
+		model.addAttribute("mAuthorOpen","open");
+		model.addAttribute("mAuthorEmp","active");
+		return "authorization/employee";
+	}
+	
 	@RequestMapping(value = {"/authorization"}, method = RequestMethod.GET)
 	public String Authorizatoingroup(ModelMap model, HttpServletRequest request){
 		model.addAttribute("title", "Authorization");

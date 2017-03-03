@@ -82,6 +82,28 @@ public class AuthorizationController {
 		
 	}
 	
+	@RequestMapping(value = {"/update"}, method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> updateAuthorization(@RequestBody Authorization authori ) throws SQLException{
+		Map<String, Object> map = new HashMap<String, Object>();
+		try {
+			Map<String, Object> m = authService.updateAuthorization(dataSource, authori);
+			
+			if(m.get("MESSAGE") == null || m.get("MESSAGE").equals("")){
+				map.put("MESSAGE", "FAILED");
+				map.put("STATUS", HttpStatus.NOT_FOUND.value());
+				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+			}else{
+				map.put("MESSAGE", m.get("MESSAGE"));
+				map.put("STATUS", HttpStatus.OK.value());
+				return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+			}	
+		}catch (Exception e) {
+			map.put("message", "fail");
+			e.printStackTrace();
+		}
+		return new ResponseEntity<Map<String, Object>>(map, HttpStatus.CREATED);
+	}
+	
 	
 	@RequestMapping(value = {"/delete/{authId}"}, method = RequestMethod.DELETE)
 	public ResponseEntity<Map<String, Object>> deleteAuthorization(@PathVariable("authId") String authId) throws SQLException{

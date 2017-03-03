@@ -67,8 +67,8 @@
 												<td ng-cloak>{{data.authType}}</td>
 												<!-- <td ng-cloak>{{data.authCount}}</td> -->
 												<td ng-cloak >
-													<button class="btn btn-danger" ng-click="deleteAuthorizationId(data.authId)"><i class="glyphicon glyphicon-trash"></i> Delete</button>
-													<button class="btn btn-info"  data-toggle="modal" data-target="#myModal" ng-click="getauthByID(data.authId)"  data-toggle="modal" data-target="#myModalEdit"><i class="glyphicon glyphicon-pencil"></i> Edit</button>
+													<button class="btn btn-danger btn-sm" ng-click="deleteAuthorizationId(data.authId)"><i class="glyphicon glyphicon-trash"></i> Delete</button>
+													<button class="btn btn-info btn-sm"  data-toggle="modal" data-target="#myModal" ng-click="getauthByID(data.authId)"  data-toggle="modal" data-target="#myModalEdit"><i class="glyphicon glyphicon-pencil"></i> Edit</button>
 												</td>							
 											</tr> 
 									
@@ -755,46 +755,180 @@
 				}
 
 				$scope.updateauth = function(){
-					var tr = $("#data-emp tr");
-					var listEmpDetail = [];
-					for(var i=0; i< Object.keys($scope.emps).length ;i++){		
-						
-						if($scope.emps[i].statusCheck == true){	
-							listEmpDetail.push({"authEmpId":$scope.emps[i].empID});
-						}
-						
-					}
 				
+					$('#form_authori').data('bootstrapValidator').validate();
+					var addauth = $("#form_authori").data('bootstrapValidator').validate().isValid();
+					if(addauth){
+						
+						if($scope.sAuthType == "Individual"){
 
-						$('#form_authori').data('bootstrapValidator').validate();
-						var addauth = $("#form_authori").data('bootstrapValidator').validate().isValid();
-						if(addauth){
-							var groupName = getValueStringById("authori_name");
-							var groupDesc = getValueStringById("authori_desc");
-							var stringValue = {
-								    "authId": $scope.authoriID ,"authName":groupName,"authDesc":groupDesc, "authDetail":listEmpDetail
-							};
-							
-							$http({
-					 			method: 'POST',
-							    url: "${pageContext.request.contextPath}/rest/authorization/edit",
-							    headers: {
-							    	'Accept': 'application/json',
-							        'Content-Type': 'application/json'
-							    }	,
-							    data : stringValue    
-							}).success(function(response) {	
-								
-								if(response.MESSAGE == "SUCCESS"){
-									$scope.listAuthorization();
-									$scope.closeModal();
-								}else if(response.MESSAGE == "EXIST"){
-									alert("EXIST");
+							var countObjEmp = Object.keys($scope.emps).length;
+							var countStatus = 0;
+							var listEmpDetail = [];
+							for(var i=0;i < countObjEmp ;i++){
+								if($scope.emps[i].statusCheck == true){
+									countStatus++;
+									listEmpDetail.push({"authEmpId":$scope.emps[i].empID,"authGroupId":"","authGroupAndOr":"","authGroupAmount":""});
+								}	
+							}
+
+							if($("#authAndOr").val() == "And"){
+								if(isNaN($scope.authAmount)){
+									$scope.setErrorField("divAthAmountIndividual","The authorization amount can not input string !");
+								}else{
+									
+									if(parseInt(countStatus) < parseInt($scope.authAmount)){
+										$scope.setErrorField("divAthAmountIndividual","Please check employee equal or greater than authorization amount  !");
+									}else{
+										$scope.setSuccessField("divAthAmountIndividual");
+										alert("And");
+										var stringValue = {
+											"authId":$scope.authoriID,
+											"authName":getValueStringById("authName"),
+											"authType":getValueStringById("authType"), 
+											"authAndOr":"And", 
+											"authAmount":getValueStringById("authAmount"),
+											"authorizationDetail": listEmpDetail
+										};
+
+										$http({
+								 			method: 'POST',
+										    url: "${pageContext.request.contextPath}/rest/authorization/update",
+										    headers: {
+										    	'Accept': 'application/json',
+										        'Content-Type': 'application/json'
+										    }	,
+										    data : stringValue    
+										}).success(function(response) {	
+											if(response.MESSAGE == "success"){
+												$scope.listAuthorization();
+												$scope.closeModal();
+											}else if(response.MESSAGE == "exist"){
+												alert("EXIST");
+											}else if(response.MESSAGE == "used"){
+
+											}else if(response.MESSAGE == "not allowed"){
+
+											}
+										});
+										
+									}
 								}
+							}else if($("#authAndOr").val() == "Or"){
+							alert("Or");
+								var stringValue = {
+										"authId":$scope.authoriID,
+										"authName":getValueStringById("authName"),
+										"authType":getValueStringById("authType"), 
+										"authAndOr":"Or", 
+										"authAmount":0,
+										"authorizationDetail": listEmpDetail
+									};
+
+									$http({
+							 			method: 'POST',
+									    url: "${pageContext.request.contextPath}/rest/authorization/update",
+									    headers: {
+									    	'Accept': 'application/json',
+									        'Content-Type': 'application/json'
+									    }	,
+									    data : stringValue    
+									}).success(function(response) {	
+										if(response.MESSAGE == "success"){
+											$scope.listAuthorization();
+											$scope.closeModal();
+										}else if(response.MESSAGE == "exist"){
+											alert("EXIST");
+										}else if(response.MESSAGE == "used"){
+
+										}else if(response.MESSAGE == "not allowed"){
+
+										}
+										
+									});
+							}
+							
+
+						}else if($scope.sAuthType == "Group"){
+							
+							var countObj = Object.keys($scope.authorizationGroup).length;
+							var countTrueFalse = 0;
+							var countOjbTrue = 0;
+							var listGroupDetail = [];
+							for(var i = 0; i < countObj; i++){	
+								if($scope.authorizationGroup[i].statusCheck == true){
+									countOjbTrue++;
+									if($scope.authorizationGroup[i].andOrCheck == "And"){
+										$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber);
+										if($scope.authorizationGroup[i].amountCheck != ""){
+											if (isNaN($scope.authorizationGroup[i].amountCheck)) {
+												$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount can not input string !");
+											}else{
+												if(parseInt($scope.authorizationGroup[i].amountCheck) > parseInt($scope.authorizationGroup[i].authGroupCount)){
+													$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[item-1].itemNumber,"Amount can not big than employee in group "+ $scope.authorizationGroup[item-1].authGroupName+" !");
+												}else{
+													$scope.setSuccessField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber);
+													countTrueFalse++;
+													listGroupDetail.push({"authEmpId":"","authGroupId":$scope.authorizationGroup[i].authGroupId,"authGroupAndOr":"And","authGroupAmount":$scope.authorizationGroup[i].amountCheck});
+												}
+											}	
+										}else{
+											$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount is required and can not be empty!");
+										}
+									}else if($scope.authorizationGroup[i].andOrCheck == "Or"){
+										countTrueFalse++;
+										listGroupDetail.push({"authEmpId":"","authGroupId":$scope.authorizationGroup[i].authGroupId,"authGroupAndOr":"Or","authGroupAmount":1});
+										$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber);
+									}else{
+										$scope.setErrorField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber,"The authorization and \ or is required and can not be empty!");
+									}
+								}
+							}//close for loop object 	
+
+						
+							if(countTrueFalse == countOjbTrue){
 								
-							});
+								var stringValue = {
+										"authId":$scope.authoriID,
+										"authName":getValueStringById("authName"),
+										"authType":getValueStringById("authType"), 
+										"authAndOr":"", 
+										"authAmount":0,
+										"authorizationDetail": listGroupDetail
+									};
+								$http({
+						 			method: 'POST',
+								    url: "${pageContext.request.contextPath}/rest/authorization/update",
+								    headers: {
+								    	'Accept': 'application/json',
+								        'Content-Type': 'application/json'
+								    }	,
+								    data : stringValue    
+								}).success(function(response) {	
+									
+									if(response.MESSAGE == "success"){
+										$scope.listAuthorization();
+										$scope.closeModal();
+									}else if(response.MESSAGE == "exist"){
+										alert("EXIST");
+									}else if(response.MESSAGE == "used"){
+
+									}else if(response.MESSAGE == "not allowed"){
+
+									}
+									
+								});
+							}else{
+								alert("Error Group");
+							}
+							
+						}else{
+						
 						}
-					
+						
+					}else{
+
+					}
 				}
 
 				$scope.deleteAuthorizationId = function(authID){
@@ -841,6 +975,7 @@
 									$("#authType").val(value.authType);
 									$scope.authoriID = value.authId;
 									$scope.sAuthAndOr = value.authType;
+									$scope.sAuthType = value.authType;
 									$(".select2").select2();
 								
 									if(value.authType == "Individual"){	
@@ -873,10 +1008,6 @@
 									}else if(value.authType == "Group"){
 
 										$scope.authorizationGroup = response.authorizationGroup;
-										 
-										/* for(var i=0;i < Object.keys($scope.authorizationGroup).length;i++){
-											setValueById("chrAuthAndOr"+$scope.authorizationGroup[i].itemNumber,$scope.authorizationGroup[i].andOrCheck);
-										} */
 										
 										$("#div_group").css("display","");
 										$("#div_emp").css("display","none");
