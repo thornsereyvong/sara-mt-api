@@ -274,8 +274,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 		        	String groAndOr = "";
 		        	if(rs4.getString("Auth_GroupAmount").equals(null)){
 		        		groAndOr = "";
-		        	}else{
-		        		
+		        	}else{	
 		        		
 		        	}
 		        	

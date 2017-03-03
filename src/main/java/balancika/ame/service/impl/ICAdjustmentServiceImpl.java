@@ -4,6 +4,8 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import org.springframework.stereotype.Repository;
+
 import com.mysql.jdbc.Connection;
 
 import balancika.ame.entities.MeDataSource;
@@ -16,12 +18,13 @@ import balancika.ame.entities.tansaction.ICAdjustmentDetail;
 import balancika.ame.service.ICAdjustmentService;
 import balancika.ame.utilities.DBConnection;
 
+@Repository
 public class ICAdjustmentServiceImpl implements ICAdjustmentService{
 
 	@Override
 	public ICAdjustment getICAdjustment(ICAdjustment adj, MeDataSource dataSource) {
 		try (Connection con = DBConnection.getConnection(dataSource)){			
-			String sql = "{call ame_sale_list_by_id(?)}";
+			String sql = "{call ame_ic_adjustment_list_by_id(?)}";
 			CallableStatement c = con.prepareCall(sql);
 			c.setString(1, adj.getAdjId());
 			ResultSet rs  = c.executeQuery();			

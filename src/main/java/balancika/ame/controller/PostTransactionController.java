@@ -14,9 +14,14 @@ import org.springframework.web.bind.annotation.RestController;
 import balancika.ame.entities.MeDataSource;
 import balancika.ame.entities.tansaction.APPayment;
 import balancika.ame.entities.tansaction.ARReceipt;
+import balancika.ame.entities.tansaction.CashAdvance;
+import balancika.ame.entities.tansaction.CashAdvanceClearance;
+import balancika.ame.entities.tansaction.CashTransfer;
 import balancika.ame.entities.tansaction.CreditNote;
 import balancika.ame.entities.tansaction.DebitNote;
+import balancika.ame.entities.tansaction.ICAdjustment;
 import balancika.ame.entities.tansaction.ICTransfer;
+import balancika.ame.entities.tansaction.Journal;
 import balancika.ame.entities.tansaction.PurchaseInvoice;
 import balancika.ame.entities.tansaction.PurchaseReturn;
 import balancika.ame.entities.tansaction.Sale;
@@ -24,9 +29,14 @@ import balancika.ame.entities.tansaction.SaleReturn;
 import balancika.ame.entities.tansaction.Transaction;
 import balancika.ame.service.APPaymentService;
 import balancika.ame.service.ARReceiptService;
+import balancika.ame.service.CashAdvanceClearanceService;
+import balancika.ame.service.CashAdvanceService;
+import balancika.ame.service.CashTransferService;
 import balancika.ame.service.CreditNoteService;
 import balancika.ame.service.DebitNoteService;
+import balancika.ame.service.ICAdjustmentService;
 import balancika.ame.service.ICTransferService;
+import balancika.ame.service.JournalService;
 import balancika.ame.service.PostTransactionService;
 import balancika.ame.service.PurchaseInvoiceService;
 import balancika.ame.service.PurchaseReturnService;
@@ -69,6 +79,21 @@ public class PostTransactionController {
 	
 	@Autowired
 	private ICTransferService trfService;
+	
+	@Autowired
+	private ICAdjustmentService adjService;
+	
+	@Autowired
+	private CashAdvanceService caService;
+	
+	@Autowired
+	private CashTransferService ctfService;
+	
+	@Autowired
+	private JournalService jnService;
+	
+	@Autowired
+	private CashAdvanceClearanceService clService;
 	
 	@RequestMapping(value = {"/list"}, method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> listTransaction(@RequestBody Transaction tran,HttpServletRequest req){
@@ -1366,62 +1391,106 @@ public class PostTransactionController {
 				case "IC Adjustment":
 					sql = "SELECT COUNT(*) as CRow FROM tblAdjustment WHERE AdjID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
-						map.put("MESSAGE", "SUCCESS");
-						
-						
+						ICAdjustment adj = new ICAdjustment();
+						adj.setAdjId(tran.getTransId());
+						ICAdjustment adjustment = adjService.getICAdjustment(adj, dataSource);
+						if(adjustment != null){
+							map.put("MESSAGE", "SUCCESS");
+							map.put("STATUS", HttpStatus.OK.value());
+							map.put("DATA", adjustment);
+							return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+						}else{
+							map.put("MESSAGE", "FAILED");
+							map.put("MSG", "The IC Adjustment with record id: "+tran.getTransId()+" does not exist.");
+						}						
 					}else{
 						map.put("MESSAGE", "FAILED");
-						
+						map.put("MSG", "The IC Adjustment with record id: "+tran.getTransId()+" does not exist.");
 					}
 			    	break;
 				case "Cash Transfer":
 					sql = "SELECT COUNT(*) as CRow FROM tblMoney_Company_Transfer WHERE TrID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
-						map.put("MESSAGE", "SUCCESS");
-						
+						CashTransfer ctf = new CashTransfer();
+						ctf.setCtfId(tran.getTransId());
+						CashTransfer cashTransfer = ctfService.getCashTransfer(ctf, dataSource);
+						if(cashTransfer != null){
+							map.put("MESSAGE", "SUCCESS");
+							map.put("STATUS", HttpStatus.OK.value());
+							map.put("DATA", cashTransfer);
+							return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+						}else{
+							map.put("MESSAGE", "FAILED");
+							map.put("MSG", "The Cash Transfer with record id: "+tran.getTransId()+" does not exist.");
+						}
 						
 					}else{
 						map.put("MESSAGE", "FAILED");
-						
+						map.put("MSG", "The Cash Transfer with record id: "+tran.getTransId()+" does not exist.");
 					}
 			    	break;
 				case "Cash Advance":
 					sql = "SELECT COUNT(*) as CRow FROM tblCashAdvance WHERE CaID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
-						map.put("MESSAGE", "SUCCESS");
-						
-						
+						CashAdvance ca  = new CashAdvance();
+						ca.setCaId(tran.getTransId());
+						CashAdvance cash = caService.getCashAdvance(ca, dataSource);
+						if(cash!=null){
+							map.put("MESSAGE", "SUCCESS");
+							map.put("STATUS", HttpStatus.OK.value());
+							map.put("DATA", cash);
+							return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+						}else{
+							map.put("MESSAGE", "FAILED");
+							map.put("MSG", "The Cash Advance with record id: "+tran.getTransId()+" does not exist.");
+						}
 					}else{
 						map.put("MESSAGE", "FAILED");
-						
+						map.put("MSG", "The Cash Advance with record id: "+tran.getTransId()+" does not exist.");
 					}
 			    	break;
 				case "Cash Advance Clearance":
 					sql = "SELECT COUNT(*) as CRow FROM tblClearance_History WHERE ClID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
-						map.put("MESSAGE", "SUCCESS");
-						
-						
+						CashAdvanceClearance cac = new CashAdvanceClearance();
+						cac.setClId(tran.getTransId());
+						CashAdvanceClearance cash = clService.getCashAdvanceClearance(cac, dataSource);
+						if(cash!=null){
+							map.put("MESSAGE", "SUCCESS");
+							map.put("STATUS", HttpStatus.OK.value());
+							map.put("DATA", cash);
+							return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+						}else{
+							map.put("MESSAGE", "FAILED");
+							map.put("MSG", "The Cash Advance Clearance with record id: "+tran.getTransId()+" does not exist.");
+						}
 					}else{
 						map.put("MESSAGE", "FAILED");
-						
+						map.put("MSG", "The Cash Advance Clearance with record id: "+tran.getTransId()+" does not exist.");
 					}
 			    	break;
 				case "GL Entries":
 					sql = "SELECT COUNT(*) as CRow FROM tblJournal WHERE JID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
-						map.put("MESSAGE", "SUCCESS");
-						
-						
+						Journal j = new Journal();						
+						j.setjId(Integer.parseInt(tran.getTransId()));
+						Journal jn = jnService.getJournal(j, dataSource);
+						if(jn!=null){
+							map.put("MESSAGE", "SUCCESS");
+							map.put("STATUS", HttpStatus.OK.value());
+							map.put("DATA", jn);
+							return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+						}else{
+							map.put("MESSAGE", "FAILED");
+							map.put("MSG", "The GL Entries with record id: "+tran.getTransId()+" does not exist.");
+						}
 					}else{
 						map.put("MESSAGE", "FAILED");
-						
+						map.put("MSG", "The GL Entries with record id: "+tran.getTransId()+" does not exist.");
 					}
 			    	break;
-			    default:
-		    	
-			} 
-			
+			    default:		    	
+			} 			
 			map.put("STATUS", HttpStatus.OK.value());
 			return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 		}
