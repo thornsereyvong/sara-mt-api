@@ -289,7 +289,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 		        	
 		        	String checkAndOrAmount = "";
 		        	if(rs4.getString("Auth_GroupAndOr").equals("Or")){
-		        		checkAndOrAmount = "";
+		        		checkAndOrAmount = "";		        	
 		        	}else{
 		        		checkAndOrAmount = rs4.getString("Auth_GroupAmount");
 		        	}

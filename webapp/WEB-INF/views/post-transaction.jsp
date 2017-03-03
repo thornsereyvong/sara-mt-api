@@ -51,6 +51,7 @@
 												<option value="IC Transfer">IC Transfer</option>
 												<option value="IC Adjustment">IC Adjustment</option>
 												<option value="Cash Transfer">Cash Transfer</option>
+												<option value="Cash Advance">Cash Advance</option>
 												<option value="Cash Advance Clearance">Cash Advance Clearance</option>
 												<option value="GL Entries">GL Entries</option>
 											</select>
@@ -1214,8 +1215,7 @@
 						</div>
 					</div>
 				</div>
-				
-				
+								
 				<div class="modal fade modal-default" id="frmARCdn" role="dialog">
 					<div class="modal-dialog  modal-lg">
 						<div class="modal-content">
@@ -1633,7 +1633,180 @@
 					</div>
 				</div>
 				
+				<div class="modal fade modal-default" id="frmICAdjustment" role="dialog">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><b>IC ADJUSTMENT</b></h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Entry No</label>
+										<div class="form-group">
+											<input type="text" value="{{icAdjustment.adjId}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Post Status</label>
+										<div class="form-group">
+											<input type="text" value="{{icAdjustment.postStatus}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Adjustment Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{icAdjustment.adjDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Reference</label>
+										<div class="form-group">
+											<input type="text" value="{{icAdjustment.adjReference}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<label class="font-label">Remark</label>
+										<div class="form-group">
+											<input type="text" value="{{icAdjustment.adjDesc}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12 table-responsive">
+										<table class="table table-hover">
+											<tr>
+												<th>Item ID</th>
+												<th>Item Name</th>
+												<th>Location ID</th>
+												<th>Class ID</th>
+												<th>Batch No</th>
+												<th>Uom ID</th>
+												<th>Qty Adjustment</th>
+											</tr>
+											<tbody>
+												<tr ng-repeat="tr in icAdjustment.adjDetail" >
+													<td ng-cloak>{{tr.item.itemId}}</td>
+													<td ng-cloak>{{tr.item.itemName}}</td>
+													<td ng-cloak>{{tr.location.locationId}}</td>
+													<td ng-cloak>{{tr.classCode.classId}}</td>
+													<td ng-cloak>{{tr.batchNo}}</td>
+													<td ng-cloak>{{tr.uom.uomId}}</td>
+													<td ng-cloak>{{tr.adjQty | number:2}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="modal fade modal-default" id="frmCashAdvance" role="dialog">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><b>CASH ADVANCE</b></h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Entry No</label>
+										<div class="form-group">
+											<input type="text" value="{{cashAdvance.caId}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Post Status</label>
+										<div class="form-group">
+											<input type="text" value="{{cashAdvance.postStatus}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Cash Advance Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{cashAdvance.caDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Expected Clear Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{cashAdvance.expectedClearDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Reference</label>
+										<div class="form-group">
+											<input type="text" value="{{cashAdvance.caReference}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Employee</label>
+										<div class="form-group">
+											<input type="text" value="[{{cashAdvance.employee.empID}}] cashAdvance.employee.empName" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Cash Account</label>
+										<div class="form-group">
+											<input type="text" value="[{{cashAdvance.cashAccount.accountId}}] {{cashAdvance.cashAccount.accountName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Cash Advance Account</label>
+										<div class="form-group">
+											<input type="text" value="[{{cashAdvance.cashAdvanceAccount.accountId}}] {{cashAdvance.cashAdvanceAccount.accountName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Class</label>
+										<div class="form-group">
+											<input type="text" value="[{{cashAdvance.classCode.classId}}] cashAdvance.classCode.className" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Account</label>
+										<div class="form-group">
+											<input type="text" value="{{cashAdvance.clearAmount | number:2}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<label class="font-label">Remark</label>
+										<div class="form-group">
+											
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<div class="form-group">
+											<textarea rows="5" style="width:100%">{{cashAdvance.remark}}</textarea>
+										</div>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
 				<div id="errors"></div>
+				
 			</div>
 			<jsp:include page="${request.contextPath}/foot"></jsp:include>
 		</div>
@@ -1916,13 +2089,15 @@
 										
 								    	break;
 									case "IC Adjustment":
-										
+										$scope.icAdjustment = response.DATA;
+										$("#frmICAdjustment").modal({backdrop: 'static', keyboard: false});
 								    	break;
 									case "Cash Transfer":
 										
 								    	break;
 									case "Cash Advance":
-										
+										$scope.cashAdvance = response.DATA;
+										$("#frmCashAdvance").modal({backdrop: 'static', keyboard: false});
 								    	break;
 									case "Cash Advance Clearance":
 										
