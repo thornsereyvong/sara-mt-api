@@ -2093,17 +2093,20 @@
 										$("#frmICAdjustment").modal({backdrop: 'static', keyboard: false});
 								    	break;
 									case "Cash Transfer":
-										
+										$scope.cashTransfer = response.DATA;
+										$("#frmCashTransfer").modal({backdrop: 'static', keyboard: false});
 								    	break;
 									case "Cash Advance":
 										$scope.cashAdvance = response.DATA;
 										$("#frmCashAdvance").modal({backdrop: 'static', keyboard: false});
 								    	break;
 									case "Cash Advance Clearance":
-										
+										$scope.cashAdvanceClearance = response.DATA;
+										$("#frmCashAdvanceClearance").modal({backdrop: 'static', keyboard: false});
 								    	break;
 									case "GL Entries":
-										
+										$scope.glEntries = response.DATA;
+										$("#frmGLEntries").modal({backdrop: 'static', keyboard: false});
 								    	break;
 								    default:
 								}
