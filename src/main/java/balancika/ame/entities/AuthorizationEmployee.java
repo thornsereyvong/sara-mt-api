@@ -1,13 +1,28 @@
 package balancika.ame.entities;
 
+import java.util.List;
+
 public class AuthorizationEmployee {
 	private String empId;
 	private String authProcess;
 	private String authId;
 	private String authName;
+	private int action;
+	private List<Employee> empDetail;
 	
 	
-	
+	public int getAction() {
+		return action;
+	}
+	public void setAction(int action) {
+		this.action = action;
+	}
+	public List<Employee> getEmpDetail() {
+		return empDetail;
+	}
+	public void setEmpDetail(List<Employee> empDetail) {
+		this.empDetail = empDetail;
+	}
 	public String getAuthName() {
 		return authName;
 	}

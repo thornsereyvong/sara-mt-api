@@ -12,11 +12,10 @@
 
 		<jsp:include page="${request.contextPath}/header"></jsp:include>
 		<jsp:include page="${request.contextPath}/menu"></jsp:include>
-	<style>
-			.width-75{ width: 75px !important; }
-			.cursor-pointer{ cursor: pointer !important; margin-top: -20px !important;}
-		
-		</style>
+<style>
+	.width-75{ width: 75px !important; }
+	.cursor-pointer{ cursor: pointer !important; margin-top: -20px !important;}
+</style>
 
 		<div class="content-wrapper" ng-controller="authoriCon">
 			<section class="content-header">
@@ -72,7 +71,6 @@
 												<td ng-cloak>{{data.authName}}</td>
 												<td ng-cloak >
 													<button class="btn btn-default btn-sm" ng-click="deleteAuthEmployeeById(data.empId,data.authProcess,data.authId)"><i class="glyphicon glyphicon-trash"></i></button>
-													
 												</td>							
 											</tr> 
 									
@@ -96,31 +94,52 @@
 			<div id="errors"></div>
 			<!-- Dialog Create  -->
 			
-			<div data-ng-init="listEmployee()"  data-backdrop="static" class="modal fade bs-example-modal-lg" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+			<div data-ng-init="listEmployee()"  data-backdrop="static" class="modal fade bs-example-modal-lg" id="myModal" role="dialog" aria-labelledby="myModalLabel">
 			  <div class="modal-dialog modal-lg" role="document">
 			    <div class="modal-content">
 			      <div class="modal-header">
 			        <button type="button" class="close" data-dismiss="modal" ng-click="closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			        <h4 class="modal-title" id="myModalLabel"><b>[{{btn_save | uppercase}}] Group</b></h4>
+			        <h4 class="modal-title" id="myModalLabel"><b>[{{btn_save | uppercase}}] </b></h4>
 			      </div>
-			       <form id="form_group">
+			     
+			     <form id="form_group">
 			      <div class="modal-body">
 			     
 			      <div class="clearfix"></div>
-			       
-			       <div class="col-sm-12">
-			       		<label>Authorization Name</label>
-			       		<div class="form-group">
-			       			<input type="text" name="authori_name" id="authori_name" ng-model="authName" class="form-control"> 
-			       		</div>
-			       </div>
-			        <div class="clearfix"></div>
-			       <div class="col-sm-12">
-			       		<label>Authorization Description</label>
-			       		<div class="form-group">
-			       			<input type="text" name="authori_desc" id="authori_desc" ng-model="authDesc" class="form-control"> 
-			       		</div>
-			       </div>
+		
+			      	 
+			      		<div class="col-md-4 col-sm-4">
+							<label>Action</label>
+							<div class="form-group">
+								<select class="form-control" name="action" id="action"  style="width:100%"  >
+									<option value="">-- Select Action --</option>
+									<option value="1">Override Existing</option>
+									<option value="0">Keep Existing</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="col-sm-4 col-md-4">
+							<label>Process</label>
+							<div class="form-group">
+								<select class="form-control" name="process" id="process" ng-model="processMod">
+									<option value="">-- Select Process --</option>
+									<option value="Sale Order">Sale Order</option>
+									<option value="Quote">Quote</option>
+								</select>
+							</div>
+						</div>
+						
+						<div class="col-md-4 col-sm-4">
+							<label>Authorization</label>
+							<div class="form-group">
+								<select class="form-control select2" name="authorization" id="authorization" ng-model="empMod" style="width:100%">
+									<option value="">-- Select Authorization --</option>
+									<option ng-repeat="ath in authorization" value="{{ath.authId}}" ng-cloak>[{{ath.authId}}] {{ath.authName}}</option>
+								</select>
+							</div>
+						</div>
+						 <div class="clearfix"></div>
 			       
 			      <div class="col-sm-3">
 				  	<form class="form-inline">
@@ -233,8 +252,6 @@
 					var getEv = getValueStringById("btn_save");
 					if(getEv == "Create"){
 						$scope.createAuthGroup();
-					}else{
-						$scope.updateAuthGroup();
 					}
 				
 				}	
@@ -253,12 +270,10 @@
 					$scope.emps[index].statusCheck = !$scope.emps[index].statusCheck;
 				}
 
-				
-
-				
 				$scope.closeModal = function(){
-					setValueById("authori_name","");
-					setValueById("authori_desc","");
+					setValueById("action","");
+					setValueById("process","");
+					$("#authorization").select2("val","");
 					$("#form_group").bootstrapValidator('resetForm', 'true');
 					$("input[name=ckr]").prop('checked', false);
 					$scope.btn_save = "Create";
@@ -284,6 +299,22 @@
 					});
 				}
 
+				$scope.listAuthorization = function(){
+					$http({
+			 			method: 'GET',
+					    url: "${pageContext.request.contextPath}/rest/authorization/list",
+					    headers: {
+					    	'Accept': 'application/json',
+					        'Content-Type': 'application/json'
+					    }	    
+					}).success(function(response) {
+						$scope.authorization = [];
+						if(response.MESSAGE == "SUCCESS"){
+							$scope.authorization = response.DATA;
+						}
+					});
+				}
+				$scope.listAuthorization();
 				$scope.listEmployee();
 
 				$scope.changeEmp = function(){
@@ -311,37 +342,46 @@
 					var listEmpDetail = [];
 					
 					for(var i=0; i< Object.keys($scope.emps).length ;i++){		
-						
 						if($scope.emps[i].statusCheck == true){	
-							listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empID});
-						}
-						
+							listEmpDetail.push({"empID":$scope.emps[i].empID});
+						}	
 					}
 				
 
 						$('#form_group').data('bootstrapValidator').validate();
 						var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
 						if(addAuthGroup){
-							var groupName = getValueStringById("authori_name");
-							var groupDesc = getValueStringById("authori_desc");
+							var process = getValueStringById("process");
+							var authorization = getValueStringById("authorization");
+							var action = getValueStringById("action");
 							var stringValue = {
-								    "authGroupName":groupName,"authGroupDesc":groupDesc, "authGroupDetail":listEmpDetail
-							};
+								    			"authProcess":process,"authId":authorization, "action": action,"empDetail":listEmpDetail
+											  };
 							$http({
 					 			method: 'POST',
-							    url: "${pageContext.request.contextPath}/rest/authorizationgroup/create",
+							    url: "${pageContext.request.contextPath}/rest/authorizationemployee/create",
 							    headers: {
 							    	'Accept': 'application/json',
 							        'Content-Type': 'application/json'
 							    }	,
 							    data : stringValue    
 							}).success(function(response) {	
-						
-								if(response.MESSAGE == "SUCCESS"){
-									$scope.listAuthorizationEmployee();
+
+
+								if(response.MESSAGE == "success"){
 									$scope.closeModal();
-								}else if(response.MESSAGE == "EXIST"){
-									alert("EXIST");
+									$.alert({
+			                            title: '<h3 class="text-center">Success</h3>',
+			                            type: 'green',
+			                            content: response.DESCRIPTION+"<hr>",
+			                     	});
+									
+								}else {
+									$.alert({
+			                            title: '<h3 class="text-center">Fail</h3>',
+			                            type: 'red',
+			                            content: "<hr>",
+			                       });
 								}
 								
 							});
@@ -350,49 +390,7 @@
 				}
 
 
-				$scope.updateAuthGroup = function(){
-					var tr = $("#data-emp tr");
-					var listEmpDetail = [];
-					for(var i=0; i< Object.keys($scope.emps).length ;i++){		
-						
-						if($scope.emps[i].statusCheck == true){	
-							listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empID});
-						}
-						
-					}
-				
-
-						$('#form_group').data('bootstrapValidator').validate();
-						var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
-						if(addAuthGroup){
-							var groupName = getValueStringById("authori_name");
-							var groupDesc = getValueStringById("authori_desc");
-							var stringValue = {
-								    "authGroupId": $scope.authoriID ,"authGroupName":groupName,"authGroupDesc":groupDesc, "authGroupDetail":listEmpDetail
-							};
-							
-							$http({
-					 			method: 'POST',
-							    url: "${pageContext.request.contextPath}/rest/authorizationgroup/edit",
-							    headers: {
-							    	'Accept': 'application/json',
-							        'Content-Type': 'application/json'
-							    }	,
-							    data : stringValue    
-							}).success(function(response) {	
-								
-								if(response.MESSAGE == "SUCCESS"){
-									$scope.listAuthorizationEmployee();
-									$scope.closeModal();
-								}else if(response.MESSAGE == "EXIST"){
-									alert("EXIST");
-								}
-								
-							});
-						}
-					
-				}
-
+			
 				$scope.deleteAuthEmployeeById = function(empId,process,authID){
 					$.confirm({
 					    title: '<h3 class="text-center">Are you sure you want to delete  this process '+process+' ?</h3>',
@@ -403,8 +401,8 @@
 					    	confirm: {
 					            text: 'Delete',
 					            action: function () {
-					            	$http({
-							 			method: 'POST',
+					            	$http({   
+					            		method:"POST",  
 									    url: "${pageContext.request.contextPath}/rest/authorizationemployee/deleteById/"+empId+"/"+process+"/"+authID,
 									    headers: {
 									    	'Accept': 'application/json',
@@ -439,33 +437,6 @@
 					
 				}
 
-				$scope.getAuthGroupByID = function(authID){
-					$scope.btn_save = "Edit";
-					$http({
-			 			method: 'GET',
-					    url: "${pageContext.request.contextPath}/rest/authorizationgroup/get/"+authID,
-					    headers: {
-					    	'Accept': 'application/json',
-					        'Content-Type': 'application/json'
-					    }	    
-					}).success(function(response) {
-						$scope.authGroupByID = [];
-						if(response.MESSAGE == "SUCCESS"){
-							$scope.authGroupByID = response.authorizationGroup;
-							$scope.authorizationGroupDetail = response.authorizationGroupDetail;
-							$scope.authoriID =  "";
-							 angular.forEach($scope.authGroupByID, function(value, key){
-									$("#authori_name").val(value.authGroupName);
-									$("#authori_desc").val(value.authGroupDesc);
-									$scope.authoriID = value.authGroupId;
-							 });
-
-							$scope.emps = response.Employees;
-
-						}
-					});
-				}
-
 
 
 
@@ -492,22 +463,24 @@
 						validating: 'glyphicon glyphicon-refresh'
 					},
 					fields: {
-						authori_name: {
+						action: {
 							validators: {
 								notEmpty: {
-									message: 'The authorization group name is required and can not be empty!'
-								},
-								stringLength: {
-									max: 255,
-									message: 'The authorization group name must be less than 255 characters long.'
+									message: 'The authorization action is required and can not be empty!'
 								}
 							}
 						},
-						authori_desc: {
+						process: {
 							validators: {
-								stringLength: {
-									max: 255,
-									message: 'The authorization group description must be less than 255 characters long.'
+								notEmpty: {
+									message: 'The authorization process must is required and can not be empty!'
+								}
+							}
+						},
+						authorization: {
+							validators: {
+								notEmpty: {
+									message: 'The authorization  is required and can not be empty!'
 								}
 							}
 						}
@@ -515,8 +488,6 @@
 					}
 				});
 
-
-				
 			  
 			});
 		
