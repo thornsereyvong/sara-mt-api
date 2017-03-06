@@ -31,7 +31,7 @@ public class CashAdvanceClearanceServiceImpl implements CashAdvanceClearanceServ
 			CashAdvance cashAdvance = null;
 			CashAdvanceClearance cash = null;
 			CashAdvanceClearanceDetail cashDetail = null;
-			ArrayList<CashAdvanceClearanceDetail> cashs= new ArrayList<>();
+			ArrayList<CashAdvanceClearanceDetail> cashs = new ArrayList<>();
 			int i=0;
 			while(rs.next()){	i++;
 				if(i==1){
