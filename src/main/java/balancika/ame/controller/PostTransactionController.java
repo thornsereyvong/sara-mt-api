@@ -1449,7 +1449,7 @@ public class PostTransactionController {
 						map.put("MSG", "The Cash Advance with record id: "+tran.getTransId()+" does not exist.");
 					}
 			    	break;
-				case "Cash Advance Clearance":
+				case "Cash Advance Clearance":					
 					sql = "SELECT COUNT(*) as CRow FROM tblClearance_History WHERE ClID = '"+tran.getTransId()+"'";
 					if(post.checkExist(sql, dataSource)){
 						CashAdvanceClearance cac = new CashAdvanceClearance();

@@ -1805,6 +1805,222 @@
 					</div>
 				</div>
 				
+				<div class="modal fade modal-default" id="frmCashAdvanceClearance" role="dialog">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><b>CASH ADVANCE CLEARANCE</b></h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Entry No</label>
+										<div class="form-group">
+											<input type="text" value="{{cashAdvanceClearance.clId}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Post Status</label>
+										<div class="form-group">
+											<input type="text" value="{{cashAdvanceClearance.postStatus}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Clearance Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{cashAdvanceClearance.clearDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Reference</label>
+										<div class="form-group">
+											<input type="text" value="{{cashAdvanceClearance.reference}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Cash Account</label>
+										<div class="form-group">
+											<input type="text" value="[{{cashAdvanceClearance.account.accountId}}] {{cashAdvanceClearance.account.accountName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Employee</label>
+										<div class="form-group">
+											<input type="text" value="[{{cashAdvanceClearance.employee.empID}}] {{cashAdvanceClearance.employee.empName}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Class</label>
+										<div class="form-group">
+											<input type="text" value="[{{cashAdvanceClearance.classCode.classId}}] {{cashAdvanceClearance.classCode.className}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Remark</label>
+										<div class="form-group">
+											<input type="text" value="{{cashAdvanceClearance.remark}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12 table-responsive">
+										<table class="table table-hover">
+											<tr>
+												<th>Cash Advance ID</th>
+												<th>Reference</th>
+												<th>Cash Advance Date</th>
+												<th>Original Amount</th>
+												<th>Payment To Date</th>
+												<th>Amount Due</th>
+												<th>Net Amount Due</th>
+												<th>Description</th>
+											</tr>
+											<tbody>
+												<tr  ng-repeat="tr in cashAdvanceClearance.cashAdvanceClearances" ng-if="tr.cashAdvance.caId != null" >
+													<td ng-cloak>{{tr.cashAdvance.caId}}</td>
+													<td ng-cloak>{{tr.cashAdvance.caReference}}</td>
+													<td ng-cloak>{{tr.cashAdvance.caDate}}</td>
+													<td ng-cloak>{{tr.cashAdvance.amount | number:2}}</td>
+													<td ng-cloak>{{tr.cashAdvance.clearAmount | number:2}}</td>
+													<td ng-cloak>{{(tr.cashAdvance.amount-tr.cashAdvance.clearAmount) | number:2}}</td>
+													<td ng-cloak>{{tr.remark}}</td>
+													<td ng-cloak>{{((tr.cashAdvance.amount-tr.cashAdvance.clearAmount)-tr.clearAmount) | number:2}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="clearfix"></div>
+									<br>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Amount</label>
+										<div class="form-group">
+											<input type="text" value="{{getTotalAmountClearance() | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
+							</div>
+						</div>
+					</div>
+				</div>   
+				
+				
+				<div class="modal fade modal-default" id="frmGLEntries" role="dialog">
+					<div class="modal-dialog  modal-lg">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal">&times;</button>
+								<h4 class="modal-title"><b>GENERAL JOURNAL ENTRY</b></h4>
+							</div>
+							<div class="modal-body">
+								<div class="row">
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Entry No</label>
+										<div class="form-group">
+											<input type="text" value="{{glEntries.jId}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6 col-md-6 col-xs-12">
+										<label class="font-label">Post Status</label>
+										<div class="form-group">
+											<input type="text" value="{{glEntries.postStatus}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Journal Date</label>
+										<div class="form-group">
+					                  		<div class="input-group">
+						                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+						                    	<input type="text" disabled class="form-control pull-right date" value="{{glEntries.jDate}}" readonly="readonly" name="fromdate">
+						                  	</div>
+				                		</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Account Peroid</label>
+										<div class="form-group">
+											<input type="text" value="[{{glEntries.periodM}}] [{{glEntries.peroidY}}]" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Source Code</label>
+										<div class="form-group">
+											<input type="text" value="{{glEntries.type}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-6">
+										<label class="font-label">Journal Reference</label>
+										<div class="form-group">
+											<input type="text" value="{{glEntries.reference}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12">
+										<label class="font-label">Remark</label>
+										<div class="form-group">
+											<input type="text" value="{{glEntries.remark}}" disabled class="form-control" >
+										</div>
+									</div>
+									<div class="col-sm-12 table-responsive">
+										<table class="table table-hover">
+											<tr>
+												<th>Account ID</th>
+												<th>Account Name</th>
+												<th>Class ID</th>
+												<th>Trans. Date</th>
+												<th>Description</th>
+												<th>Debit</th>
+												<th>Credit</th>
+											</tr>
+											<tbody>
+												<tr  ng-repeat="tr in glEntries.journalDetail">
+													<td ng-cloak>{{tr.account.accountId}}</td>
+													<td ng-cloak>{{tr.account.accountName}}</td>
+													<td ng-cloak>{{tr.classCode.classId}}</td>
+													<td ng-cloak>{{tr.jDate}}</td>
+													<td ng-cloak>{{tr.reference}}</td>
+													<td ng-cloak>{{(tr.drCr == 'Dr' ? tr.amount:0) | number:2}}</td>
+													<td ng-cloak>{{(tr.drCr == 'Cr' ? -tr.amount:0) | number:2}}</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+									<div class="clearfix"></div>
+									<br>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Debit</label>
+										<div class="form-group">
+											<input type="text" value="{{getTotalDrAmount() | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Credit</label>
+										<div class="form-group">
+											<input type="text" value="{{getTotalCrAmount() | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+									<div class="col-sm-6 col-md-6 col-xs-12 pull-right">
+										<label class="font-label">Total Balance</label>
+										<div class="form-group">
+											<input type="text" value="{{(getTotalDrAmount()-getTotalCrAmount()) | number:2}}" disabled class="form-control text-right" >
+										</div>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-danger" data-dismiss="modal">CLOSE</button>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				
 				<div id="errors"></div>
 				
 			</div>
@@ -2046,7 +2262,6 @@
 							    "transId" : transId
 							}
 						}).success(function(response) {
-							dis(response.DATA)
 							if(response.MESSAGE == "SUCCESS"){			
 								switch(transType) {
 									case "AP Invoice":
@@ -2156,6 +2371,44 @@
 						}
 					}
 					return x;
+				}
+				$scope.getTotalAmountClearance = function(){
+					if (typeof ($scope.cashAdvanceClearance) === 'undefined') {
+			            return 0;
+			        }
+					var x = 0;
+					if($scope.cashAdvanceClearance.cashAdvanceClearances != null){
+						for(var i=0;i<$scope.cashAdvanceClearance.cashAdvanceClearances.length;i++){
+							x += Number($scope.cashAdvanceClearance.cashAdvanceClearances[i].cashAdvance.amount)-Number($scope.cashAdvanceClearance.cashAdvanceClearances[i].cashAdvance.clearAmount)-Number($scope.cashAdvanceClearance.cashAdvanceClearances[i].clearAmount);
+						}
+					}
+					return x;
+				}
+				$scope.getTotalDrAmount = function(){
+					if (typeof ($scope.glEntries) === 'undefined') {
+			            return 0;
+			        }
+					var x = 0;
+					if($scope.glEntries.journalDetail != null){
+						for(var i=0;i<$scope.glEntries.journalDetail.length;i++){
+							if($scope.glEntries.journalDetail[i].drCr == 'Dr')
+								x += Number($scope.glEntries.journalDetail[i].amount);
+						}
+					}
+					return x;
+				}
+				$scope.getTotalCrAmount = function(){
+					if (typeof ($scope.glEntries) === 'undefined') {
+			            return 0;
+			        }
+					var x = 0;
+					if($scope.glEntries.journalDetail != null){
+						for(var i=0;i<$scope.glEntries.journalDetail.length;i++){
+							if($scope.glEntries.journalDetail[i].drCr == 'Cr')
+								x += Number($scope.glEntries.journalDetail[i].amount);
+						}
+					}
+					return -x;
 				}
 				
 			}]);

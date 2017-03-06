@@ -24,7 +24,7 @@ public class CashAdvanceClearanceServiceImpl implements CashAdvanceClearanceServ
 	@Override
 	public CashAdvanceClearance getCashAdvanceClearance(CashAdvanceClearance cl, MeDataSource dataSource) {
 		try (Connection con = DBConnection.getConnection(dataSource)){			
-			String sql = "{call ame_cash_advance_list_by_id(?)}";
+			String sql = "{call ame_cash_advance_clearance_list_by_id(?)}";
 			CallableStatement c = con.prepareCall(sql);
 			c.setString(1, cl.getClId());
 			ResultSet rs  = c.executeQuery();
@@ -44,26 +44,29 @@ public class CashAdvanceClearanceServiceImpl implements CashAdvanceClearanceServ
 					cash.setRemark(rs.getString("Remark"));
 					cash.setClassCode(new Class(rs.getString("ClassID"), rs.getString("ClassName"), 0));
 					cash.setEmployee(new Employee(rs.getString("EmpID"), rs.getString("EmpName")));
-					cash.setAccount(new Account(rs.getString("CashAcc"), rs.getString("CashAccountName")));
-					
+					cash.setAccount(new Account(rs.getString("CashAcc"), rs.getString("CashAccountName")));					
 				}
 				cashDetail = new CashAdvanceClearanceDetail();
 				cashDetail.setCrId(rs.getString("CLID"));
 				cashDetail.setClassCode(new Class(rs.getString("ClassDID"), rs.getString("ClassDName"), 0));
+				cashDetail.setClearAmount(rs.getDouble("ClearAMT"));
+				cashDetail.setRemark(rs.getString("RemarkDetail"));
+				
 				cashAdvance = new CashAdvance();
 				cashAdvance.setCaId(rs.getString("CAID"));
 				cashAdvance.setCaReference(rs.getString("CAReference"));
 				cashAdvance.setCaDate(rs.getDate("Date"));
 				cashAdvance.setAmount(rs.getDouble("CashAmount"));
-				
+				cashDetail.setCashAdvance(cashAdvance);
+				cashs.add(cashDetail);				
 			}
-			
-			
+			if(cash !=null)
+				cash.setCashAdvanceClearances(cashs);		
+					
 			return cash;
 		}catch (Exception e) {
 			e.printStackTrace();
-		}
-		
+		}		
 		return null;
 	}
 

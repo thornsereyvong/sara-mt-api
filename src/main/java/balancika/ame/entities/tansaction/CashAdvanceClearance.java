@@ -1,6 +1,7 @@
 package balancika.ame.entities.tansaction;
 
 import java.sql.Date;
+import java.util.List;
 
 import balancika.ame.entities.maintain.Employee;
 import balancika.ame.entities.setting.Account;
@@ -13,6 +14,14 @@ public class CashAdvanceClearance {
 	private Employee employee;
 	private Class classCode;
 	private Account account;
+	private List<CashAdvanceClearanceDetail> cashAdvanceClearances;
+			
+	public List<CashAdvanceClearanceDetail> getCashAdvanceClearances() {
+		return cashAdvanceClearances;
+	}
+	public void setCashAdvanceClearances(List<CashAdvanceClearanceDetail> cashAdvanceClearances) {
+		this.cashAdvanceClearances = cashAdvanceClearances;
+	}
 	public String getClId() {
 		return clId;
 	}
