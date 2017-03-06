@@ -17,7 +17,7 @@
 					<li class="${mAuthor}"><a href="${pageContext.request.contextPath}/authorization"><i class="fa fa-circle-o"></i>Authorization</a></li>
 					<li class="${mAuthorGroup}"><a href="${pageContext.request.contextPath}/authorization/group"><i class="fa fa-circle-o"></i>Authorization Group</a></li>
 					<li class="${mAuthorEmp}"><a href="${pageContext.request.contextPath}/authorization/employee"><i class="fa fa-circle-o"></i>Employee Authorization</a></li>					
-					<li><a href="${pageContext.request.contextPath}/authorizaton/approval"><i class="fa fa-circle-o"></i>Authorization Approval</a></li>
+					<%-- <li><a href="${pageContext.request.contextPath}/authorizaton/approval"><i class="fa fa-circle-o"></i>Authorization Approval</a></li> --%>
 				</ul>
 			</li>
 			

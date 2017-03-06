@@ -14,6 +14,7 @@ import com.mysql.jdbc.CallableStatement;
 import com.mysql.jdbc.Connection;
 
 import balancika.ame.entities.AuthorizationEmployee;
+import balancika.ame.entities.Employee;
 import balancika.ame.entities.MeDataSource;
 import balancika.ame.service.AuthorizationEmployeeService;
 import balancika.ame.utilities.DBConnection;
@@ -27,7 +28,7 @@ public class AuthorizationEmployeeServiceImpl implements AuthorizationEmployeeSe
 		AuthorizationEmployee auth = null;
 		CallableStatement cstmt = null;
 		try (Connection con = DBConnection.getConnection(dataSource)){
-			String sql = "{call spHRMGetEmployeeIDAuthorisation(?)}";
+			String sql = "{call spAMEGetEmployeeIDAuthorisation(?)}";
 			cstmt = (CallableStatement) con.prepareCall(sql);
 			cstmt.setString(1, empId);	
 			ResultSet rs = cstmt.executeQuery();
@@ -88,6 +89,67 @@ public class AuthorizationEmployeeServiceImpl implements AuthorizationEmployeeSe
 			e.printStackTrace();
 		}finally{
 			 cstmt.close();
+		}
+		return null;
+	}
+
+	@Override
+	public Map<String, Object> createAuthorizationEmployee(MeDataSource dataSource, AuthorizationEmployee authEmp) throws SQLException {
+		
+		CallableStatement cbs = null;
+		
+		
+		try (Connection con = DBConnection.getConnection(dataSource)){
+		
+			
+			String empDetail = "";
+			if(authEmp.getEmpDetail() != null){
+				for(Employee authorisationEmpDetail : authEmp.getEmpDetail()){
+					empDetail += "(";
+					empDetail += "'"+ authorisationEmpDetail.getEmpID()+"',";
+					empDetail += "'" + authEmp.getAuthProcess() + "',";
+					empDetail += "'" + authEmp.getAuthId() + "'";
+					empDetail += "),";
+				}
+				if (empDetail != "") {
+					empDetail = empDetail.substring(0, empDetail.length() - 1);
+				}
+			}
+			
+			Map<String, Object> m = new HashMap<String, Object>();
+			
+			String sql = "{call spHRMAddManyEmployeeAuthorisation(?,?,?)}";
+			cbs = (CallableStatement) con.prepareCall(sql);
+			cbs.setString(1, dataSource.getUserid());	
+			cbs.setInt(2, authEmp.getAction());
+			cbs.setString(3, empDetail);	
+			boolean results = cbs.execute();
+			
+			while(results){
+				ResultSet rs = cbs.getResultSet();
+				
+				 while (rs.next()) {
+					 m.put("MESSAGE", rs.getString("Message"));
+		         }	 
+		         rs.close();
+		        
+		        results = cbs.getMoreResults();
+		        ResultSet rs2 = cbs.getResultSet();
+		        
+		        while (rs2.next()) {
+		        	 m.put("DESCRIPTION", rs2.getString("alert"));
+		         }	 
+		         rs.close();
+		         
+		         return m;
+			}
+	
+			
+			 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}finally{
+			cbs.close();
 		}
 		return null;
 	}
