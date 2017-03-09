@@ -13,7 +13,7 @@
 		<jsp:include page="${request.contextPath}/header"></jsp:include>
 		<jsp:include page="${request.contextPath}/menu"></jsp:include>
 	<style>
-			.width-75{ width: 75px !important; }
+			.width-75{ width: 100px !important; }
 			.cursor-pointer{ cursor: pointer !important; margin-top: -20px !important;}
 		
 		</style>
@@ -121,7 +121,7 @@
 				  	<form class="form-inline">
 				        <div class="form-group" style="padding-top: 20px;">
 				        	<div class="input-group"> 
-				        		<input type="text" pagination-id="listEmployeeCreate" ng-model="search" class="form-control" placeholder="Search">
+				        		<input type="text" pagination-id="listEmployeeCreate" ng-model="searchGroup" class="form-control" placeholder="Search">
 				        	</div>
 				        </div>
 				    </form>
@@ -144,6 +144,7 @@
 								<tbody>
 									<tr>
 										<th class="width-75 text-center">
+										Count (<span>{{countEmpTrue}}</span>)
 										</th> 
 										<th style="cursor: pointer;" ng-click="sort('empID')" >Employee ID 
 											<span class="glyphicon sort-icon" ng-show="sortKey=='empID'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>
@@ -152,7 +153,7 @@
 									</tr>
 								</tbody>
 								<tbody id="data-emp">
-									<tr pagination-id="listEmployeeCreate" dir-paginate="tr in emps |orderBy:sortKey:reverse |filter:search |itemsPerPage:pageSize.row" current-page="currentPage" >
+									<tr pagination-id="listEmployeeCreate" dir-paginate="tr in emps |orderBy:sortKey:reverse |filter:searchGroup |itemsPerPage:pageSize.row" current-page="currentPage" >
 												<td class="width-75 text-center">
 													<div class="icheckbox icheckbox-primary">
 														<input ng-checked="tr.statusCheck" name="ckr" id="ckr{{$index}}" ng-click="ckRowClick(($index + 1) + (currentPage - 1) * pageSize.row)" class="styled" type="checkbox">
@@ -205,7 +206,7 @@
 			app.controller('authoriCon',['$scope','$http',function($scope, $http){	
 
 				$scope.btn_save = "Create";
-				
+				$scope.countEmpTrue = 0;
 				$scope.currentPage = 1;
 				$scope.pageSize = {};
 				$scope.pageSize.rows = [ 
@@ -244,8 +245,35 @@
 				}
 				
 				$scope.ckRowClick = function(index){
-					index--;
-					$scope.emps[index].statusCheck = !$scope.emps[index].statusCheck;
+
+
+					if($scope.btn_save == "Create"){
+						index--;
+						$scope.emps[index].statusCheck = !$scope.emps[index].statusCheck;
+						
+						var countObjEmp = Object.keys($scope.emps).length;
+						var countStatus = 0;
+						for(var i=0;i < countObjEmp ;i++){
+							if($scope.emps[i].statusCheck == true){
+								countStatus++;
+							}	
+						}
+						$scope.countEmpTrue = countStatus;
+					}else{
+						index--;
+						$scope.emps[index].statusCheck = !$scope.emps[index].statusCheck;
+
+						var countObjEmp = Object.keys($scope.emps).length;
+						var countStatus = 0;
+						for(var i=0;i < countObjEmp ;i++){
+							if($scope.emps[i].statusCheck == true){
+								countStatus++;
+							}	
+						}
+						$scope.countEmpTrue = countStatus;
+						
+					}
+					
 				}
 
 				
@@ -261,6 +289,7 @@
 				}
 				
 				$scope.closeModal = function(){
+					$scope.countEmpTrue = 0;
 					setValueById("authori_name","");
 					setValueById("authori_desc","");
 					$("#form_group").bootstrapValidator('resetForm', 'true');
@@ -367,6 +396,7 @@
 																action : function(){
 																	$scope.listAuthorizationGroup();
 																	$scope.continueCreate();
+																	$scope.countEmpTrue = 0;
 																}
 															},
 															cancelContinue :{
@@ -561,8 +591,16 @@
 									$("#authori_desc").val(value.authGroupDesc);
 									$scope.authoriID = value.authGroupId;
 							 });
-
+					
 							$scope.emps = response.Employees;
+							var countObjEmp = Object.keys($scope.emps).length;
+							var countStatus = 0;
+							for(var i=0;i < countObjEmp ;i++){
+								if($scope.emps[i].statusCheck == true){
+									countStatus++;
+								}	
+							}
+							$scope.countEmpTrue = countStatus;
 
 						}
 					});
