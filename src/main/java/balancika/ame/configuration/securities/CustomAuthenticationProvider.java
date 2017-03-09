@@ -22,11 +22,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		String username = authentication.getName().trim();
 		String password = authentication.getCredentials().toString().trim();
 		CrmUserLogin user = userService.findUserByUsername(username);
-		if (user == null || (!user.getUserID().equalsIgnoreCase(username)) || user.getHas() == 0) {
-			throw new BadCredentialsException("Invalid Username and password!");
-		}
-
-		if (!password.equals(new PasswordEncrypt().BalDecrypt(user.getPassword()))) {
+		if (user == null || (!user.getUserID().equalsIgnoreCase(username)) || user.getHas() == 0 || !password.equals(new PasswordEncrypt().BalDecrypt(user.getPassword()))) {
 			throw new BadCredentialsException("Invalid Username and password!");
 		}
 

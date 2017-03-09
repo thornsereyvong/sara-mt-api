@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -18,6 +19,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@Order(1)
 public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
@@ -33,7 +35,7 @@ public class AppSecurityConfiguration extends WebSecurityConfigurerAdapter{
 	
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.authorizeRequests().antMatchers("/layout/**", "/login", "/rest/database/list").permitAll();
+		http.authorizeRequests().antMatchers("/layout/**", "/login", "/rest/database/list", "/api/**").permitAll();
 		http.authorizeRequests().anyRequest().hasAnyAuthority("")
 		.and()
 		.formLogin().loginPage("/login").loginProcessingUrl("/login")

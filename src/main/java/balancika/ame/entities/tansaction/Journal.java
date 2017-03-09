@@ -4,11 +4,24 @@ import java.sql.Date;
 import java.util.List;
 
 public class Journal {
-	private int jId, isExpense;
+	private int jId, isExpense, periodM, peroidY;
 	private String reference, postStatus, remark, type, clientId,fromJId;
 	private Date jDate;
 	private double total;
-	private List<JournalDetail> journalDetail;
+	private List<JournalDetail> journalDetail;		
+	
+	public int getPeriodM() {
+		return periodM;
+	}
+	public void setPeriodM(int periodM) {
+		this.periodM = periodM;
+	}
+	public int getPeroidY() {
+		return peroidY;
+	}
+	public void setPeroidY(int peroidY) {
+		this.peroidY = peroidY;
+	}
 	public int getjId() {
 		return jId;
 	}
