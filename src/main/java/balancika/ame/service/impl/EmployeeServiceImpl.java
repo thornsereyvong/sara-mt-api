@@ -10,8 +10,8 @@ import org.springframework.stereotype.Repository;
 
 import com.mysql.jdbc.CallableStatement;
 
-import balancika.ame.entities.Employee;
 import balancika.ame.entities.MeDataSource;
+import balancika.ame.entities.maintain.Employee;
 import balancika.ame.service.EmployeeService;
 import balancika.ame.utilities.DBConnection;
 
@@ -31,7 +31,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 			ArrayList<Employee> arrEmp = new ArrayList<Employee>();
 			while(rs.next()){
 				employee = new Employee();
-				employee.setEmpID(rs.getString("empId"));
+				employee.setEmpId(rs.getString("empId"));
 				employee.setEmpName(rs.getString("empName"));
 				employee.setEmpEmail(rs.getString("empEmail"));
 				employee.setEmpPostion(rs.getString("empPosition"));

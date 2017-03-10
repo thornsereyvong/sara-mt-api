@@ -2,13 +2,11 @@ package balancika.ame.entities.maintain;
 
 public class Employee {
 
-	private String empID;
+	private String empId;
 	private String empName;
 	private String empPostion;
 	private String empEmail;
 	private boolean statusCheck;
-	
-	
 	
 	public boolean isStatusCheck() {
 		return statusCheck;
@@ -16,12 +14,11 @@ public class Employee {
 	public void setStatusCheck(boolean statusCheck) {
 		this.statusCheck = statusCheck;
 	}
-	
-	public String getEmpID() {
-		return empID;
+	public String getEmpId() {
+		return empId;
 	}
-	public void setEmpID(String empID) {
-		this.empID = empID;
+	public void setEmpId(String empId) {
+		this.empId = empId;
 	}
 	public String getEmpName() {
 		return empName;
@@ -44,9 +41,9 @@ public class Employee {
 	public Employee() {
 		super();
 	}
-	public Employee(String empID, String empName) {
+	public Employee(String empId, String empName) {
 		super();
-		this.empID = empID;
+		this.empId = empId;
 		this.empName = empName;
 	}
 	

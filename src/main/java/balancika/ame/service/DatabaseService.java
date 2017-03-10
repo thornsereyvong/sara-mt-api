@@ -8,5 +8,7 @@ import balancika.ame.entities.SDCompany;
 
 public interface DatabaseService {
 	List<SDCompany> listAllSystemDatabase(MeDataSource dataSource);
-	List<Map<String, Object>> getDefaultConfig(MeDataSource dataSource);
+	Map<String, Object> getDefaultConfig(MeDataSource dataSource);
+	List<Map<String, Object>> showAllDatabase(MeDataSource dataSource);
+	
 }

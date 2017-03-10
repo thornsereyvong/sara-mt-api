@@ -15,8 +15,8 @@ import com.mysql.jdbc.Connection;
 
 import balancika.ame.entities.AuthorizationGroup;
 import balancika.ame.entities.AuthorizationGroupDetail;
-import balancika.ame.entities.Employee;
 import balancika.ame.entities.MeDataSource;
+import balancika.ame.entities.maintain.Employee;
 import balancika.ame.service.AuthorizationGroupService;
 import balancika.ame.utilities.DBConnection;
 
@@ -231,7 +231,7 @@ public class AuthorizationGroupServiceImpl implements AuthorizationGroupService 
 		        	
 		        	//System.out.println(rs3.getString("EmpID")+" "+rs3.getString("AuthGroup_EmpID"));
 		        	//System.out.println(dataCheck);
-		        	empDetail.setEmpID(rs3.getString("EmpID"));
+		        	empDetail.setEmpId(rs3.getString("EmpID"));
 		        	empDetail.setEmpName(rs3.getString("EmpName"));
 		        	empDetail.setStatusCheck(dataCheck);
 		        	tempArrauth.add(empDetail);

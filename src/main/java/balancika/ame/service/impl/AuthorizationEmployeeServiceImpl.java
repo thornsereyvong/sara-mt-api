@@ -14,8 +14,8 @@ import com.mysql.jdbc.CallableStatement;
 import com.mysql.jdbc.Connection;
 
 import balancika.ame.entities.AuthorizationEmployee;
-import balancika.ame.entities.Employee;
 import balancika.ame.entities.MeDataSource;
+import balancika.ame.entities.maintain.Employee;
 import balancika.ame.service.AuthorizationEmployeeService;
 import balancika.ame.utilities.DBConnection;
 
@@ -106,7 +106,7 @@ public class AuthorizationEmployeeServiceImpl implements AuthorizationEmployeeSe
 			if(authEmp.getEmpDetail() != null){
 				for(Employee authorisationEmpDetail : authEmp.getEmpDetail()){
 					empDetail += "(";
-					empDetail += "'"+ authorisationEmpDetail.getEmpID()+"',";
+					empDetail += "'"+ authorisationEmpDetail.getEmpId()+"',";
 					empDetail += "'" + authEmp.getAuthProcess() + "',";
 					empDetail += "'" + authEmp.getAuthId() + "'";
 					empDetail += "),";

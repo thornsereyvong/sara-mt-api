@@ -2,6 +2,8 @@ package balancika.ame.entities;
 
 import java.util.List;
 
+import balancika.ame.entities.maintain.Employee;
+
 public class AuthorizationEmployee {
 	private String empId;
 	private String authProcess;

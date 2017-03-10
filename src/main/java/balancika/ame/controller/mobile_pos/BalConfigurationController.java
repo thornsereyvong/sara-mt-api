@@ -57,11 +57,28 @@ public class BalConfigurationController {
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
 	
+	@RequestMapping(value = {"/database"}, method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> getDatabase(@RequestBody MeDataSource dataSource){
+		Map<String, Object> map = new HashMap<String, Object>();		
+		dataSource.setDb("systemdatabase");
+		List<Map<String, Object>> coms = dbService.showAllDatabase(dataSource);	
+		if(coms != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("MSG", "");
+			map.put("DATA", coms);
+		}else{
+			map.put("MESSAGE", "FAILED");
+			map.put("MSG", "");
+			map.put("DATA", null);
+		}		
+		map.put("STATUS", HttpStatus.OK.value());
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+	}
+	
 	@RequestMapping(value = {"/default"}, method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> getDefault(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();		
-		
-		List<SDCompany> coms = dbService.listAllSystemDatabase(dataSource);		
+		Map<String, Object> coms = dbService.getDefaultConfig(dataSource);		
 		if(coms != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("MSG", "");

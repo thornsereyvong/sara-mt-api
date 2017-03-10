@@ -16,8 +16,8 @@ import com.mysql.jdbc.Connection;
 import balancika.ame.entities.Authorization;
 import balancika.ame.entities.AuthorizationDetail;
 import balancika.ame.entities.AuthorizationGroup;
-import balancika.ame.entities.Employee;
 import balancika.ame.entities.MeDataSource;
+import balancika.ame.entities.maintain.Employee;
 import balancika.ame.service.AuthorizationService;
 import balancika.ame.utilities.DBConnection;
 
@@ -263,7 +263,7 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 		        	else
 		        		dataCheck = false;
 
-		        	empDetail.setEmpID(rs3.getString("EmpID"));
+		        	empDetail.setEmpId(rs3.getString("EmpID"));
 		        	empDetail.setEmpName(rs3.getString("EmpName"));
 		        	empDetail.setStatusCheck(dataCheck);
 		        	tempArrauth.add(empDetail);
