@@ -58,7 +58,7 @@
 										</div>
 									</div>
 									<div class="col-sm-6 col-md-3 col-xs-12">
-			                        	<div class="icheckbox icheckbox-primary"><br><br>
+			                        	<div class="icheckbox icheckbox-primary"><br class="hidden-xs"><br>
 			                        		<input id="ckrShowAll" ng-click="ckrShowAllClick()" class="styled" type="checkbox">
 			                        		<label class="cursor-pointer"  for="ckrShowAll">Show posted, voided and deleted transactions</label>
 			                        	</div>

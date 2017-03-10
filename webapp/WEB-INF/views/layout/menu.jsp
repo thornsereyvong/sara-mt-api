@@ -28,36 +28,21 @@
 					<li><a href="${pageContext.request.contextPath}/post-transaction"><i class="fa fa-circle-o"></i> Post Transaction</a></li>					
 				</ul>
 			</li>
-			
-			
+									
 			<li class="${mReportAct}">
 				<a href="${pageContext.request.contextPath}/">
-					<img src="${pageContext.request.contextPath}/resources/images/module/Report-16.png" style="width: 16px;"> &nbsp;&nbsp;<span>Report</span> 
+					<img src="${pageContext.request.contextPath}/resources/images/module/Report-16.png" style="width: 16px;"> &nbsp;&nbsp;<span>Report</span> <i class="fa fa-angle-left pull-right"></i>
 				</a>
+				<ul class="treeview-menu">					
+					<li>
+						<a href="#"><i class="fa fa-circle-o"></i> Account Receivable <i class="fa fa-angle-left pull-right"></i></a>
+						<ul class="treeview-menu">
+							<li><a href="${pageContext.request.contextPath}/report/account-receivable/invoice-register"><i class="fa fa-circle-o"></i> Invoice Register</a></li>							
+						</ul>
+					</li>
+					
+				</ul>
 			</li>
-			
-			<% 
-				ArrayList<MenuMatix> arrMenu = new ArrayList<>();
-				// authorization								
-				arrMenu.add(new MenuMatix("author","Authorization","",""));
-				arrMenu.add(new MenuMatix("author1","Authorization","authorization","author"));
-				arrMenu.add(new MenuMatix("author1","Authorization Group","group","author"));
-				
-				// transaction
-				arrMenu.add(new MenuMatix("trans","Tansaction","",""));
-				arrMenu.add(new MenuMatix("trans1","Tansaction","post-transaction","trans"));
-				
-				
-				// report
-				arrMenu.add(new MenuMatix("report","Report","",""));
-				
-				
-				arrMenu.add(new MenuMatix("report1","Account Receivable","","report")); //Account Receivable
-				arrMenu.add(new MenuMatix("report11","Account Receivable","","report"));
-				
-				
-			%>
-			
 			
 		</ul>
 	</section>
