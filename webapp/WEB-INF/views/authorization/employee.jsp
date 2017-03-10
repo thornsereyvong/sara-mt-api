@@ -99,7 +99,7 @@
 			    <div class="modal-content">
 			      <div class="modal-header">
 			        <button type="button" class="close" data-dismiss="modal" ng-click="closeModal()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-			        <h4 class="modal-title" id="myModalLabel"><b>[{{btn_save | uppercase}}] </b></h4>
+			        <h4 class="modal-title" id="myModalLabel"><b>[{{btn_save | uppercase}}] Employee Authorization </b></h4>
 			      </div>
 			     
 			     <form id="form_group">
@@ -145,7 +145,7 @@
 				  	<form class="form-inline">
 				        <div class="form-group" style="padding-top: 20px;">
 				        	<div class="input-group"> 
-				        		<input type="text" pagination-id="listEmployeeCreate" ng-model="search" class="form-control" placeholder="Search">
+				        		<input type="text" pagination-id="listEmployeeCreate" ng-model="searchEmp" class="form-control" placeholder="Search">
 				        	</div>
 				        </div>
 				    </form>
@@ -168,6 +168,7 @@
 								<tbody>
 									<tr>
 										<th class="width-75 text-center">
+										Count (<span>{{countEmpTrue}}</span>)
 										</th> 
 										<th style="cursor: pointer;" ng-click="sort('empID')" >Employee ID 
 											<span class="glyphicon sort-icon" ng-show="sortKey=='empID'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>
@@ -176,7 +177,7 @@
 									</tr>
 								</tbody>
 								<tbody id="data-emp">
-									<tr pagination-id="listEmployeeCreate" dir-paginate="tr in emps |orderBy:sortKey:reverse |filter:search |itemsPerPage:pageSize.row" current-page="currentPage" >
+									<tr pagination-id="listEmployeeCreate" dir-paginate="tr in emps |orderBy:sortKey:reverse |filter:searchEmp |itemsPerPage:pageSize.row" current-page="currentPage" >
 												<td class="width-75 text-center">
 													<div class="icheckbox icheckbox-primary">
 														<input ng-checked="tr.statusCheck" name="ckr" id="ckr{{$index}}" ng-click="ckRowClick(($index + 1) + (currentPage - 1) * pageSize.row)" class="styled" type="checkbox">
@@ -231,6 +232,7 @@
 				$scope.btn_save = "Create";
 				
 				$scope.currentPage = 1;
+				$scope.countEmpTrue = 0;
 				$scope.pageSize = {};
 				$scope.pageSize.rows = [ 
 								{ value: "5", label: "5" },
@@ -268,9 +270,18 @@
 				$scope.ckRowClick = function(index){
 					index--;
 					$scope.emps[index].statusCheck = !$scope.emps[index].statusCheck;
+					var countObjEmp = Object.keys($scope.emps).length;
+					var countStatus = 0;
+					for(var i=0;i < countObjEmp ;i++){
+						if($scope.emps[i].statusCheck == true){
+							countStatus++;
+						}	
+					}
+					$scope.countEmpTrue = countStatus;
 				}
 
 				$scope.closeModal = function(){
+					$scope.countEmpTrue = 0;
 					setValueById("action","");
 					setValueById("process","");
 					$("#authorization").select2("val","");
@@ -339,53 +350,79 @@
 				}
 				
 				$scope.createAuthGroup = function(){
-					var listEmpDetail = [];
-					
-					for(var i=0; i< Object.keys($scope.emps).length ;i++){		
-						if($scope.emps[i].statusCheck == true){	
-							listEmpDetail.push({"empID":$scope.emps[i].empID});
-						}	
-					}
-				
 
-						$('#form_group').data('bootstrapValidator').validate();
-						var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
-						if(addAuthGroup){
-							var process = getValueStringById("process");
-							var authorization = getValueStringById("authorization");
-							var action = getValueStringById("action");
-							var stringValue = {
-								    			"authProcess":process,"authId":authorization, "action": action,"empDetail":listEmpDetail
-											  };
-							$http({
-					 			method: 'POST',
-							    url: "${pageContext.request.contextPath}/rest/authorizationemployee/create",
-							    headers: {
-							    	'Accept': 'application/json',
-							        'Content-Type': 'application/json'
-							    }	,
-							    data : stringValue    
-							}).success(function(response) {	
+					$.confirm({
+					    title: '<h3 class="text-center">Are you sure you want to create this employee authorization ?</h3>',
+					    content: '<hr>',
+					    type: 'green',
+					    buttons: {
+					        createAuthorization: {
+					            text: 'Yes',
+					            action: function () {
 
-
-								if(response.MESSAGE == "success"){
-									$scope.closeModal();
-									$.alert({
-			                            title: '<h3 class="text-center">Success</h3>',
-			                            type: 'green',
-			                            content: response.DESCRIPTION+"<hr>",
-			                     	});
+					            	var listEmpDetail = [];
 									
-								}else {
-									$.alert({
-			                            title: '<h3 class="text-center">Fail</h3>',
-			                            type: 'red',
-			                            content: "<hr>",
-			                       });
-								}
+									for(var i=0; i< Object.keys($scope.emps).length ;i++){		
+										if($scope.emps[i].statusCheck == true){	
+											listEmpDetail.push({"empID":$scope.emps[i].empID});
+										}	
+									}
 								
-							});
-						}
+
+										$('#form_group').data('bootstrapValidator').validate();
+										var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
+										if(addAuthGroup){
+											var process = getValueStringById("process");
+											var authorization = getValueStringById("authorization");
+											var action = getValueStringById("action");
+											var stringValue = {
+												    			"authProcess":process,"authId":authorization, "action": action,"empDetail":listEmpDetail
+															  };
+											$http({
+									 			method: 'POST',
+											    url: "${pageContext.request.contextPath}/rest/authorizationemployee/create",
+											    headers: {
+											    	'Accept': 'application/json',
+											        'Content-Type': 'application/json'
+											    }	,
+											    data : stringValue    
+											}).success(function(response) {	
+
+
+												if(response.MESSAGE == "success"){
+													$scope.closeModal();
+													$.alert({
+							                            title: '<h3 class="text-center">Success</h3>',
+							                            type: 'green',
+							                            content: response.DESCRIPTION+"<hr>",
+							                     	});
+													
+												}else {
+													$.alert({
+							                            title: '<h3 class="text-center">Fail</h3>',
+							                            type: 'red',
+							                            content: "<hr>",
+							                       });
+												}
+												
+											});
+										}
+
+					            	
+								 }
+					        },
+					        cancelAction:{
+								text: 'Cancel',
+								action: function(){
+									
+								}
+						    }
+					    }
+					});
+					
+			            
+			            
+					
 					
 				}
 

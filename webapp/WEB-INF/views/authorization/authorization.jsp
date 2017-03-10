@@ -13,7 +13,7 @@
 		<jsp:include page="${request.contextPath}/header"></jsp:include>
 		<jsp:include page="${request.contextPath}/menu"></jsp:include>
 	<style>
-			.width-75{ width: 75px !important; }
+			.width-75{ width: 105px !important; }
 			.cursor-pointer{ cursor: pointer !important; margin-top: -20px !important;}
 		
 		</style>
@@ -170,11 +170,11 @@
 			     			<thead>
 			     				<tr>
 			     					<th></th>
-			     					<th style="width:120px">Authorization Id</th>
-			     					<th style="width:150px">Authorization Name</th>
-			     					<th style="width:180px">Authorization Employee</th>	
+			     					<th style="width:117px">Authorization Id</th>
+			     					<th style="width:142px">Authorization Name</th>
+			     					<th style="width:153px">Employee</th>	
 			     					<th style="wdith:30px;">Authorization And/Or</th>
-			     					<th style="width:160px;">Authorization Amount</th>
+			     					<th style="width:155px;">Authorization Amount</th>
 			     				</tr>
 			     			</thead>
 			     			<tbody id="table_group">
@@ -241,7 +241,8 @@
 							<table class="table table-hover">
 								<tbody>
 									<tr>
-										<th class="width-75 text-center">
+										<th class="width-75 text-center" style="width:100px;">
+										<span>Count ({{countEmpTrue}})</span>
 										</th> 
 										<th style="cursor: pointer;" ng-click="sort('empID')" >Employee ID 
 											<span class="glyphicon sort-icon" ng-show="sortKey=='empID'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>
@@ -303,7 +304,7 @@
 			app.controller('authoriCon',['$scope','$http',function($scope, $http){	
 
 				$scope.btn_save = "Create";
-				
+				$scope.countEmpTrue = 0;
 				$scope.currentPage = 1;
 				$scope.pageSize = {};
 				$scope.pageSize.rows = [ 
@@ -353,32 +354,59 @@
 					if(getEv == "Create"){
 						$scope.createauth();
 					}else{
+						
 						$scope.updateauth();
 					}
 				
 				}	
 				
 				$scope.ckRowClick = function(index){
-					index--;
-					$scope.emps[index].statusCheck = !$scope.emps[index].statusCheck;
-
-					var countObjEmp = Object.keys($scope.emps).length;
-					var countStatus = 0;
-					for(var i=0;i < countObjEmp ;i++){
-						if($scope.emps[i].statusCheck == true){
-							countStatus++;
-						}	
-					}
-					if(isNaN($scope.authAmount)){
-						$scope.setErrorField("divAthAmountIndividual","The authorization amount can not input string !");
-					}else{
+					if($scope.btn_save == "Create"){
+						index--;
+						$scope.emps[index].statusCheck = !$scope.emps[index].statusCheck;
 						
-						if(parseInt(countStatus) < parseInt($scope.authAmount)){
-							$scope.setErrorField("divAthAmountIndividual","Please check employee equal or greater than authorization amount  !");
+						var countObjEmp = Object.keys($scope.emps).length;
+						var countStatus = 0;
+						for(var i=0;i < countObjEmp ;i++){
+							if($scope.emps[i].statusCheck == true){
+								countStatus++;
+							}	
+						}
+						$scope.countEmpTrue = countStatus;
+						if(isNaN($scope.authAmount)){
+							$scope.setErrorField("divAthAmountIndividual","The authorization amount can not input string !");
 						}else{
-							$scope.setSuccessField("divAthAmountIndividual");
+							
+							if(parseInt(countStatus) < parseInt($scope.authAmount)){
+								$scope.setErrorField("divAthAmountIndividual","Please check employee equal or greater than authorization amount  !");
+							}else{
+								$scope.setSuccessField("divAthAmountIndividual");
+							}
+						}
+					}else{
+						index--;
+						$scope.emps[index].statusCheck = !$scope.emps[index].statusCheck;
+						
+						var countObjEmp = Object.keys($scope.emps).length;
+						var countStatus = 0;
+						for(var i=0;i < countObjEmp ;i++){
+							if($scope.emps[i].statusCheck == true){
+								countStatus++;
+							}	
+						}
+						$scope.countEmpTrue = countStatus;
+						if(isNaN($scope.authAmount)){
+							$scope.setErrorField("divAthAmountIndividual","The authorization amount can not input string !");
+						}else{
+							
+							if(parseInt(countStatus) < parseInt($scope.authAmount)){
+								$scope.setErrorField("divAthAmountIndividual","Please check employee equal or greater than authorization amount  !");
+							}else{
+								$scope.setSuccessField("divAthAmountIndividual");
+							}
 						}
 					}
+					
 					
 				}
 
@@ -421,53 +449,101 @@
 					
 				}
 
-			
-				
-
-				
-				
 	
 				$scope.changeType = function(){
-					$scope.sAuthAndOr = "";
-					$(".select2").select2();
-					$scope.listAuthorizationGroup();
-					if($scope.sAuthType == "Individual"){
-						$("#div_group").css("display","none");
-						$("#authAndOr").removeAttr("disabled","");
-						$("#div_andOr").css("display","");
-						$("#div_emp").css("display","");
-						$scope.listEmployee();
-						$scope.currentPage = 1;
-						$scope.pageSize.row = $scope.pageSize.rows[1].value;	
-								
-					}else if($scope.sAuthType == "Group"){
-
+			
+					if($scope.btn_save == "Create"){
+						
+						$scope.sAuthAndOr = "";
+						$(".select2").select2();
 						$scope.listAuthorizationGroup();
+						if($scope.sAuthType == "Individual"){
+							$("#div_group").css("display","none");
+							$("#authAndOr").removeAttr("disabled","");
+							$("#div_andOr").css("display","");
+							$("#div_emp").css("display","");
+							$scope.listEmployee();
+							$scope.currentPage = 1;
+							$scope.pageSize.row = $scope.pageSize.rows[1].value;	
+									
+						}else if($scope.sAuthType == "Group"){
+							$scope.countEmpTrue = 0;
+							$scope.listAuthorizationGroup();
+							
+							$("#div_group").css("display","");
+							$("#div_emp").css("display","none");
+							$("#div_andOr").css("display","none");
+							$("#div_amount").css("display","none");
+							$("#authAmount").attr("disabled","disabled");
+							$("#authAndOr").attr("disabled","disabled");
+							$("#authAndOr").val("");
+							//$('#form_authori').bootstrapValidator('revalidateField', 'authAndOr');
+							setValueById("authAmount","");
+							//$('#form_authori').bootstrapValidator('revalidateField', 'authAmount');
 						
-						$("#div_group").css("display","");
-						$("#div_emp").css("display","none");
-						$("#div_andOr").css("display","none");
-						$("#div_amount").css("display","none");
-						$("#authAmount").attr("disabled","disabled");
-						$("#authAndOr").attr("disabled","disabled");
-						$("#authAndOr").val("");
-						//$('#form_authori').bootstrapValidator('revalidateField', 'authAndOr');
-						setValueById("authAmount","");
-						//$('#form_authori').bootstrapValidator('revalidateField', 'authAmount');
-					
+						}else{
+							$scope.countEmpTrue = 0;
+							$("#div_emp").css("display","none");
+							$("#div_andOr").css("display","none");
+							$("#div_amount").css("display","none");
+							$("#authAmount").attr("disabled","disabled");
+							$("#authAndOr").attr("disabled","disabled");
+							$("#authAndOr").val("");
+							$('#form_authori').bootstrapValidator('revalidateField', 'authAndOr');
+							setValueById("authAmount","");
+							$('#form_authori').bootstrapValidator('revalidateField', 'authAmount');
+							
+						}
+						
 					}else{
+						//$scope.sAuthAndOr = "";
+						$(".select2").select2();
+						//$scope.listAuthorizationGroup();
 
-						$("#div_emp").css("display","none");
-						$("#div_andOr").css("display","none");
-						$("#div_amount").css("display","none");
-						$("#authAmount").attr("disabled","disabled");
-						$("#authAndOr").attr("disabled","disabled");
-						$("#authAndOr").val("");
-						$('#form_authori').bootstrapValidator('revalidateField', 'authAndOr');
-						setValueById("authAmount","");
-						$('#form_authori').bootstrapValidator('revalidateField', 'authAmount');
+
+						if($scope.sAuthType == "Individual"){
+							$scope.emps;
+							$("#div_group").css("display","none");
+							$("#authAndOr").removeAttr("disabled","");
+							$("#div_andOr").css("display","");
+							$("#div_emp").css("display","");
+							
+							$scope.changeAndOr();
+							
+							//$scope.listEmployee();
+							//$scope.currentPage = 1;
+							//$scope.pageSize.row = $scope.pageSize.rows[1].value;	
+									
+						}else if($scope.sAuthType == "Group"){
+							
+							//$scope.listAuthorizationGroup();
+							
+							 $("#div_group").css("display","");
+							$("#div_emp").css("display","none");
+							$("#div_andOr").css("display","none");
+							$("#div_amount").css("display","none");
+							$("#authAmount").attr("disabled","disabled");
+							$("#authAndOr").attr("disabled","disabled"); 
+							//$("#authAndOr").val("");
+							//$('#form_authori').bootstrapValidator('revalidateField', 'authAndOr');
+							//setValueById("authAmount","");
+							//$('#form_authori').bootstrapValidator('revalidateField', 'authAmount');
 						
+						}else{
+				
+							/* $("#div_emp").css("display","none");
+							$("#div_andOr").css("display","none");
+							$("#div_amount").css("display","none");
+							$("#authAmount").attr("disabled","disabled");
+							$("#authAndOr").attr("disabled","disabled");
+							$("#authAndOr").val("");
+							$('#form_authori').bootstrapValidator('revalidateField', 'authAndOr');
+							setValueById("authAmount","");
+							$('#form_authori').bootstrapValidator('revalidateField', 'authAmount'); */
+							
+						}
 					}
+					
 				}
 
 				$scope.changeAndOr = function(){
@@ -502,12 +578,14 @@
 					$("#div_emp").css("display","none");
 					$("#div_group").css("display","none");
 					$scope.setNomallField("divAthAmountIndividual");
+					$scope.countEmpTrue = 0;
 				}
 
 				$scope.closeModalCreate = function(){
 					$scope.sAuthType = "";
 					setValueById("authType","");
 					setValueById("authAmount","");
+					$scope.countEmpTrue = 0;
 					$('#form_authori').bootstrapValidator("resetForm",true);
 					$("#div_andOr").css("display","none");
 					$("#div_amount").css("display","none");
@@ -605,6 +683,7 @@
 																			action : function(){
 																				$scope.listAuthorization();
 																				$scope.closeModalCreate();
+																				$scope.countEmpTrue = 0;
 																			}
 																		},
 																		cancelContinue :{
@@ -612,6 +691,7 @@
 																			action: function(){
 																				$scope.listAuthorization();
 																				$scope.closeModal();
+																				$scope.countEmpTrue = 0;
 																			}
 																		}
 										                            }
@@ -670,6 +750,7 @@
 																		action : function(){
 																			$scope.listAuthorization();
 																			$scope.closeModalCreate();
+																			$scope.countEmpTrue = 0;
 																		}
 																	},
 																	cancelContinue :{
@@ -677,6 +758,7 @@
 																		action: function(){
 																			$scope.listAuthorization();
 																			$scope.closeModal();
+																			$scope.countEmpTrue = 0;
 																		}
 																	}
 									                            }
@@ -936,7 +1018,7 @@
 														$scope.setErrorField("divAthAmountIndividual","Please check employee equal or greater than authorization amount  !");
 													}else{
 														$scope.setSuccessField("divAthAmountIndividual");
-														alert("And");
+														
 														var stringValue = {
 															"authId":$scope.authoriID,
 															"authName":getValueStringById("authName"),
@@ -956,7 +1038,7 @@
 														    data : stringValue    
 														}).success(function(response) {	
 															if(response.MESSAGE == "success"){
-																$scope.listAuthorizationGroup();
+																$scope.listAuthorization();
 																$scope.closeModal();
 																 $.alert({
 											                            title: '<h3 class="text-center">Success</h3>',
@@ -1003,7 +1085,7 @@
 													    data : stringValue    
 													}).success(function(response) {	
 														if(response.MESSAGE == "success"){
-															$scope.listAuthorizationGroup();
+															$scope.listAuthorization();
 															$scope.closeModal();
 															 $.alert({
 										                            title: '<h3 class="text-center">Success</h3>',
@@ -1088,7 +1170,7 @@
 												}).success(function(response) {	
 													
 													if(response.MESSAGE == "success"){
-														$scope.listAuthorizationGroup();
+														$scope.listAuthorization();
 														$scope.closeModal();
 														 $.alert({
 									                            title: '<h3 class="text-center">Success</h3>',
@@ -1139,7 +1221,7 @@
 
 				$scope.deleteAuthorizationId = function(authID,authName){
 					$.confirm({
-					    title: '<h3 class="text-center">Are you sure you want to delete  <br> this  authorization group '+authName+' ?</h3>',
+					    title: '<h3 class="text-center">Are you sure you want to delete this  authorization with ID '+authID+' ?</h3>',
 					    type: 'orange',
 					    content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.'+"<hr>",
 					    autoClose: 'cancelAction|8000',
@@ -1193,6 +1275,7 @@
 
 				$scope.getauthByID = function(authID){
 					$scope.btn_save = "Edit";
+
 					$http({
 			 			method: 'GET',
 					    url: "${pageContext.request.contextPath}/rest/authorization/get/"+authID,
@@ -1222,7 +1305,18 @@
 								
 									if(value.authType == "Individual"){	
 										$scope.emps = response.Employees;
+
+
+									    var countObjEmp = Object.keys($scope.emps).length;
+											
+									   var countStatus = 0;
+										for(var i=0;i < countObjEmp ;i++){
+											if($scope.emps[i].statusCheck == true){
+												countStatus++;
+											}	
+										}
 										
+										$scope.countEmpTrue = countStatus;
 										
 										$scope.sAuthAndOr = value.authAndOr;
 										setValueById("authAndOr",value.authAndOr);
@@ -1250,7 +1344,8 @@
 									}else if(value.authType == "Group"){
 
 										$scope.authorizationGroup = response.authorizationGroup;
-										
+										$scope.listEmployee();
+										$scope.sAuthAndOr = "";
 										$("#div_group").css("display","");
 										$("#div_emp").css("display","none");
 										$("#div_andOr").css("display","none");
