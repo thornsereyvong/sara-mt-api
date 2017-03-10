@@ -146,8 +146,8 @@
 										<th class="width-75 text-center">
 										Count (<span>{{countEmpTrue}}</span>)
 										</th> 
-										<th style="cursor: pointer;" ng-click="sort('empID')" >Employee ID 
-											<span class="glyphicon sort-icon" ng-show="sortKey=='empID'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>
+										<th style="cursor: pointer;" ng-click="sort('empId')" >Employee ID 
+											<span class="glyphicon sort-icon" ng-show="sortKey=='empId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>
 										<th style="cursor: pointer;" ng-click="sort('empName')">Employee Name 
 											<span class="glyphicon sort-icon" ng-show="sortKey=='empName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>	
 									</tr>
@@ -160,7 +160,7 @@
 														<label class="cursor-pointer" for="ckr{{$index}}"></label>
 													</div>
 												</td>
-												<td ng-cloak>{{tr.empID}}</td>
+												<td ng-cloak>{{tr.empId}}</td>
 												<td ng-cloak>{{tr.empName}}</td>							
 									</tr> 
 								</tbody>
@@ -349,7 +349,7 @@
 									for(var i=0; i< Object.keys($scope.emps).length ;i++){		
 										
 										if($scope.emps[i].statusCheck == true){	
-											listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empID});
+											listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empId});
 										}
 										
 									}
@@ -449,7 +449,7 @@
 									for(var i=0; i< Object.keys($scope.emps).length ;i++){		
 										
 										if($scope.emps[i].statusCheck == true){	
-											listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empID});
+											listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empId});
 										}
 										
 									}

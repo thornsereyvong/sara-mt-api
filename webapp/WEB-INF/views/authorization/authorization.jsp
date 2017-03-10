@@ -244,8 +244,8 @@
 										<th class="width-75 text-center" style="width:100px;">
 										<span>Count ({{countEmpTrue}})</span>
 										</th> 
-										<th style="cursor: pointer;" ng-click="sort('empID')" >Employee ID 
-											<span class="glyphicon sort-icon" ng-show="sortKey=='empID'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>
+										<th style="cursor: pointer;" ng-click="sort('empId')" >Employee ID 
+											<span class="glyphicon sort-icon" ng-show="sortKey=='empId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>
 										<th style="cursor: pointer;" ng-click="sort('empName')">Employee Name 
 											<span class="glyphicon sort-icon" ng-show="sortKey=='empName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>	
 									</tr>
@@ -258,7 +258,7 @@
 														<label class="cursor-pointer" for="ckr{{$index}}"></label>
 													</div>
 												</td>
-												<td ng-cloak>{{tr.empID}}</td>
+												<td ng-cloak>{{tr.empId}}</td>
 												<td ng-cloak>{{tr.empName}}</td>							
 									</tr> 
 								</tbody>
@@ -627,7 +627,7 @@
 											for(var i=0;i < countObjEmp ;i++){
 												if($scope.emps[i].statusCheck == true){
 													countStatus++;
-													listEmpDetail.push({"authEmpId":$scope.emps[i].empID,"authGroupId":"","authGroupAndOr":"","authGroupAmount":""});
+													listEmpDetail.push({"authEmpId":$scope.emps[i].empId,"authGroupId":"","authGroupAndOr":"","authGroupAmount":""});
 												}	
 											}
 
@@ -1005,7 +1005,7 @@
 											for(var i=0;i < countObjEmp ;i++){
 												if($scope.emps[i].statusCheck == true){
 													countStatus++;
-													listEmpDetail.push({"authEmpId":$scope.emps[i].empID,"authGroupId":"","authGroupAndOr":"","authGroupAmount":""});
+													listEmpDetail.push({"authEmpId":$scope.emps[i].empId,"authGroupId":"","authGroupAndOr":"","authGroupAmount":""});
 												}	
 											}
 

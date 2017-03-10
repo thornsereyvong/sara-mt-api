@@ -41,7 +41,7 @@
 							<div class="form-group">
 								<select class="form-control select2" ng-model="mEmp" ng-change="changeEmp()" >
 									<option value="">-- Select Employee --</option>
-									<option ng-repeat="op in emps" value="{{op.empID}}" ng-cloak>[{{op.empID}}] {{op.empName}}</option>
+									<option ng-repeat="op in emps" value="{{op.empId}}" ng-cloak>[{{op.empId}}] {{op.empName}}</option>
 								</select>
 							</div>
 						</div>
@@ -170,8 +170,8 @@
 										<th class="width-75 text-center">
 										Count (<span>{{countEmpTrue}}</span>)
 										</th> 
-										<th style="cursor: pointer;" ng-click="sort('empID')" >Employee ID 
-											<span class="glyphicon sort-icon" ng-show="sortKey=='empID'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>
+										<th style="cursor: pointer;" ng-click="sort('empId')" >Employee ID 
+											<span class="glyphicon sort-icon" ng-show="sortKey=='empId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>
 										<th style="cursor: pointer;" ng-click="sort('empName')">Employee Name 
 											<span class="glyphicon sort-icon" ng-show="sortKey=='empName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>	
 									</tr>
@@ -184,7 +184,7 @@
 														<label class="cursor-pointer" for="ckr{{$index}}"></label>
 													</div>
 												</td>
-												<td ng-cloak>{{tr.empID}}</td>
+												<td ng-cloak>{{tr.empId}}</td>
 												<td ng-cloak>{{tr.empName}}</td>							
 									</tr> 
 								</tbody>
@@ -364,7 +364,7 @@
 									
 									for(var i=0; i< Object.keys($scope.emps).length ;i++){		
 										if($scope.emps[i].statusCheck == true){	
-											listEmpDetail.push({"empID":$scope.emps[i].empID});
+											listEmpDetail.push({"empId":$scope.emps[i].empId});
 										}	
 									}
 								
