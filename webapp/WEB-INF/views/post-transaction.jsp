@@ -173,8 +173,7 @@
 					</div>
 				</section>		
 					
-				<section class="content-footer"></section>	
-				
+				<section class="content-footer"></section>					
 								
 				<div class="modal fade modal-default" id="frmFilterPost" role="dialog">
 					<div class="modal-dialog  modal-lg">
@@ -2532,7 +2531,7 @@
 						     $('#todate').val((new Date()).getFullYear()+"-12-01"); 
 					        break;
 					}				
-				});
+				});				
 			});
 		</script>		
 	</body>

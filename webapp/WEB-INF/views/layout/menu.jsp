@@ -1,3 +1,4 @@
+<%@page import="balancika.ame.utilities.MenuMatix"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 
@@ -35,6 +36,27 @@
 				</a>
 			</li>
 			
+			<% 
+				ArrayList<MenuMatix> arrMenu = new ArrayList<>();
+				// authorization								
+				arrMenu.add(new MenuMatix("author","Authorization","",""));
+				arrMenu.add(new MenuMatix("author1","Authorization","authorization","author"));
+				arrMenu.add(new MenuMatix("author1","Authorization Group","group","author"));
+				
+				// transaction
+				arrMenu.add(new MenuMatix("trans","Tansaction","",""));
+				arrMenu.add(new MenuMatix("trans1","Tansaction","post-transaction","trans"));
+				
+				
+				// report
+				arrMenu.add(new MenuMatix("report","Report","",""));
+				
+				
+				arrMenu.add(new MenuMatix("report1","Account Receivable","","report")); //Account Receivable
+				arrMenu.add(new MenuMatix("report11","Account Receivable","","report"));
+				
+				
+			%>
 			
 			
 		</ul>
