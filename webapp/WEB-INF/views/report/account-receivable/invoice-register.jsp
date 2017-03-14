@@ -20,8 +20,31 @@
 					</ol>
 				</section>
 				<section class="content">
-				
-				
+					<div class="col-sm-12" style="padding-left: 0px; margin-top: -15px;">
+						<button style="margin-top: 10px;" ng-click="btnPrintData()" class="btn btn-default"><i class="fa fa-print"></i> Print</button>
+						<button style="margin-top: 10px;" ng-click="btnEmailData()" class="btn btn-default"><i class="fa fa-envelope-o"></i> Email</button>
+						<button style="margin-top: 10px;" ng-click="btnExportData()" class="btn btn-default"><i class="fa fa-external-link"></i> Export</button>
+					</div>
+					<div class="clearfix"></div>					
+					<div class="col-md-12" style="padding-left: 0px;padding-right: 0px; margin-top: 10px;">
+						<div class="box box-danger direct-chat direct-chat-danger">
+							<div class="box-header with-border">
+								<h3 class="box-title">Report Criteria</h3>
+								<div class="box-tools pull-right">
+									<button class="btn btn-box-tool" data-widget="collapse">
+										<i class="fa fa-minus"></i>
+									</button>
+								</div>
+							</div>
+							<div class="box-body">
+								
+							</div>
+							<div class="box-footer">
+								<button type="button" class="btn btn-defualt pull-right">Run Report</button>
+							</div>
+						</div>
+					</div>
+										
 				</section>
 				
 			</div>

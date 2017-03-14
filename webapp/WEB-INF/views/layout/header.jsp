@@ -25,7 +25,7 @@
 		</a>
 		<div class="navbar-custom-menu pull-left" style="font-size: 20px">
 			<ul class="nav navbar-nav">
-				<li><a><span>Company: ${company}</span></a></li>
+				<li><a><span>${company}</span></a></li>
 			</ul>
 		</div>
 		<div class="navbar-custom-menu">

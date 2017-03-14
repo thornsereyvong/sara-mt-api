@@ -1907,8 +1907,7 @@
 						</div>
 					</div>
 				</div>   
-				
-				
+							
 				<div class="modal fade modal-default" id="frmGLEntries" role="dialog">
 					<div class="modal-dialog  modal-lg">
 						<div class="modal-content">

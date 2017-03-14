@@ -71,7 +71,7 @@ public class DatabaseServiceImpl implements DatabaseService{
 	@Override
 	public List<Map<String, Object>> showAllDatabase(MeDataSource dataSource) {
 		try (Connection con = DBConnection.getConnection(dataSource)){
-			String sql = "show databases";
+			String sql = "show databases where `Database` NOT IN ('information_schema', 'test', 'mysql', 'performance_schema','systemdatabase')";
 			PreparedStatement ps = con.prepareStatement(sql);
 			ResultSet rs = ps.executeQuery();					
 			return SQLUtil.aliasRSToMap(rs);
