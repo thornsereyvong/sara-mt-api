@@ -37,7 +37,8 @@
 					<li>
 						<a href="#"><i class="fa fa-circle-o"></i> Account Receivable <i class="fa fa-angle-left pull-right"></i></a>
 						<ul class="treeview-menu">
-							<li><a href="${pageContext.request.contextPath}/report/account-receivable/invoice-register"><i class="fa fa-circle-o"></i> Invoice Register</a></li>							
+							<li><a href="${pageContext.request.contextPath}/report/account-receivable/invoice-register-summary"><i class="fa fa-circle-o"></i> Invoice Register-[Summary]</a></li>							
+							<li><a href="${pageContext.request.contextPath}/report/account-receivable/invoice-register-detail"><i class="fa fa-circle-o"></i> Invoice Register-[Detail]</a></li>
 						</ul>
 					</li>
 					
