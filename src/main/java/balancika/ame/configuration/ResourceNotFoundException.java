@@ -11,8 +11,7 @@ public class ResourceNotFoundException extends RuntimeException{
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	@ResponseStatus(HttpStatus.NOT_FOUND)
-	public String handleResourceNotFoundException() {
-		
-	    return "notFoundJSPPage";
+	public String handleResourceNotFoundException(){		
+	    return "404";
 	}
 }

@@ -1,6 +1,8 @@
 package balancika.ame.controller;
 
+import org.apache.poi.util.SystemOutLogger;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -12,27 +14,22 @@ public class GlobalExceptionHandlerController {
 
     @ExceptionHandler(value = NullPointerException.class)
     public String handleNullPointerException(Exception e) {
-
-        System.out.println("A null pointer exception ocurred " + e);
-
-        return "nullpointerExceptionPage";
+    	System.out.println("NullPointerException");
+        return "404";
     }
-
-
+   
+    @ResponseStatus(value = HttpStatus.NOT_FOUND)
+    @ExceptionHandler(value = ResourceNotFoundException.class)
+    public String handleResourceNotFoundException() {
+    	System.out.println("NOT_FOUND");
+        return "404";
+    }
+    
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = Exception.class)
-    public String handleAllException(Exception e) {
-
-        System.out.println("A unknow Exception Ocurred: " + e);
-
-        return "unknowExceptionPage";
+    public String handleAllException(Exception e) {    	
+    	System.out.println("INTERNAL_SERVER_ERROR");       	
+        return "404";
     }
-
-
-    @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public String handleResourceNotFoundException() {
-
-        return "notFoundJSPPage";
-    }
+    
 }
