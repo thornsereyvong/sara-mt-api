@@ -36,16 +36,7 @@
 									</button>
 								</div>
 							</div>
-							<div class="box-body">
-								<div class="col-sm-3 col-md-3 col-xs-12">
-									<label class="font-label">Report Type</label>
-									<div class="form-group">
-										<select style="width:100%"  class="form-control select2-small" name="reportType" id="reportType">
-											<option selected value="Report Summary">Report Summary</option>
-											<option value="Report Detail">Report Detail</option>
-										</select>
-									</div>
-								</div>
+							<div class="box-body">								
 								<div class="col-sm-3 col-md-3 col-xs-12">
 									<label class="font-label">Post Status</label>
 									<div class="form-group">
@@ -71,7 +62,7 @@
 									</div>
 								</div>
 								<div class="col-sm-3 col-md-3 col-xs-12">
-									<label class="font-label">From Date</label>
+									<label class="font-label">Transaction Date</label>
 									<div class="form-group">
 				                  		<div class="input-group">
 					                    	<div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
@@ -88,7 +79,86 @@
 					                  	</div>
 			                		</div>
 								</div>
-								
+								<div class="col-sm-3 col-md-3 col-xs-12">
+									<label class="font-label">From Location</label>
+									<div class="form-group">
+										<select style="width:100%"  class="form-control select2" name="fLoction" id="fLoction">
+											<option selected  value="All">All</option>											
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-3 col-md-3 col-xs-12">
+									<label class="font-label">To Location</label>
+									<div class="form-group">
+										<select style="width:100%"  class="form-control select2" name="tLoction" id="tLoction">
+											<option selected  value="All">All</option>											
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-3 col-md-3 col-xs-12">
+									<label class="font-label">From Employee</label>
+									<div class="form-group">
+										<select style="width:100%"  class="form-control select2" name="fEmployee" id="fEmployee">
+											<option selected  value="All">All</option>											
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-3 col-md-3 col-xs-12">
+									<label class="font-label">To Employee</label>
+									<div class="form-group">
+										<select style="width:100%"  class="form-control select2" name="tEmployee" id="tEmployee">
+											<option selected  value="All">All</option>											
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-3 col-md-3 col-xs-12">
+									<label class="font-label">From Customer</label>
+									<div class="form-group">
+										<select style="width:100%"  class="form-control select2" name="fCustomer" id="fCustomer">
+											<option selected  value="All">All</option>											
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-3 col-md-3 col-xs-12">
+									<label class="font-label">To Customer</label>
+									<div class="form-group">
+										<select style="width:100%"  class="form-control select2" name="tCustomer" id="tCustomer">
+											<option selected  value="All">All</option>											
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-3 col-md-3 col-xs-12">
+									<label class="font-label">From Class</label>
+									<div class="form-group">
+										<select style="width:100%"  class="form-control select2" name="fClass" id="fClass">
+											<option selected  value="All">All</option>											
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-3 col-md-3 col-xs-12">
+									<label class="font-label">To Class</label>
+									<div class="form-group">
+										<select style="width:100%"  class="form-control select2" name="tClass" id="tClass">
+											<option selected  value="All">All</option>											
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-3 col-md-3 col-xs-12">
+									<label class="font-label">Short By</label>
+									<div class="form-group">
+										<select style="width:100%"  class="form-control select2" name="fClass" id="fClass">
+											<option selected  value="All">All</option>											
+										</select>
+									</div>
+								</div>
+								<div class="col-sm-3 col-md-3 col-xs-12">
+									<label class="font-label">Order</label>
+									<div class="form-group">
+										<select style="width:100%"  class="form-control select2" name="tClass" id="tClass">
+											<option selected  value="All">All</option>											
+										</select>
+									</div>
+								</div>
 							</div>
 							<div class="box-footer">
 								<button class="btn btn-default pull-right"><i class="fa fa-area-chart"></i> Run Report</button>								
