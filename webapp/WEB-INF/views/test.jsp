@@ -1,15 +1,18 @@
-<section class="content">
-	<div class="error-page">
-		<h2 class="headline text-yellow">404</h2>
-		<div class="error-content">
-			<h3>
-				<i class="fa fa-warning text-yellow"></i> Oops! Page not found.
-			</h3>
-			<p>
-				We could not find the page you were looking for. Meanwhile, you may
-				<a href="#">return to dashboard</a> or try using the
-				search form.
-			</p>
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog imodal-dialog">
+		<div class="modal-content imodal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+			</div>
+			<div class="modal-body">...</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary">Save changes</button>
+			</div>
 		</div>
 	</div>
-</section>
+</div>

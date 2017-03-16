@@ -10,7 +10,7 @@
     	<div class="wrapper">
     	
 			<jsp:include page="${request.contextPath}/header"></jsp:include>
-			<jsp:include page="${request.contextPath}/menu"></jsp:include>
+			
 						
 			<div class="content-wrapper">
 				<section class="content-header">
