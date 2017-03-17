@@ -8,7 +8,18 @@
 			.imodal-content{height: auto; min-height: 100%; border-radius: 0;}			
 			.imodal-footer{position: fixed; height: 45px; bottom: 0;width: 100%;}			
 			.imodal-button{margin-top: -10px !important;}
-			.padding-0{padding: 0px !important;}			
+			.padding-0{padding: 0px !important;}
+			.pagination{margin: 5px 0;} 
+			
+			@media screen and (max-width:1283px){
+				.table-responsive {width: 100%;margin-bottom: 15px;overflow-y: hidden;-ms-overflow-style: -ms-autohiding-scrollbar;border: 1px solid #ddd;}				
+				.table-responsive>.table {margin-bottom: 0;}
+				.table-responsive>.table>tbody>tr>td, .table-responsive>.table>tbody>tr>th, .table-responsive>.table>tfoot>tr>td, .table-responsive>.table>tfoot>tr>th, .table-responsive>.table>thead>tr>td, .table-responsive>.table>thead>tr>th {white-space: nowrap;}
+				.table-responsive>.table-bordered {border: 0;}
+				.table-responsive>.table-bordered>tbody>tr>td:first-child, .table-responsive>.table-bordered>tbody>tr>th:first-child, .table-responsive>.table-bordered>tfoot>tr>td:first-child, .table-responsive>.table-bordered>tfoot>tr>th:first-child, .table-responsive>.table-bordered>thead>tr>td:first-child, .table-responsive>.table-bordered>thead>tr>th:first-child {border-left: 0;}
+				.table-responsive>.table-bordered>tbody>tr>td:last-child, .table-responsive>.table-bordered>tbody>tr>th:last-child, .table-responsive>.table-bordered>tfoot>tr>td:last-child, .table-responsive>.table-bordered>tfoot>tr>th:last-child, .table-responsive>.table-bordered>thead>tr>td:last-child, .table-responsive>.table-bordered>thead>tr>th:last-child {border-right: 0;}
+				.table-responsive>.table-bordered>tbody>tr:last-child>td, .table-responsive>.table-bordered>tbody>tr:last-child>th, .table-responsive>.table-bordered>tfoot>tr:last-child>td, .table-responsive>.table-bordered>tfoot>tr:last-child>th { border-bottom: 0;}
+			}			
 		</style>		
 	</head>
 	<body class="sidebar-mini wysihtml5-supported skin-red-light" ng-app="agedReceivablesApp">
@@ -26,13 +37,8 @@
 					</ol>
 				</section>
 				<section class="content">
-					<div class="col-sm-12" style="padding-left: 0px; margin-top: -15px;">
-						<button style="margin-top: 10px;" ng-click="btnPrintData()" class="btn btn-default"><i class="fa fa-print"></i> Print</button>
-						<button style="margin-top: 10px;" ng-click="btnEmailData()" class="btn btn-default"><i class="fa fa-envelope-o"></i> Email</button>
-						<button style="margin-top: 10px;" ng-click="btnExportData()" class="btn btn-default"><i class="fa fa-external-link"></i> Export</button>
-					</div>
-					<div class="clearfix"></div>										
-					<div class="box box-danger" style="margin-top: 10px;">
+															
+					<div class="box box-danger">
 						<div class="box-header with-border">
 							<h3 class="box-title">Report Criteria</h3>
 							<div class="box-tools pull-right">
@@ -182,7 +188,7 @@
 							</div>
 						</div>
 						<div class="box-footer">
-							<button data-toggle="modal" data-target="#myModal" class="btn btn-default pull-right" ng-click="runReport()"><i class="fa fa-area-chart"></i> Run Report</button>								
+							<button class="btn btn-default pull-right" ng-click="runReport()"><i class="fa fa-area-chart"></i> Run Report</button>								
 						</div>
 					</div>		
 					
@@ -194,6 +200,17 @@
 									<h4 class="modal-title" id="myModalLabel"><b>Invoice Register [Summary]</b> Period: 12-12-2017 To 12-03-2017</h4>
 								</div>
 								<div class="modal-body">
+									<div class="col-sm-2">
+									  	<form class="form-inline">
+									        <div class="form-group">
+									        	<label>Row: </label>
+									        	<div class="input-group">
+									        		<select class="form-control" ng-model="pageSize.row" id ="row" ng-options="obj.value as obj.label for obj in pageSize.rows"></select>
+									        	</div>
+									        </div>
+									    </form>
+									    <br/>
+									</div>
 									<div class="col-sm-12 table-responsive padding-0">										
 										<table class="table table-hover">
 											<tr class="active">
@@ -213,17 +230,41 @@
 												<th>Class Name</th>
 											</tr>
 											
-											<tbody>
-												<tr dir-paginate="tr in pageSize.row |itemsPerPage:10" class="ng-cloak">
-													<td>{{$index}}</td>
-												</tr>
+											<tbody dir-paginate="tr in record |itemsPerPage:1" current-page="currentPage" class="ng-cloak">
 												<tr>
-													
-													<td colspan="14">
-														<dir-pagination-controls max-size="10" direction-links="true" boundary-links="true"></dir-pagination-controls>
-													</td>
+													<td>{{tr.SalDate}}</td>
+													<td>{{tr.SalID}}</td>
+													<td>{{tr.SalReference}}</td>
+													<td>{{tr.CustName}}</td>
+													<td>{{tr.LocationID}}</td>
+													<td class="dis-number">{{tr.TotalAmt | number:2}}</td>
+													<td class="dis-number">{{tr.DisInvDol | number:2}}</td>
+													<td class="dis-number">{{tr.NetTotalAmt | number:2}}</td>
+													<td class="dis-number">{{tr.rcpToDate | number:2}}</td>
+													<td class="dis-number">{{(tr.NetTotalAmt - tr.rcpToDate) | number:2}}</td>
+													<td>{{tr.PostStatus}}</td>
+													<td>{{tr.EmpName}}</td>
+													<td>{{tr.ClassID}}</td>
+													<td>{{tr.ClassName}}</td>
+												</tr>
+												<tr ng-if="calTotalPage(totalRecord,1 ) == (($index + 1) + (currentPage - 1) * 1)">
+													<th colspan="3">Record Count: {{totalRecord}}</th>
+													<th colspan="2">Grand Total</th>
+													<th>{{tr.TotalAmt | number:2}}</th>
+													<th>{{tr.TotalAmt | number:2}}</th>
+													<th>{{tr.TotalAmt | number:2}}</th>
+													<th>{{tr.TotalAmt | number:2}}</th>
+													<th>{{tr.TotalAmt | number:2}}</th>
+													<th colspan="4"></th>
 												</tr>
 											</tbody>
+											<tfoot>
+												<tr>												
+													<td colspan="14" style="padding: 0px;">
+														<dir-pagination-controls max-size="1" direction-links="true" boundary-links="true"></dir-pagination-controls>
+													</td>
+												</tr>
+											</tfoot>
 										</table>
 									</div>
 								</div>
@@ -259,30 +300,34 @@
 				    $scope.sortKey = keyname;   //set the sortKey to the param passed
 				    $scope.reverse = !$scope.reverse; //if true make it false and vice versa
 				};
-
+				$scope.currentPage = 1;
 				$scope.pageSize = {};
-
-				$scope.pageSize.rows = [ 
-								{ value: "5", label: "5" },
-			    				{ value: "10", label: "10" },
-			            		{ value: "15", label: "15" },
-			            		{ value: "20", label: "20" },
-			            		{ value: "25", label: "25" },
-			            		{ value: "30", label: "30" },
-			            		];
+				$scope.pageSize.rows = [{ value: "5", label: "5" },{ value: "10", label: "10" },{ value: "15", label: "15" },{ value: "20", label: "20" },{ value: "25", label: "25" },{ value: "30", label: "30" }];
 				$scope.pageSize.row = $scope.pageSize.rows[1].value;
-				$scope.runReport = function(){
-					
-					
-					
+				$scope.runReport = function(){					
+					$http({
+					    method: 'POST',
+					    url: "${pageContext.request.contextPath}/rest/account-receivable/invoice-register/summary",
+					    headers: {
+					    	'Accept': 'application/json',
+					        'Content-Type': 'application/json'
+					    },
+					    data: {"fDate":"2017-01-01","tDate":"2017-12-31", "postStatus":"all", "fLocation":"all", "tLocation": "all", "fEmployee":"all", "tEmployee": "all"}
+					}).success(function(response){						
+						if(response.MESSAGE == 'SUCCESS'){
+							$scope.record = response.DATA;
+							$scope.totalRecord = $scope.record.length;
+						}else{
+							$scope.record = [];							
+						}
+						$("#myModal").modal('toggle');
+					});					
 				}
-				
-				
-				
-				
+				$scope.calTotalPage = function(record, perpage){
+					return Math.ceil(record/perpage);
+				} 
+
 			}]);
-			
-			
 			
 			$(function(){							   
 				$("#datafilter").change(function(){
