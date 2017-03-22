@@ -7,7 +7,7 @@
 <jsp:include page="${request.contextPath}/head"></jsp:include>
 
 </head>
-<body class="sidebar-mini wysihtml5-supported skin-red-light" ng-app="authorization" >
+<body class="sidebar-mini wysihtml5-supported skin-red-light " ng-app="authorization" >
 	<div class="wrapper">
 
 		<jsp:include page="${request.contextPath}/header"></jsp:include>

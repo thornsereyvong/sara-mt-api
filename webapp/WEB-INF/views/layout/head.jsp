@@ -27,6 +27,10 @@
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/plugins/toggle/bootstrap-toggle.min.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/bootstrap/css/build.css">
 <link rel="stylesheet" href="${pageContext.request.contextPath}/resources/jquery_confirm/jquery-confirm.css">
+
+
+
+      
 <style type="text/css">
 	.cursor_move{ cursor: move; }
 	.width-120{ width: 300px !important; }

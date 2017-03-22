@@ -12,11 +12,10 @@
 
 		<jsp:include page="${request.contextPath}/header"></jsp:include>
 		<jsp:include page="${request.contextPath}/menu"></jsp:include>
-	<style>
-			.width-75{ width: 100px !important; }
-			.cursor-pointer{ cursor: pointer !important; margin-top: -20px !important;}
-		
-		</style>
+<style>
+	.width-75{ width: 100px !important; }
+	.cursor-pointer{ cursor: pointer !important; margin-top: -20px !important;}
+</style>
 
 		<div class="content-wrapper" ng-controller="authoriCon">
 			<section class="content-header">
