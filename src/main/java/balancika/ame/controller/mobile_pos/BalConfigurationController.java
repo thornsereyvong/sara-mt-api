@@ -6,10 +6,12 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.mysql.jdbc.Connection;
 import balancika.ame.entities.MeDataSource;
@@ -25,6 +27,7 @@ public class BalConfigurationController {
 	private DatabaseService dbService;
 	
 	@RequestMapping(value = {"/server"}, method = RequestMethod.POST)
+	@ResponseBody
 	public ResponseEntity<Map<String, Object>> confServer(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
 		Connection con = DBConnection.getConnection(dataSource);		
@@ -40,6 +43,7 @@ public class BalConfigurationController {
 	}
 	
 	@RequestMapping(value = {"/company"}, method = RequestMethod.POST)
+	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getCompany(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();		
 		dataSource.setDb("systemdatabase");
@@ -58,6 +62,7 @@ public class BalConfigurationController {
 	}
 	
 	@RequestMapping(value = {"/database"}, method = RequestMethod.POST)
+	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getDatabase(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();		
 		dataSource.setDb("systemdatabase");
@@ -76,6 +81,7 @@ public class BalConfigurationController {
 	}
 	
 	@RequestMapping(value = {"/default"}, method = RequestMethod.POST)
+	@ResponseBody
 	public ResponseEntity<Map<String, Object>> getDefault(@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();		
 		Map<String, Object> coms = dbService.getDefaultConfig(dataSource);		

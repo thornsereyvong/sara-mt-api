@@ -25,7 +25,8 @@ public class GlobalExceptionHandlerController {
     
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = Exception.class)
-    public String handleAllException(Exception e) {    	
+    public String handleAllException(Exception e) {   
+    	e.printStackTrace();
     	System.out.println("INTERNAL_SERVER_ERROR");       	
         return "404";
     }
