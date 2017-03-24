@@ -4,13 +4,12 @@
 	<head>
 		<jsp:include page="${request.contextPath}/head"></jsp:include>		
 		<style>
-			.imodal-dialog{width: 100%; height: 100%; margin: 0;padding: 0;}			
-			.imodal-content{height: auto; min-height: 100%; border-radius: 0;}			
-			.imodal-footer{position: fixed; height: 45px; bottom: 0;width: 100%;}			
+			.imodal-dialog{width: 100%; height: 100%; margin: 0;padding: 0;}
+			.imodal-content{height: auto; min-height: 100%; border-radius: 0;}
+			.imodal-footer{position: fixed; height: 45px; bottom: 0;width: 100%;}
 			.imodal-button{margin-top: -10px !important;}
 			.padding-0{padding: 0px !important;}
-			.pagination{margin: 5px 0;} 
-			
+			.pagination{margin: 5px 0;}			
 			@media screen and (max-width:1283px){
 				.table-responsive {width: 100%;margin-bottom: 15px;overflow-y: hidden;-ms-overflow-style: -ms-autohiding-scrollbar;border: 1px solid #ddd;}				
 				.table-responsive>.table {margin-bottom: 0;}
@@ -19,7 +18,9 @@
 				.table-responsive>.table-bordered>tbody>tr>td:first-child, .table-responsive>.table-bordered>tbody>tr>th:first-child, .table-responsive>.table-bordered>tfoot>tr>td:first-child, .table-responsive>.table-bordered>tfoot>tr>th:first-child, .table-responsive>.table-bordered>thead>tr>td:first-child, .table-responsive>.table-bordered>thead>tr>th:first-child {border-left: 0;}
 				.table-responsive>.table-bordered>tbody>tr>td:last-child, .table-responsive>.table-bordered>tbody>tr>th:last-child, .table-responsive>.table-bordered>tfoot>tr>td:last-child, .table-responsive>.table-bordered>tfoot>tr>th:last-child, .table-responsive>.table-bordered>thead>tr>td:last-child, .table-responsive>.table-bordered>thead>tr>th:last-child {border-right: 0;}
 				.table-responsive>.table-bordered>tbody>tr:last-child>td, .table-responsive>.table-bordered>tbody>tr:last-child>th, .table-responsive>.table-bordered>tfoot>tr:last-child>td, .table-responsive>.table-bordered>tfoot>tr:last-child>th { border-bottom: 0;}
-			}			
+			}
+			.border-top-none{border-top: 0px !important;}
+			.border-top{border-top: 2px solid #ddd !important;}
 		</style>		
 	</head>
 	<body class="sidebar-mini wysihtml5-supported skin-red-light" ng-app="agedReceivablesApp">
@@ -200,16 +201,11 @@
 									<h4 class="modal-title" id="myModalLabel"><b>Invoice Register [Summary]</b> Period: 12-12-2017 To 12-03-2017</h4>
 								</div>
 								<div class="modal-body">
-									<div class="col-sm-2">
-									  	<form class="form-inline">
-									        <div class="form-group">
-									        	<label>Row: </label>
-									        	<div class="input-group">
-									        		<select class="form-control" ng-model="pageSize.row" id ="row" ng-options="obj.value as obj.label for obj in pageSize.rows"></select>
-									        	</div>
-									        </div>
-									    </form>
-									    <br/>
+									<div class="col-sm-1 col-xs-12 padding-0" style="height: 40px;">
+									  	<div class="input-group input-group-md">
+								  			<span style="border: 0px; padding-left: 0px;" class="input-group-addon" id="sizing-addon3">ROW:</span>
+									  		<select style="width:70px;" class="form-control" ng-model="pageSize.row" id ="row" ng-options="obj.value as obj.label for obj in pageSize.rows"></select>
+										</div>
 									</div>
 									<div class="col-sm-12 table-responsive padding-0">										
 										<table class="table table-hover">
@@ -229,8 +225,7 @@
 												<th>Class ID</th>
 												<th>Class Name</th>
 											</tr>
-											
-											<tbody dir-paginate="tr in record |itemsPerPage:1" current-page="currentPage" class="ng-cloak">
+											<tbody dir-paginate="tr in record |itemsPerPage:pageSize.row" current-page="currentPage" class="ng-cloak border-top-none">
 												<tr>
 													<td>{{tr.SalDate}}</td>
 													<td>{{tr.SalID}}</td>
@@ -247,21 +242,21 @@
 													<td>{{tr.ClassID}}</td>
 													<td>{{tr.ClassName}}</td>
 												</tr>
-												<tr ng-if="calTotalPage(totalRecord,1 ) == (($index + 1) + (currentPage - 1) * 1)">
+												<tr ng-if="(record[(totalRecord-1)].SalID === tr.SalID)" class="border-top">
 													<th colspan="3">Record Count: {{totalRecord}}</th>
 													<th colspan="2">Grand Total</th>
-													<th>{{tr.TotalAmt | number:2}}</th>
-													<th>{{tr.TotalAmt | number:2}}</th>
-													<th>{{tr.TotalAmt | number:2}}</th>
-													<th>{{tr.TotalAmt | number:2}}</th>
-													<th>{{tr.TotalAmt | number:2}}</th>
+													<th class="dis-number">{{totalAmt | number:2}}</th>
+													<th class="dis-number">{{totalDis | number:2}}</th>
+													<th class="dis-number">{{totalNetAmt | number:2}}</th>
+													<th class="dis-number">{{totalRcp | number:2}}</th>
+													<th class="dis-number">{{(totalNetAmt-totalRcp) | number:2}}</th>
 													<th colspan="4"></th>
 												</tr>
 											</tbody>
 											<tfoot>
 												<tr>												
 													<td colspan="14" style="padding: 0px;">
-														<dir-pagination-controls max-size="1" direction-links="true" boundary-links="true"></dir-pagination-controls>
+														<dir-pagination-controls max-size="pageSize.row" direction-links="true" boundary-links="true"></dir-pagination-controls>
 													</td>
 												</tr>
 											</tfoot>
@@ -276,9 +271,6 @@
 							</div>
 						</div>
 					</div>
-					
-					
-							
 					<div id="errors"></div>								
 				</section>
 			</div>
@@ -317,6 +309,14 @@
 						if(response.MESSAGE == 'SUCCESS'){
 							$scope.record = response.DATA;
 							$scope.totalRecord = $scope.record.length;
+							$scope.totalAmt = 0; $scope.totalDis = 0; $scope.totalNetAmt = 0; $scope.totalRcp = 0; $scope.totalNetAmtDue = 0;
+							for(var i=0; i<$scope.totalRecord; i++){
+								$scope.totalAmt += Number($scope.record[i].TotalAmt);
+								$scope.totalDis += Number($scope.record[i].DisInvDol);
+								$scope.totalNetAmt += Number($scope.record[i].NetTotalAmt);
+								$scope.totalRcp += Number($scope.record[i].rcpToDate);
+								$scope.totalNetAmtDue += $scope.totalNetAmt-$scope.rcpToDate;
+							}
 						}else{
 							$scope.record = [];							
 						}

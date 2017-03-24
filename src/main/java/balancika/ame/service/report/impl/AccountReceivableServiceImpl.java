@@ -23,7 +23,7 @@ public class AccountReceivableServiceImpl implements AccountReceivableService{
 					             "COALESCE(s.PmtToDate,0) AS 'PmtToDate',s.CustID,s.EmpID,s.PostStatus,s.SalReference,COALESCE(s.ClassID) as 'ClassID',COALESCE((SELECT C.Des FROM tblclass C WHERE C.ClassID = s.ClassID),'') AS ClassName "+
 					             ",(SUM(COALESCE(sd.NetTotalAmt,0) + COALESCE(sd.DisDol,0)) - sum(COALESCE(sd.DisDol,0) + COALESCE(sd.DisInv,0))) as 'NetTotalAmt' "+
 					             ",((SUM(COALESCE(sd.NetTotalAmt,0) + COALESCE(sd.DisDol,0)) - sum(COALESCE(sd.DisDol,0) + COALESCE(sd.DisInv,0))) - COALESCE(s.PmtToDate,0)) as 'AmtDue' "+
-					             ",COALESCE((SELECT SUM(COALESCE(RcpAmount,0)) FROM tblreceiptdetails WHERE SalID=s.SalID),0) 'rcpToDate' "+
+					             ",COALESCE((SELECT SUM(COALESCE(RcpAmount,0)+COALESCE(Discount,0)+COALESCE(AppliedAmt,0)) FROM tblreceiptdetails WHERE SalID=s.SalID AND PostStatus='Posted'),0) 'rcpToDate' "+
 					     "FROM tblsales s LEFT JOIN tblsalesdetails sd on s.SalID = sd.SalID "+
 					     "LEFT JOIN tblemployee e on s.EmpID = e.EmpID LEFT JOIN tblcustomer c on s.CustID = c.CustID "+
 					     "WHERE (s.SalDate BETWEEN ? AND ?) "+
