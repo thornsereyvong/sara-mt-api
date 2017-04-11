@@ -16,77 +16,78 @@ public class Station {
 	private String custName;
 	private PriceCode priceCode;
 	private int billCount;
-	
-	String getStationId() {
+	public String getStationId() {
 		return stationId;
 	}
-	void setStationId(String stationId) {
+	public void setStationId(String stationId) {
 		this.stationId = stationId;
 	}
-	String getStationName() {
+	public String getStationName() {
 		return stationName;
 	}
-	void setStationName(String stationName) {
+	public void setStationName(String stationName) {
 		this.stationName = stationName;
 	}
-	String getStationType() {
+	public String getStationType() {
 		return stationType;
 	}
-	void setStationType(String stationType) {
+	public void setStationType(String stationType) {
 		this.stationType = stationType;
 	}
-	String getStationGroupId() {
+	public String getStationGroupId() {
 		return stationGroupId;
 	}
-	void setStationGroupId(String stationGroupId) {
+	public void setStationGroupId(String stationGroupId) {
 		this.stationGroupId = stationGroupId;
 	}
-	String getDescription() {
+	public String getDescription() {
 		return description;
 	}
-	void setDescription(String description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
-	int getGuestNum() {
+	public int getGuestNum() {
 		return guestNum;
 	}
-	void setGuestNum(int guestNum) {
+	public void setGuestNum(int guestNum) {
 		this.guestNum = guestNum;
 	}
-	String getStatus() {
+	public String getStatus() {
 		return status;
 	}
-	void setStatus(String status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
-	Date getStartTime() {
+	public Date getStartTime() {
 		return startTime;
 	}
-	void setStartTime(Date startTime) {
+	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
-	String getCustId() {
+	public String getCustId() {
 		return custId;
 	}
-	void setCustId(String custId) {
+	public void setCustId(String custId) {
 		this.custId = custId;
 	}
-	String getCustName() {
+	public String getCustName() {
 		return custName;
 	}
-	void setCustName(String custName) {
+	public void setCustName(String custName) {
 		this.custName = custName;
 	}
-	PriceCode getPriceCode() {
+	public PriceCode getPriceCode() {
 		return priceCode;
 	}
-	void setPriceCode(PriceCode priceCode) {
+	public void setPriceCode(PriceCode priceCode) {
 		this.priceCode = priceCode;
 	}
-	int getBillCount() {
+	public int getBillCount() {
 		return billCount;
 	}
-	void setBillCount(int billCount) {
+	public void setBillCount(int billCount) {
 		this.billCount = billCount;
 	}
+	
+	
 }

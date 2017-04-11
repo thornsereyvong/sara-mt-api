@@ -1,10 +1,14 @@
 package balancika.ame.entities.setting;
 
+import java.util.List;
+
 public class StationGroup {
 	
 	private String stationGroupId;
 	private String stationGroupName;
 	private String description;
+	private List<Station> stations;
+	
 	public String getStationGroupId() {
 		return stationGroupId;
 	}
@@ -23,8 +27,10 @@ public class StationGroup {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
-	
-	
+	public List<Station> getStations() {
+		return stations;
+	}
+	public void setStations(List<Station> stations) {
+		this.stations = stations;
+	}	
 }

@@ -1,10 +1,10 @@
 package balancika.ame.entities.setting;
 
 public class Uom {
-	String systemCodeId;
-	String uomId;
-	String description;
-	String remark;
+	private String systemCodeId;
+	private String uomId;
+	private String description;
+	private String remark;
 	
 	public String getSystemCodeId() {
 		return systemCodeId;
