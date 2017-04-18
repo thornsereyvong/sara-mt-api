@@ -8,11 +8,13 @@ import java.util.List;
 import com.mysql.jdbc.Connection;
 
 import balancika.ame.entities.MeDataSource;
+import balancika.ame.entities.setting.PriceCode;
+import balancika.ame.entities.setting.Station;
 import balancika.ame.entities.setting.StationGroup;
 import balancika.ame.service.pos.StationGroupService;
 import balancika.ame.utilities.DBConnection;
 
-public class StationGroupImpl implements StationGroupService{
+public class StationGroupServiceImpl implements StationGroupService{
 
 	@Override
 	public List<StationGroup> listStationGroup(MeDataSource dataSource) {
@@ -22,12 +24,7 @@ public class StationGroupImpl implements StationGroupService{
 			String sql = "call ame_res_list_all_station_group()";
 			CallableStatement c = con.prepareCall(sql);
 			ResultSet rs  = c.executeQuery();
-			ArrayList<StationGroup> stationGroups = new ArrayList<>();
-			int i=0;
-			while(rs.next()){ i++;
 			
-			}
-			return stationGroups;
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
