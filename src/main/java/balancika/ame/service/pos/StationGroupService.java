@@ -1,13 +1,11 @@
 package balancika.ame.service.pos;
 
-import java.util.List;
-
+import java.util.Map;
 import balancika.ame.entities.MeDataSource;
-import balancika.ame.entities.setting.StationGroup;
 
 public interface StationGroupService {
 	
-	List<StationGroup> listStationGroup(MeDataSource dataSource);
+	Map<String, Object> listStationGroup(MeDataSource dataSource);
 	
 	
 }

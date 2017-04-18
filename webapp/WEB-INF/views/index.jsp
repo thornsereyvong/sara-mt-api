@@ -21,10 +21,7 @@
 						<li><a href="#">Dashboard</a></li>
 					</ol>
 				</section>
-			
-			
-			
-			
+				image link with server <img src="${pageContext.request.contextPath}/rest/file/get/item/pic_21_en.jpg" width="100px" />
 			</div>
 			<jsp:include page="${request.contextPath}/foot"></jsp:include>
 		</div>
