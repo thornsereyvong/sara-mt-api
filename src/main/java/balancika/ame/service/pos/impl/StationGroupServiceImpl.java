@@ -2,7 +2,6 @@ package balancika.ame.service.pos.impl;
 
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +11,6 @@ import org.springframework.stereotype.Repository;
 import com.mysql.jdbc.Connection;
 
 import balancika.ame.entities.MeDataSource;
-import balancika.ame.entities.setting.PriceCode;
-import balancika.ame.entities.setting.Station;
-import balancika.ame.entities.setting.StationGroup;
 import balancika.ame.service.pos.StationGroupService;
 import balancika.ame.utilities.DBConnection;
 import balancika.ame.utilities.SQLUtil;
@@ -42,6 +38,20 @@ public class StationGroupServiceImpl implements StationGroupService{
 				i++;
 			}
 			return map;
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> listStationByStationGroup(String stationId, MeDataSource dataSource) {
+		try (Connection con = DBConnection.getConnection(dataSource)){			
+			String sql = "call ame_res_list_all_station_by_SG(?)";
+			CallableStatement c = con.prepareCall(sql);
+			c.setString(1, stationId);
+			ResultSet rs = c.executeQuery();
+			return SQLUtil.aliasRSToMap(rs);			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
