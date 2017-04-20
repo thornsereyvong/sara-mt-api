@@ -44,7 +44,22 @@ public class ItemController {
 		map.put("STATUS", HttpStatus.OK.value());
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
-	
+	@RequestMapping(value = {"/{itemGroupId}/{filter}"}, method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> listItemByItemGroup(@PathVariable("itemGroupId") String itemGroupId,@PathVariable("filter") String filter,@RequestBody MeDataSource dataSource){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Map<String, Object>> igMap = igService.listItemByItemGroup(filter, itemGroupId, dataSource);
+		if(igMap != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("MSG", "");
+			map.put("DATA", igMap);
+		}else{
+			map.put("MESSAGE", "FAILED");
+			map.put("MSG", "");
+			map.put("DATA", null);
+		}		
+		map.put("STATUS", HttpStatus.OK.value());
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+	}
 	@RequestMapping(value = {"/detail/{filter}"}, method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> getItemDetail(@PathVariable("filter") String filter,@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();

@@ -3,6 +3,7 @@ package balancika.ame.service.pos.impl;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Repository;
@@ -39,6 +40,22 @@ public class ItemGroupServiceImpl implements ItemGroupService{
 				i++;
 			}
 			return map;
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List<Map<String, Object>> listItemByItemGroup(String filter, String igId, MeDataSource dataSource) {
+		try (Connection con = DBConnection.getConnection(dataSource)){			
+			String sql = "call ame_res_list_item(?,?,?)";
+			CallableStatement c = con.prepareCall(sql);
+			c.setString(1, "i.itemid");
+			c.setString(2, filter);
+			c.setString(3, igId);
+			ResultSet rs = c.executeQuery();
+			return SQLUtil.aliasRSToMap(rs);	
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
