@@ -40,6 +40,7 @@
     <script src="${pageContext.request.contextPath}/resources/jquery_confirm/jquery-confirm.js"></script>
     <script src="${pageContext.request.contextPath}/resources/jquery_confirm/modernizr.js"></script>
     <script src="${pageContext.request.contextPath}/resources/js.mine/function.mine.js"></script>
+    <%-- <script src="${pageContext.request.contextPath}/resources/js.mine/shortcut.js"></script> --%>
     <script>
 		$(window).load(function() {
 			$(".se-pre-con").fadeOut("slow");;
