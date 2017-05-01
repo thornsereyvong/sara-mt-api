@@ -1,9 +1,9 @@
 package balancika.ame.entities.setting;
 
 public class Class {
-	String classId;
-	String className;
-	int inactive=0;
+	private String classId;
+	private String className;
+	private int inactive=0;
 	
 	public String getClassId() {
 		return classId;

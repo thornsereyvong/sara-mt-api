@@ -15,7 +15,17 @@ public class SQLUtil {
 	public static String CUSTOMER_SQL  = "SELECT CustID 'custId', COALESCE(CustName, '') 'custName' FROM tblcustomer WHERE Inactive=0;";
 	public static String CLASS_SQL  = "SELECT ClassID 'classId', COALESCE(Des, '') 'className' FROM tblclass WHERE Inactive=0;";
 	public static String EMPLOYEE_SQL  = "SELECT EmpID 'empId', COALESCE(EmpName,'') 'empName' FROM tblemployee WHERE Inactive=0;";
-	public static String MMDSALE_SQL  = "SELECT MAX(SalDate) 'fDate', MIN(SalDate) 'tDate'  FROM tblsales; ";
+	public static String MMDSALE_SQL  = "SELECT MAX(SalDate) 'tDate', MIN(SalDate) 'fDate'  FROM tblsales; ";
+	public static String ITEM_SQL = "SELECT ItemID 'itemId', COALESCE(ItemName,'') 'itemName' FROM tblitem WHERE Inactive=0;";
+	public static String PRICE_CODE_SQL="SELECT PriceCode 'priceCode', COALESCE(Description,'') 'priceCodeName' FROM tblpricecode;";
+	public static String ITEM_GROUP_SQL = "SELECT ItemGroupID 'itemGroupId', COALESCE(ItemGroupName,'') 'itemGroupName'  FROM tblitemgroup;";
+	public static String CUST_GROUP = "SELECT CustGroupID 'custGroupId', COALESCE(CustGroupName,'') 'custGroupName' FROM tblcustomergroup;";
+	public static String UOM_SQL = "SELECT UomID 'uomId', COALESCE(Des, '') 'uomName' FROM tbluom;";
+	public static String VENDOR_SQL = "SELECT VendID 'vendId', COALESCE(VendName,'') 'vendName' FROM tblvendor WHERE Inactive=0;";
+	public static String VENDOR_GROUP_SQL = "SELECT VendGroupID 'vendGroupId', COALESCE(VendGroupName,'') 'vendGroupName' FROM tblvendorgroup;";
+	public static String ACCOUNT_SQL = "SELECT AccID 'accId', COALESCE(AccName,'') 'accName' FROM tblaccount;";
+	public static String JOUNAL_SQL = "";
+	public static String JOUNAL_TYPE_SQL = "SELECT JType 'typeId', COALESCE(JTypeName,'') 'typeName'  FROM tbljtype;";
 	
 	public static List<Map<String, Object>> aliasRSToMap(ResultSet rs){
 		try {

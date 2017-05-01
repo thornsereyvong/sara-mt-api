@@ -1,8 +1,8 @@
 package balancika.ame.entities.setting;
 
 public class Account {
-	String accountId;
-	String accountName;
+	private String accountId;
+	private String accountName;
 	public String getAccountId() {
 		return accountId;
 	}

@@ -1,8 +1,6 @@
 package balancika.ame.controller;
 
-import org.apache.poi.util.SystemOutLogger;
 import org.springframework.http.HttpStatus;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -27,7 +25,8 @@ public class GlobalExceptionHandlerController {
     
     @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = Exception.class)
-    public String handleAllException(Exception e) {    	
+    public String handleAllException(Exception e) {   
+    	e.printStackTrace();
     	System.out.println("INTERNAL_SERVER_ERROR");       	
         return "404";
     }

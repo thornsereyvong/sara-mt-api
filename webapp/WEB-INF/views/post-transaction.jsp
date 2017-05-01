@@ -34,7 +34,7 @@
 						<div class="box-body">
 							<div class="row">
 								<div class="col-sm-12">
-									<div class="col-sm-6 col-md-3 col-xs-12">
+									<div class="col-lg-3 col-sm-6 col-md-6 col-xs-12">
 										<label class="font-label">Transaction Type <span class="requrie">(Required)</span></label>
 										<div class="form-group">
 											
@@ -57,7 +57,7 @@
 											</select>
 										</div>
 									</div>
-									<div class="col-sm-6 col-md-3 col-xs-12">
+									<div class="col-lg-3 col-sm-6 col-md-6 col-xs-12">
 			                        	<div class="icheckbox icheckbox-primary"><br class="hidden-xs"><br>
 			                        		<input id="ckrShowAll" ng-click="ckrShowAllClick()" class="styled" type="checkbox">
 			                        		<label class="cursor-pointer"  for="ckrShowAll">Show posted, voided and deleted transactions</label>

@@ -70,7 +70,8 @@ public class ARReceiptServiceImpl implements ARReceiptService{
 				
 				rcps.add(rcpDetail);
 			}
-			receipt.setReceiptDetail(rcps);
+			if(receipt != null)
+				receipt.setReceiptDetail(rcps);
 			return receipt;	
 		}catch (Exception e) {
 			e.printStackTrace();

@@ -40,9 +40,13 @@
     <script src="${pageContext.request.contextPath}/resources/jquery_confirm/jquery-confirm.js"></script>
     <script src="${pageContext.request.contextPath}/resources/jquery_confirm/modernizr.js"></script>
     <script src="${pageContext.request.contextPath}/resources/js.mine/function.mine.js"></script>
+<<<<<<< HEAD
     
 
     
+=======
+    <%-- <script src="${pageContext.request.contextPath}/resources/js.mine/shortcut.js"></script> --%>
+>>>>>>> 6217a60ad4542690a6cab9ed69512d61efa07f1e
     <script>
 		$(window).load(function() {
 			$(".se-pre-con").fadeOut("slow");;

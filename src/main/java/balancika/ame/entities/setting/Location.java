@@ -1,11 +1,11 @@
 package balancika.ame.entities.setting;
 
 public class Location {
-	String systemCodeId;
-	String locationId;
-	String locationName;
-	String address;
-	String remark;
+	private String systemCodeId;
+	private String locationId;
+	private String locationName;
+	private String address;
+	private String remark;
 	
 	public String getSystemCodeId() {
 		return systemCodeId;
