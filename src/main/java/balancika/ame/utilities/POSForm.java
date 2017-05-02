@@ -1,22 +1,22 @@
 package balancika.ame.utilities;
 
-import java.util.Map;
 import balancika.ame.entities.MeDataSource;
 
-public class POSFilter {
+import java.util.List;
+import java.util.Map;
+public class POSForm {
 	private MeDataSource dataSource;
-	private Map<String, String> filter;
-	
+	private List<Map<String,Object>> records;
 	public MeDataSource getDataSource() {
 		return dataSource;
 	}
 	public void setDataSource(MeDataSource dataSource) {
 		this.dataSource = dataSource;
 	}
-	public Map<String, String> getFilter() {
-		return filter;
+	public List<Map<String, Object>> getRecords() {
+		return records;
 	}
-	public void setFilter(Map<String, String> filter) {
-		this.filter = filter;
-	}	
+	public void setRecords(List<Map<String, Object>> records) {
+		this.records = records;
+	}
 }
