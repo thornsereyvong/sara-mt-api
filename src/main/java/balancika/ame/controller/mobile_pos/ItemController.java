@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import balancika.ame.entities.MeDataSource;
 import balancika.ame.service.pos.ItemGroupService;
 import balancika.ame.service.pos.ItemService;
+import balancika.ame.utilities.POSFilter;
 
 @RestController
 @RequestMapping("/api/pos/item/")
@@ -64,6 +65,22 @@ public class ItemController {
 	public ResponseEntity<Map<String, Object>> getItemDetail(@PathVariable("filter") String filter,@RequestBody MeDataSource dataSource){
 		Map<String, Object> map = new HashMap<String, Object>();
 		List<Map<String, Object>> iMap = iService.listItemDetail(filter, dataSource);
+		if(iMap != null){
+			map.put("MESSAGE", "SUCCESS");
+			map.put("MSG", "");
+			map.put("DATA", iMap);
+		}else{
+			map.put("MESSAGE", "FAILED");
+			map.put("MSG", "");
+			map.put("DATA", null);
+		}		
+		map.put("STATUS", HttpStatus.OK.value());
+		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
+	}
+	@RequestMapping(value = {"/detail"}, method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> getItemDetail1(@RequestBody POSFilter pos){
+		Map<String, Object> map = new HashMap<String, Object>();
+		List<Map<String, Object>> iMap = iService.ListItemDetailWithMap(pos);
 		if(iMap != null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("MSG", "");
