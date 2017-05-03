@@ -7,35 +7,29 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import balancika.ame.entities.MeDataSource;
-import balancika.ame.service.pos.ItemGroupService;
-import balancika.ame.service.pos.ItemService;
+import balancika.ame.service.pos.POSTransactionService;
 import balancika.ame.utilities.POSFilter;
+import balancika.ame.utilities.POSForm;
 
 @RestController
-@RequestMapping("/api/pos/item/")
-public class ItemController {
+@RequestMapping("/api/pos/transaction/")
+public class POSTransactionController {
 	
-	@Autowired
-	private ItemGroupService igService;
+	@Autowired 
+	private POSTransactionService posService;
 	
-	@Autowired
-	private ItemService iService;
-	
-	@RequestMapping(value = {"/startup/{filter}"}, method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> startup_item(@PathVariable("filter") String filter,@RequestBody MeDataSource dataSource){
+	@RequestMapping(value = {"/sale-order/list"}, method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> listSaleOrder(@RequestBody POSFilter pos){
 		Map<String, Object> map = new HashMap<String, Object>();
-		Map<String, Object> igMap = igService.listItemGroupGroup(filter, dataSource);
-		if(igMap != null){
+		List<Map<String, Object>> srMap = posService.listSaleOrder(pos);
+		if(srMap!=null){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("MSG", "");
-			map.put("DATA", igMap);
+			map.put("DATA", srMap);
 		}else{
 			map.put("MESSAGE", "FAILED");
 			map.put("MSG", "");
@@ -44,14 +38,15 @@ public class ItemController {
 		map.put("STATUS", HttpStatus.OK.value());
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
-	@RequestMapping(value = {"/{itemGroupId}/{filter}"}, method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> listItemByItemGroup(@PathVariable("itemGroupId") String itemGroupId,@PathVariable("filter") String filter,@RequestBody MeDataSource dataSource){
+	
+	@RequestMapping(value = {"/sale-order/add"}, method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> addSaleOrder(@RequestBody POSForm frm){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Map<String, Object>> igMap = igService.listItemByItemGroup(filter, itemGroupId, dataSource);
-		if(igMap != null){
+		boolean insertStatus = posService.addSaleOrder(frm);
+		if(insertStatus){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("MSG", "");
-			map.put("DATA", igMap);
+			map.put("DATA", null);
 		}else{
 			map.put("MESSAGE", "FAILED");
 			map.put("MSG", "");
@@ -60,14 +55,15 @@ public class ItemController {
 		map.put("STATUS", HttpStatus.OK.value());
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
-	@RequestMapping(value = {"/detail/{filter}"}, method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> getItemDetail(@PathVariable("filter") String filter,@RequestBody MeDataSource dataSource){
+	
+	@RequestMapping(value = {"/sale-order/update"}, method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> updateSaleOrder(@RequestBody POSForm frm){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Map<String, Object>> iMap = iService.listItemDetail(filter, dataSource);
-		if(iMap != null){
+		boolean updateStatus = posService.updateSaleOrderByStation(frm);
+		if(updateStatus){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("MSG", "");
-			map.put("DATA", iMap);
+			map.put("DATA", null);
 		}else{
 			map.put("MESSAGE", "FAILED");
 			map.put("MSG", "");
@@ -76,14 +72,15 @@ public class ItemController {
 		map.put("STATUS", HttpStatus.OK.value());
 		return new ResponseEntity<Map<String,Object>>(map,HttpStatus.OK);
 	}
-	@RequestMapping(value = {"/detail"}, method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> getItemDetail1(@RequestBody POSFilter pos){
+	
+	@RequestMapping(value = {"/sale-order/delete"}, method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> deleteSaleOrder(@RequestBody POSForm frm){
 		Map<String, Object> map = new HashMap<String, Object>();
-		List<Map<String, Object>> iMap = iService.ListItemDetailWithMap(pos);
-		if(iMap != null){
+		boolean deleteStatus = posService.deleteSaleOrderByStation(frm);
+		if(deleteStatus){
 			map.put("MESSAGE", "SUCCESS");
 			map.put("MSG", "");
-			map.put("DATA", iMap);
+			map.put("DATA", null);
 		}else{
 			map.put("MESSAGE", "FAILED");
 			map.put("MSG", "");

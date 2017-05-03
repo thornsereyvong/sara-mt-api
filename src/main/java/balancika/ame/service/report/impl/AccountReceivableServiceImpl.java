@@ -59,7 +59,7 @@ public class AccountReceivableServiceImpl implements AccountReceivableService{
 					     "FROM tblsales s LEFT JOIN tblsalesdetails sd on s.SalID = sd.SalID "+
 					     "LEFT JOIN tblemployee e on s.EmpID = e.EmpID LEFT JOIN tblcustomer c on s.CustID = c.CustID "+
 					     "WHERE (date(s.SalDate) BETWEEN ? AND ?) "+
-					     "AND IF(LOWER(?) = 'All',TRUE,s.PostStatus = ?) "+
+					     "AND IF(LOWER(?) = 'All',s.PostStatus <> 'Deleted',s.PostStatus = ?) "+
 					     "AND IF(LOWER(?) = 'All',TRUE,sd.LocationID >= ?) "+
 					     "AND IF(LOWER(?) = 'All',TRUE,sd.LocationID <= ?) "+
 					     "AND IF(LOWER(?) = 'All',TRUE,s.EmpID >= ?) "+

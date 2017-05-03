@@ -292,7 +292,7 @@
 				$scope.pageSize.row = $scope.pageSize.rows[1].value;
 				$scope.runReport = function(){					
 					
-					dis({"fDate":getValueStringById("fromdate"),"tDate":getValueStringById("todate"), "postStatus":getValueStringById("postStatus"), "fLocation":getValueStringById("fLocation"), "tLocation": getValueStringById("tLocation"), "fEmployee":getValueStringById("fEmployee"), "tEmployee": getValueStringById("tEmployee"), "fClass":getValueStringById("fClass"), "tClass":getValueStringById("tClass"), "sr":getValueStringById("sr"),"orderBy":getValueStringById("orderBy")})
+					//dis({"fDate":getValueStringById("fromdate"),"tDate":getValueStringById("todate"), "postStatus":getValueStringById("postStatus"), "fLocation":getValueStringById("fLocation"), "tLocation": getValueStringById("tLocation"), "fEmployee":getValueStringById("fEmployee"), "tEmployee": getValueStringById("tEmployee"), "fClass":getValueStringById("fClass"), "tClass":getValueStringById("tClass"), "sr":getValueStringById("sr"),"orderBy":getValueStringById("orderBy")})
 					
 					$http({
 					    method: 'POST',
@@ -303,6 +303,9 @@
 					    },
 					    data: {"fDate":getValueStringById("fromdate"),"tDate":getValueStringById("todate"), "postStatus":getValueStringById("postStatus"), "fLocation":getValueStringById("fLocation"), "tLocation": getValueStringById("tLocation"), "fEmployee":getValueStringById("fEmployee"), "tEmployee": getValueStringById("tEmployee"), "fClass":getValueStringById("fClass"), "tClass":getValueStringById("tClass"), "sr":getValueStringById("sr"),"orderBy":getValueStringById("orderBy")}
 					}).success(function(response){						
+						
+						$scope.currentPage = 1;
+						$scope.pageSize.row = $scope.pageSize.rows[1].value;
 						if(response.MESSAGE == 'SUCCESS'){
 							$scope.record = response.DATA;
 							$scope.totalRecord = $scope.record.length;
