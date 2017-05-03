@@ -41,19 +41,19 @@
 								<table class="table table-hover">
 									<thead>
 										<tr>
-											<th style="cursor: pointer;" ng-click="sort('authorGroupId')">Authorization Group ID
+											<th class="widths-20" ng-click="sort('authorGroupId')">Authorization Group ID
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authorGroupId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authGroupName')">Authorization Group Name
+											<th class="widths-20" ng-click="sort('authGroupName')">Authorization Group Name
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authGroupName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authorGroupDesc')">Authorization Group Description
+											<th class="widths-20" ng-click="sort('authorGroupDesc')">Authorization Group Description
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authorGroupDesc'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authGroupCount')">Authorization Employee
+											<th class="widths-20" ng-click="sort('authGroupCount')">Authorization Employee
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authGroupCount'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="width: 175px;"></th>
+											<th class="widths-20" >Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -334,195 +334,154 @@
 				
 				$scope.createAuthGroup = function(){
 
-					$.confirm({
-					    title: '<h3 class="text-center">Are you sure you want to create this authorization ?</h3>',
-					    content: '<hr>',
-					    type: 'green',
-					    buttons: {
-					        createAuthorization: {
-					            text: 'Yes',
-					            action: function () {
-						            
-					            	var listEmpDetail = [];
-									
-									for(var i=0; i< Object.keys($scope.emps).length ;i++){		
-										
-										if($scope.emps[i].statusCheck == true){	
-											listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empId});
-										}
-										
+					$('#form_group').data('bootstrapValidator').validate();
+					var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
+					if(addAuthGroup){
+						var listEmpDetail = [];
+						
+						for(var i=0; i< Object.keys($scope.emps).length ;i++){		
+							
+							if($scope.emps[i].statusCheck == true){	
+								listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empId});
+							}
+							
+						}
+						
+						var groupName = getValueStringById("authori_name");
+						var groupDesc = getValueStringById("authori_desc");
+						var stringValue = {
+							    "authGroupName":groupName,"authGroupDesc":groupDesc, "authGroupDetail":listEmpDetail
+						};
+
+						swal({
+							title:  "<span style='font-size: 20px;'>You are about to create authorization group.</span>",
+							text: "Click OK to continue or CANCEL to abort.",
+							type: "info",
+							html: true,
+							showCancelButton: true,
+							closeOnConfirm: false,
+							showLoaderOnConfirm: true,	
+				        }, 
+				        function(isConfirm){ 
+
+				            if(isConfirm){
+				            	setTimeout(function(){
+					            	
+								$http({
+						 			method: 'POST',
+								    url: "${pageContext.request.contextPath}/rest/authorizationgroup/create",
+								    headers: {
+								    	'Accept': 'application/json',
+								        'Content-Type': 'application/json'
+								    }	,
+								    data : stringValue    
+								}).success(function(response) {	
+									if(response.MESSAGE == "fail"){
+										messageTypeFail(response.DESCRIPTION)
+									}else if(response.MESSAGE == "exist"){
+										messageTypeExisted(response.DESCRIPTION)
+									}else if(response.MESSAGE == "not allowed"){
+										messageTypeNotAllowed(response.DESCRIPTION)
+									}else{
+										messagsTypeSuccess(response.DESCRIPTION)
+										$scope.listAuthorizationGroup();
+										$scope.closeModal();	
 									}
-								
+									
+							
+								});
 
-										$('#form_group').data('bootstrapValidator').validate();
-										var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
-										if(addAuthGroup){
-											var groupName = getValueStringById("authori_name");
-											var groupDesc = getValueStringById("authori_desc");
-											var stringValue = {
-												    "authGroupName":groupName,"authGroupDesc":groupDesc, "authGroupDetail":listEmpDetail
-											};
-											$http({
-									 			method: 'POST',
-											    url: "${pageContext.request.contextPath}/rest/authorizationgroup/create",
-											    headers: {
-											    	'Accept': 'application/json',
-											        'Content-Type': 'application/json'
-											    }	,
-											    data : stringValue    
-											}).success(function(response) {	
-										
-												if(response.MESSAGE == "fail"){
-													$.alert({
-							                            title: '<h3 class="text-center">Fail</h3>',
-							                            type: 'orange',
-							                            content: "<hr>",
-							                       });
-												}else if(response.MESSAGE == "exist"){
-													$.alert({
-							                            title: '<h3 class="text-center">Exist</h3>',
-							                            type: 'orange',
-							                            content: response.DESCRIPTION + "<hr>",
-							                       });
-												}else{
-													$.alert({
-							                            title: '<h3 class="text-center">Success</h3>',
-							                            type: 'green',
-							                            content: response.DESCRIPTION  + "<hr>",
-							                            buttons: {
-															countinue :{
-																text: "Continue Create",
-																action : function(){
-																	$scope.listAuthorizationGroup();
-																	$scope.continueCreate();
-																	$scope.countEmpTrue = 0;
-																}
-															},
-															cancelContinue :{
-																text: "Cancel",
-																action: function(){
-																	$scope.listAuthorizationGroup();
-																	$scope.closeModal();
-																}
-															}
-							                            }
-							                            
-							                       });
-								                       
-													
-													
-												}
-												
-											});
-										}
-					            }
-					        },
-					        cancelAction:{
-						        text: "Cancel",
-						        action: function () {
-					           		 
-					        	}
-					        }
-					    }
-					});
-					
+				            	},500);
+				            }
+				        });
+					}
+          
 
-					
-					
-					
 				}
 
 
 				$scope.updateAuthGroup = function(){
-					$.confirm({
-					    title: '<h3 class="text-center">Are you sure you want to update this authorization ?</h3>',
-					    content: '<hr>',
-					    type: 'green',
-					    buttons: {
-					        updateAuthorization: {
-					            text: 'Yes',
-					            action: function () {
-						            
-					            	var tr = $("#data-emp tr");
-									var listEmpDetail = [];
-									for(var i=0; i< Object.keys($scope.emps).length ;i++){		
-										
-										if($scope.emps[i].statusCheck == true){	
-											listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empId});
-										}
-										
-									}
+				
+					            	
+
+					$('#form_group').data('bootstrapValidator').validate();
+					var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
+					if(addAuthGroup){
+						var tr = $("#data-emp tr");
+						var listEmpDetail = [];
+						for(var i=0; i< Object.keys($scope.emps).length ;i++){		
 							
+							if($scope.emps[i].statusCheck == true){	
+								listEmpDetail.push({"authGroupEmpId":$scope.emps[i].empId});
+							}
+							
+						}
 
-									$('#form_group').data('bootstrapValidator').validate();
-									var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
-									if(addAuthGroup){
-										var groupName = getValueStringById("authori_name");
-										var groupDesc = getValueStringById("authori_desc");
-										var stringValue = {
-											    "authGroupId": $scope.authoriID ,"authGroupName":groupName,"authGroupDesc":groupDesc, "authGroupDetail":listEmpDetail
-										};
-										
-										$http({
-								 			method: 'POST',
-										    url: "${pageContext.request.contextPath}/rest/authorizationgroup/edit",
-										    headers: {
-										    	'Accept': 'application/json',
-										        'Content-Type': 'application/json'
-										    }	,
-										    data : stringValue    
-										}).success(function(response) {	
-											
+						
+						var groupName = getValueStringById("authori_name");
+						var groupDesc = getValueStringById("authori_desc");
+						var stringValue = {
+							    "authGroupId": $scope.authoriID ,"authGroupName":groupName,"authGroupDesc":groupDesc, "authGroupDetail":listEmpDetail
+						};
 
-											if(response.MESSAGE == "success"){
-												$scope.listAuthorizationGroup();
-												$scope.closeModal();
-												 $.alert({
-							                            title: '<h3 class="text-center">Success</h3>',
-							                            type: 'green',
-							                            content: response.DESCRIPTION+"<hr>",
-							                       });
-											}else if(response.MESSAGE == "exist"){
-												 $.alert({
-							                            title: '<h3 class="text-center">Exist</h3>',
-							                            type: 'red',
-							                            content: response.DESCRIPTION+"<hr>",
-							                       });
-											}else{
-												$.alert({
-						                            title: '<h3 class="text-center">Fail</h3>',
-						                            type: 'red',
-						                            content: response.DESCRIPTION+"<hr>",
-						                       });
-											}
-											
-										});
-									}
-									
-						        }
-					        },
-					        cancelButtom:{
-								text: "Cancel"
-						
-						     }
-					    }
-					});
+						swal({
+							title:  "<span style='font-size: 20px;'>You are about to create authorization group.</span>",
+							text: "Click OK to continue or CANCEL to abort.",
+							type: "info",
+							html: true,
+							showCancelButton: true,
+							closeOnConfirm: false,
+							showLoaderOnConfirm: true,	
+				        }, 
+				        function(isConfirm){ 
+
+				            if(isConfirm){
+				            	setTimeout(function(){
+						$http({
+				 			method: 'POST',
+						    url: "${pageContext.request.contextPath}/rest/authorizationgroup/edit",
+						    headers: {
+						    	'Accept': 'application/json',
+						        'Content-Type': 'application/json'
+						    }	,
+						    data : stringValue    
+						}).success(function(response) {	
+							
+							if(response.MESSAGE == "fail"){
+								messageTypeFail(response.DESCRIPTION)
+							}else if(response.MESSAGE == "exist"){
+								messageTypeExisted(response.DESCRIPTION)
+							}else if(response.MESSAGE == "not allowed"){
+								messageTypeNotAllowed(response.DESCRIPTION)
+							}else{
+								messagsTypeSuccess(response.DESCRIPTION)
+								$scope.listAuthorizationGroup();
+								$scope.closeModal();	
+							}
+							
+							});
+			            	},500);
+			            }
+			        });
+					}
 					
-						
-					
+						       
 				}
 
 				$scope.deleteAuthGroup = function(authID,authName){
-					$.confirm({
-					    title: '<h3 class="text-center">Are you sure you want to delete  <br> this  authorization group '+authName+' ?</h3>',
-					    type: 'orange',
-					    content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.'+"<hr>",
-					    autoClose: 'cancelAction|8000',
-					    buttons: {
-					    	confirm: {
-					            text: 'Delete',
-					            action: function () {
-						            
+					swal({
+						title:  "<span style='font-size: 20px;'>You are about to delete authorization group with ID "+authID+".</span>",
+						text: "Click OK to continue or CANCEL to abort.",
+						type: "info",
+						html: true,
+						showCancelButton: true,
+						closeOnConfirm: false,
+						showLoaderOnConfirm: true,	
+			        }, 
+			        function(isConfirm){ 
+
+			            if(isConfirm){
+			            	setTimeout(function(){
 					            	$http({
 							 			method: 'DELETE',
 									    url: "${pageContext.request.contextPath}/rest/authorizationgroup/delete/"+authID,
@@ -553,20 +512,9 @@
 										}
 									});
 					               
-					            }
-					        },
-					        cancelAction: {
-					        	text: 'Cancel Action',
-						         action : function () {
-						        	/* $.alert({
-			                            title: '<h3 class="text-center">Action Cancel !</h3>',
-			                            type: 'red' ,
-			                            content: "<hr>", 
-			                       }); */
-						        }
-					        }
-					    }
-					});
+							},500);
+			            }
+			        }); 
 
 				}
 

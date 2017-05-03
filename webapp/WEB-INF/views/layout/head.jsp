@@ -32,6 +32,15 @@
 
       
 <style type="text/css">
+	table thead tr th{
+		cursor: pointer;
+	}
+	.widths-10{width: 10% !important; }
+	.widths-20{width: 20% !important; }
+	.widths-30{width: 30% !important; }
+	.widths-40{width: 40% !important; }
+	.widths-50{width: 50% !important; }
+	.widths-60{width: 60% !important; }
 	.cursor_move{ cursor: move; }
 	.width-120{ width: 300px !important; }
 	.width-110{ width: 110px !important; }
@@ -79,4 +88,79 @@
    	.margin-left-5{margin-left: 5px !important;}
 	
 </style>
+
+<script>
+
+function messagsTypeSuccess(textMess){
+
+	swal({
+		  title: "Successful",
+		  text: textMess,
+		  timer: 3000,
+		  type: "success",
+		  showConfirmButton: false
+	});
+}
+
+function messagsTypeError(textMess){
+
+	swal({
+		  title: "Warning",
+		  text: textMess,
+		  timer: 3000,
+		  type: "warning",
+		  showConfirmButton: false
+	});
+}
+
+function messageTypeFail(textMess){
+	swal({
+		  title: "Fail",
+		  text: textMess,
+		  timer: 3000,
+		  type: "warning",
+		  showConfirmButton: false
+	});
+}
+
+function messageTypeUsed(textMess){
+	swal({
+		  title: "Used",
+		  text: textMess,
+		  timer: 3000,
+		  type: "warning",
+		  showConfirmButton: false
+	});
+}
+
+function messageTypeExisted(textMess){
+	swal({
+		  title: "Existed",
+		  text: textMess,
+		  timer: 3000,
+		  type: "warning",
+		  showConfirmButton: false
+	});
+}
+
+function messageTypeNotAllowed(textMess){
+	swal({
+		  title: "Not Allowed",
+		  text: textMess,
+		  timer: 3000,
+		  type: "warning",
+		  showConfirmButton: false
+	});
+}
+function messageTypeNotAuthorization(textMess){
+	swal({
+		  title: "No Authorization",
+		  text: textMess,
+		  timer: 3000,
+		  type: "warning",
+		  showConfirmButton: false
+	});
+}
+
+</script>
 

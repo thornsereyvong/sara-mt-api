@@ -44,19 +44,19 @@
 								<table class="table table-hover">
 									<thead>
 										<tr>
-											<th style="cursor: pointer;" ng-click="sort('authId')">Authorization ID
+											<th class="wdiths-30"  ng-click="sort('authId')">Authorization ID
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authName')">Authorization Name
+											<th class="wdiths-30" ng-click="sort('authName')">Authorization Name
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authType')">Authorization Type
+											<th class="wdiths-30"  ng-click="sort('authType')">Authorization Type
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authType'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
 											<!-- <th style="cursor: pointer;" ng-click="sort('authCount')">Count Employee
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authCount'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th> -->
-											<th style="width: 175px;"></th>
+											<th class="wdiths-10" >Action</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -606,50 +606,56 @@
 				
 				
 				$scope.createauth = function(){
-					$.confirm({
-					    title: '<h3 class="text-center">Are you sure you want to create this authorization ?</h3>',
-					    content: '<hr>',
-					    type: 'green',
-					    buttons: {
-					        createAuthorization: {
-					            text: 'Yes',
-					            action: function () {
+				
 	
-					            	$('#form_authori').data('bootstrapValidator').validate();
-									var addauth = $("#form_authori").data('bootstrapValidator').validate().isValid();
-									if(addauth){
+		            	$('#form_authori').data('bootstrapValidator').validate();
+						var addauth = $("#form_authori").data('bootstrapValidator').validate().isValid();
+						if(addauth){
+							
+							if($scope.sAuthType == "Individual"){
+
+								var countObjEmp = Object.keys($scope.emps).length;
+								var countStatus = 0;
+								var listEmpDetail = [];
+								for(var i=0;i < countObjEmp ;i++){
+									if($scope.emps[i].statusCheck == true){
+										countStatus++;
+										listEmpDetail.push({"authEmpId":$scope.emps[i].empId,"authGroupId":"","authGroupAndOr":"","authGroupAmount":""});
+									}	
+								}
+
+								if($("#authAndOr").val() == "And"){
+									if(isNaN($scope.authAmount)){
+										$scope.setErrorField("divAthAmountIndividual","The authorization amount can not input string !");
+									}else{
 										
-										if($scope.sAuthType == "Individual"){
+										if(parseInt(countStatus) < parseInt($scope.authAmount)){
+											$scope.setErrorField("divAthAmountIndividual","Please check employee equal or greater than authorization amount  !");
+										}else{
+											$scope.setSuccessField("divAthAmountIndividual");
+											
+											var stringValue = {
+												"authName":getValueStringById("authName"),
+												"authType":getValueStringById("authType"), 
+												"authAndOr":"And", 
+												"authAmount":getValueStringById("authAmount"),
+												"authorizationDetail": listEmpDetail
+											};
 
-											var countObjEmp = Object.keys($scope.emps).length;
-											var countStatus = 0;
-											var listEmpDetail = [];
-											for(var i=0;i < countObjEmp ;i++){
-												if($scope.emps[i].statusCheck == true){
-													countStatus++;
-													listEmpDetail.push({"authEmpId":$scope.emps[i].empId,"authGroupId":"","authGroupAndOr":"","authGroupAmount":""});
-												}	
-											}
+											swal({
+												title:  "<span style='font-size: 20px;'>You are about to create authorization.</span>",
+												text: "Click OK to continue or CANCEL to abort.",
+												type: "info",
+												html: true,
+												showCancelButton: true,
+												closeOnConfirm: false,
+												showLoaderOnConfirm: true,	
+									        }, 
+									        function(isConfirm){ 
 
-											if($("#authAndOr").val() == "And"){
-												if(isNaN($scope.authAmount)){
-													$scope.setErrorField("divAthAmountIndividual","The authorization amount can not input string !");
-												}else{
-													
-													if(parseInt(countStatus) < parseInt($scope.authAmount)){
-														$scope.setErrorField("divAthAmountIndividual","Please check employee equal or greater than authorization amount  !");
-													}else{
-														$scope.setSuccessField("divAthAmountIndividual");
-														
-														var stringValue = {
-															"authName":getValueStringById("authName"),
-															"authType":getValueStringById("authType"), 
-															"authAndOr":"And", 
-															"authAmount":getValueStringById("authAmount"),
-															"authorizationDetail": listEmpDetail
-														};
-
-														$http({
+									            if(isConfirm){
+									            	setTimeout(function(){
+									            		$http({
 												 			method: 'POST',
 														    url: "${pageContext.request.contextPath}/rest/authorization/create",
 														    headers: {
@@ -658,241 +664,176 @@
 														    }	,
 														    data : stringValue    
 														}).success(function(response) {	
-													
-														
 															if(response.MESSAGE == "fail"){
-																$.alert({
-										                            title: '<h3 class="text-center">Fail</h3>',
-										                            type: 'orange',
-										                            content: "<hr>",
-										                       });
+																messageTypeFail(response.DESCRIPTION)
 															}else if(response.MESSAGE == "exist"){
-																$.alert({
-										                            title: '<h3 class="text-center">Exist</h3>',
-										                            type: 'orange',
-										                            content: response.DESCRIPTION + "<hr>",
-										                       });
+																messageTypeExisted(response.DESCRIPTION)
 															}else{
-																$.alert({
-										                            title: '<h3 class="text-center">Success</h3>',
-										                            type: 'green',
-										                            content: response.DESCRIPTION  + "<hr>",
-										                            buttons: {
-																		countinue :{
-																			text: "Continue Create",
-																			action : function(){
-																				$scope.listAuthorization();
-																				$scope.closeModalCreate();
-																				$scope.countEmpTrue = 0;
-																			}
-																		},
-																		cancelContinue :{
-																			text: "Cancel",
-																			action: function(){
-																				$scope.listAuthorization();
-																				$scope.closeModal();
-																				$scope.countEmpTrue = 0;
-																			}
-																		}
-										                            }
-										                            
-										                       });
-											                       
-																
-																
+																messagsTypeSuccess(response.DESCRIPTION)
+																$scope.listAuthorization();
+																$scope.closeModalCreate();
+																$scope.countEmpTrue = 0;		
 															}
 
-															
 														});
 														
-													}
-												}
-											}else if($("#authAndOr").val() == "Or"){
-											
-												var stringValue = {
-														"authName":getValueStringById("authName"),
-														"authType":getValueStringById("authType"), 
-														"authAndOr":"Or", 
-														"authAmount":0,
-														"authorizationDetail": listEmpDetail
-													};
+									            	},500);
+									            }
+									        });
 
-													$http({
-											 			method: 'POST',
-													    url: "${pageContext.request.contextPath}/rest/authorization/create",
-													    headers: {
-													    	'Accept': 'application/json',
-													        'Content-Type': 'application/json'
-													    }	,
-													    data : stringValue    
-													}).success(function(response) {	
-												
-														if(response.MESSAGE == "fail"){
-															$.alert({
-									                            title: '<h3 class="text-center">Fail</h3>',
-									                            type: 'orange',
-									                            content: "<hr>",
-									                       });
-														}else if(response.MESSAGE == "exist"){
-															$.alert({
-									                            title: '<h3 class="text-center">Exist</h3>',
-									                            type: 'orange',
-									                            content: response.DESCRIPTION + "<hr>",
-									                       });
-														}else{
-															$.alert({
-									                            title: '<h3 class="text-center">Success</h3>',
-									                            type: 'green',
-									                            content: response.DESCRIPTION  + "<hr>",
-									                            buttons: {
-																	countinue :{
-																		text: "Continue Create",
-																		action : function(){
-																			$scope.listAuthorization();
-																			$scope.closeModalCreate();
-																			$scope.countEmpTrue = 0;
-																		}
-																	},
-																	cancelContinue :{
-																		text: "Cancel",
-																		action: function(){
-																			$scope.listAuthorization();
-																			$scope.closeModal();
-																			$scope.countEmpTrue = 0;
-																		}
-																	}
-									                            }
-									                            
-									                       });
-										                       
-															
-															
-														}
-														
-													});
-											}
 											
-
-										}else if($scope.sAuthType == "Group"){
-											var countObj = Object.keys($scope.authorizationGroup).length;
-											var countTrueFalse = 0;
-											var countOjbTrue = 0;
-											var listGroupDetail = [];
-											for(var i = 0; i < countObj; i++){	
-												if($scope.authorizationGroup[i].statusCheck == true){
-													countOjbTrue++;
-													if($scope.authorizationGroup[i].andOrCheck == "And"){
-														$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber);
-														if($scope.authorizationGroup[i].amountCheck != ""){
-															if (isNaN($scope.authorizationGroup[i].amountCheck)) {
-																$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount can not input string !");
-															}else{
-																if(parseInt($scope.authorizationGroup[i].amountCheck) > parseInt($scope.authorizationGroup[i].authGroupCount)){
-																	$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[item-1].itemNumber,"Amount can not big than employee in group "+ $scope.authorizationGroup[item-1].authGroupName+" !");
-																}else{
-																	$scope.setSuccessField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber);
-																	countTrueFalse++;
-																	listGroupDetail.push({"authEmpId":"","authGroupId":$scope.authorizationGroup[i].authGroupId,"authGroupAndOr":"And","authGroupAmount":$scope.authorizationGroup[i].amountCheck});
-																}
-															}	
-														}else{
-															$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount is required and can not be empty!");
-														}
-													}else if($scope.authorizationGroup[i].andOrCheck == "Or"){
-														countTrueFalse++;
-														listGroupDetail.push({"authEmpId":"","authGroupId":$scope.authorizationGroup[i].authGroupId,"authGroupAndOr":"Or","authGroupAmount":1});
-														$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber);
-													}else{
-														$scope.setErrorField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber,"The authorization and \ or is required and can not be empty!");
-													}
-												}
-											}//close for loop object 	
-
-											if(countTrueFalse == countOjbTrue){
-												
-												var stringValue = {
-														"authName":getValueStringById("authName"),
-														"authType":getValueStringById("authType"), 
-														"authAndOr":"", 
-														"authAmount":0,
-														"authorizationDetail": listGroupDetail
-													};
-												
-												$http({
-										 			method: 'POST',
-												    url: "${pageContext.request.contextPath}/rest/authorization/create",
-												    headers: {
-												    	'Accept': 'application/json',
-												        'Content-Type': 'application/json'
-												    }	,
-												    data : stringValue    
-												}).success(function(response) {	
-											
-													if(response.MESSAGE == "fail"){
-														$.alert({
-								                            title: '<h3 class="text-center">Fail</h3>',
-								                            type: 'orange',
-								                            content: "<hr>",
-								                       });
-													}else if(response.MESSAGE == "exist"){
-														$.alert({
-								                            title: '<h3 class="text-center">Exist</h3>',
-								                            type: 'orange',
-								                            content: response.DESCRIPTION + "<hr>",
-								                       });
-													}else{
-														$.alert({
-								                            title: '<h3 class="text-center">Success</h3>',
-								                            type: 'green',
-								                            content: response.DESCRIPTION  + "<hr>",
-								                            buttons: {
-																countinue :{
-																	text: "Continue Create",
-																	action : function(){
-																		$scope.listAuthorization();
-																		$scope.closeModalCreate();
-																	}
-																},
-																cancelContinue :{
-																	text: "Cancel",
-																	action: function(){
-																		$scope.listAuthorization();
-																		$scope.closeModal();
-																	}
-																}
-								                            }
-								                            
-								                       });
-									                       
-														
-														
-													}
-													
-												});
-											}
-											
-										}else{
-										
 										}
-										
-									}else{
+									}
+								}else if($("#authAndOr").val() == "Or"){
+								
+									var stringValue = {
+											"authName":getValueStringById("authName"),
+											"authType":getValueStringById("authType"), 
+											"authAndOr":"Or", 
+											"authAmount":0,
+											"authorizationDetail": listEmpDetail
+										};
 
-									}	
+									swal({
+										title:  "<span style='font-size: 20px;'>You are about to create authorization.</span>",
+										text: "Click OK to continue or CANCEL to abort.",
+										type: "info",
+										html: true,
+										showCancelButton: true,
+										closeOnConfirm: false,
+										showLoaderOnConfirm: true,	
+							        }, 
+							        function(isConfirm){ 
+
+							            if(isConfirm){
+							            	setTimeout(function(){
+								            	
+										$http({
+								 			method: 'POST',
+										    url: "${pageContext.request.contextPath}/rest/authorization/create",
+										    headers: {
+										    	'Accept': 'application/json',
+										        'Content-Type': 'application/json'
+										    }	,
+										    data : stringValue    
+										}).success(function(response) {	
+									
+											if(response.MESSAGE == "fail"){
+												messageTypeFail(response.DESCRIPTION)
+											}else if(response.MESSAGE == "exist"){
+												messageTypeExisted(response.DESCRIPTION)
+											}else{
+												messagsTypeSuccess(response.DESCRIPTION)
+												$scope.listAuthorization();
+												$scope.closeModalCreate();
+												$scope.countEmpTrue = 0;		
+											}
+
+											
+										});
+
+						            	},500);
+						            }
+						        });
+							}
 								
 
-							            
+							}else if($scope.sAuthType == "Group"){
+								var countObj = Object.keys($scope.authorizationGroup).length;
+								var countTrueFalse = 0;
+								var countOjbTrue = 0;
+								var listGroupDetail = [];
+								for(var i = 0; i < countObj; i++){	
+									if($scope.authorizationGroup[i].statusCheck == true){
+										countOjbTrue++;
+										if($scope.authorizationGroup[i].andOrCheck == "And"){
+											$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber);
+											if($scope.authorizationGroup[i].amountCheck != ""){
+												if (isNaN($scope.authorizationGroup[i].amountCheck)) {
+													$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount can not input string !");
+												}else{
+													if(parseInt($scope.authorizationGroup[i].amountCheck) > parseInt($scope.authorizationGroup[i].authGroupCount)){
+														$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[item-1].itemNumber,"Amount can not big than employee in group "+ $scope.authorizationGroup[item-1].authGroupName+" !");
+													}else{
+														$scope.setSuccessField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber);
+														countTrueFalse++;
+														listGroupDetail.push({"authEmpId":"","authGroupId":$scope.authorizationGroup[i].authGroupId,"authGroupAndOr":"And","authGroupAmount":$scope.authorizationGroup[i].amountCheck});
+													}
+												}	
+											}else{
+												$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount is required and can not be empty!");
+											}
+										}else if($scope.authorizationGroup[i].andOrCheck == "Or"){
+											countTrueFalse++;
+											listGroupDetail.push({"authEmpId":"","authGroupId":$scope.authorizationGroup[i].authGroupId,"authGroupAndOr":"Or","authGroupAmount":1});
+											$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber);
+										}else{
+											$scope.setErrorField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber,"The authorization and \ or is required and can not be empty!");
+										}
+									}
+								}//close for loop object 	
+
+								if(countTrueFalse == countOjbTrue){
+									
+									var stringValue = {
+											"authName":getValueStringById("authName"),
+											"authType":getValueStringById("authType"), 
+											"authAndOr":"", 
+											"authAmount":0,
+											"authorizationDetail": listGroupDetail
+										};
+
+									swal({
+										title:  "<span style='font-size: 20px;'>You are about to create authorization.</span>",
+										text: "Click OK to continue or CANCEL to abort.",
+										type: "info",
+										html: true,
+										showCancelButton: true,
+										closeOnConfirm: false,
+										showLoaderOnConfirm: true,	
+							        }, 
+							        function(isConfirm){ 
+
+							            if(isConfirm){
+							            	setTimeout(function(){
+									$http({
+							 			method: 'POST',
+									    url: "${pageContext.request.contextPath}/rest/authorization/create",
+									    headers: {
+									    	'Accept': 'application/json',
+									        'Content-Type': 'application/json'
+									    }	,
+									    data : stringValue    
+									}).success(function(response) {	
+
+										if(response.MESSAGE == "fail"){
+											messageTypeFail(response.DESCRIPTION)
+										}else if(response.MESSAGE == "exist"){
+											messageTypeExisted(response.DESCRIPTION)
+										}else{
+											messagsTypeSuccess(response.DESCRIPTION)
+											$scope.listAuthorization();
+											$scope.closeModalCreate();		
+										}
+										
+										
+									});
+					            	},500);
 					            }
-					        },
-					        cancelAction:{
-								text: 'Cancel',
-								action: function(){
-									$scope.listAuthorization();
-									$scope.closeModal();
-								}
-						    }
-					    }
-					});
+					        });
+							}
+								
+							}else{
+							
+							}
+							
+						}else{
+
+						}	
 					
+
+							            
+					       
 					
 
 				}
@@ -984,97 +925,56 @@
 				$scope.updateauth = function(){
 
 
-					$.confirm({
-					    title: '<h3 class="text-center">Are you sure you want to update this authorization ?</h3>',
-					    content: '<hr>',
-					    type: 'green',
-					    buttons: {
-					        updateAuthorization: {
-					            text: 'Yes',
-					            action: function () {
+					
 
-					            	$('#form_authori').data('bootstrapValidator').validate();
-									var addauth = $("#form_authori").data('bootstrapValidator').validate().isValid();
-									if(addauth){
-										
-										if($scope.sAuthType == "Individual"){
+	            	$('#form_authori').data('bootstrapValidator').validate();
+					var addauth = $("#form_authori").data('bootstrapValidator').validate().isValid();
+					if(addauth){
+						
+						if($scope.sAuthType == "Individual"){
 
-											var countObjEmp = Object.keys($scope.emps).length;
-											var countStatus = 0;
-											var listEmpDetail = [];
-											for(var i=0;i < countObjEmp ;i++){
-												if($scope.emps[i].statusCheck == true){
-													countStatus++;
-													listEmpDetail.push({"authEmpId":$scope.emps[i].empId,"authGroupId":"","authGroupAndOr":"","authGroupAmount":""});
-												}	
-											}
+							var countObjEmp = Object.keys($scope.emps).length;
+							var countStatus = 0;
+							var listEmpDetail = [];
+							for(var i=0;i < countObjEmp ;i++){
+								if($scope.emps[i].statusCheck == true){
+									countStatus++;
+									listEmpDetail.push({"authEmpId":$scope.emps[i].empId,"authGroupId":"","authGroupAndOr":"","authGroupAmount":""});
+								}	
+							}
 
-											if($("#authAndOr").val() == "And"){
-												if(isNaN($scope.authAmount)){
-													$scope.setErrorField("divAthAmountIndividual","The authorization amount can not input string !");
-												}else{
-													
-													if(parseInt(countStatus) < parseInt($scope.authAmount)){
-														$scope.setErrorField("divAthAmountIndividual","Please check employee equal or greater than authorization amount  !");
-													}else{
-														$scope.setSuccessField("divAthAmountIndividual");
-														
-														var stringValue = {
-															"authId":$scope.authoriID,
-															"authName":getValueStringById("authName"),
-															"authType":getValueStringById("authType"), 
-															"authAndOr":"And", 
-															"authAmount":getValueStringById("authAmount"),
-															"authorizationDetail": listEmpDetail
-														};
-
-														$http({
-												 			method: 'POST',
-														    url: "${pageContext.request.contextPath}/rest/authorization/update",
-														    headers: {
-														    	'Accept': 'application/json',
-														        'Content-Type': 'application/json'
-														    }	,
-														    data : stringValue    
-														}).success(function(response) {	
-															if(response.MESSAGE == "success"){
-																$scope.listAuthorization();
-																$scope.closeModal();
-																 $.alert({
-											                            title: '<h3 class="text-center">Success</h3>',
-											                            type: 'green',
-											                            content: response.DESCRIPTION+"<hr>",
-											                       });
-															}else if(response.MESSAGE == "exist"){
-																 $.alert({
-											                            title: '<h3 class="text-center">Exist</h3>',
-											                            type: 'red',
-											                            content: response.DESCRIPTION+"<hr>",
-											                       });
-															}else if(response.MESSAGE == "not allowed"){
-																$.alert({
-										                            title: '<h3 class="text-center">Not allowed</h3>',
-										                            type: 'red',
-										                            content: response.DESCRIPTION+"<hr>",
-										                       });
-															}else{
-
-															}
-														});
-														
-													}
-												}
-											}else if($("#authAndOr").val() == "Or"){
+							if($("#authAndOr").val() == "And"){
+								if(isNaN($scope.authAmount)){
+									$scope.setErrorField("divAthAmountIndividual","The authorization amount can not input string !");
+								}else{
 									
-												var stringValue = {
-														"authId":$scope.authoriID,
-														"authName":getValueStringById("authName"),
-														"authType":getValueStringById("authType"), 
-														"authAndOr":"Or", 
-														"authAmount":0,
-														"authorizationDetail": listEmpDetail
-													};
+									if(parseInt(countStatus) < parseInt($scope.authAmount)){
+										$scope.setErrorField("divAthAmountIndividual","Please check employee equal or greater than authorization amount  !");
+									}else{
+										$scope.setSuccessField("divAthAmountIndividual");
+										
+										var stringValue = {
+											"authId":$scope.authoriID,
+											"authName":getValueStringById("authName"),
+											"authType":getValueStringById("authType"), 
+											"authAndOr":"And", 
+											"authAmount":getValueStringById("authAmount"),
+											"authorizationDetail": listEmpDetail
+										};
 
+										swal({
+											title:  "<span style='font-size: 20px;'>You are about to update authorization.</span>",
+											text: "Click OK to continue or CANCEL to abort.",
+											type: "info",
+											html: true,
+											showCancelButton: true,
+											closeOnConfirm: false,
+											showLoaderOnConfirm: true,	
+								        }, 
+								        function(isConfirm){ 
+
+								            if(isConfirm){
+								            	setTimeout(function(){
 													$http({
 											 			method: 'POST',
 													    url: "${pageContext.request.contextPath}/rest/authorization/update",
@@ -1084,151 +984,199 @@
 													    }	,
 													    data : stringValue    
 													}).success(function(response) {	
-														if(response.MESSAGE == "success"){
-															$scope.listAuthorization();
-															$scope.closeModal();
-															 $.alert({
-										                            title: '<h3 class="text-center">Success</h3>',
-										                            type: 'green',
-										                            content: response.DESCRIPTION+"<hr>",
-										                       });
+														if(response.MESSAGE == "fail"){
+															messageTypeFail(response.DESCRIPTION)
 														}else if(response.MESSAGE == "exist"){
-															 $.alert({
-										                            title: '<h3 class="text-center">Exist</h3>',
-										                            type: 'red',
-										                            content: response.DESCRIPTION+"<hr>",
-										                       });
+															messageTypeExisted(response.DESCRIPTION)
 														}else if(response.MESSAGE == "not allowed"){
-															$.alert({
-									                            title: '<h3 class="text-center">Not allowed</h3>',
-									                            type: 'red',
-									                            content: response.DESCRIPTION+"<hr>",
-									                       });
+															messageTypeNotAllowed(response.DESCRIPTION)
 														}else{
-
+															messagsTypeSuccess(response.DESCRIPTION)
+															$scope.listAuthorization();
+															$scope.closeModal();		
 														}
 														
+														
+														
 													});
-											}
-											
-
-										}else if($scope.sAuthType == "Group"){
-											
-											var countObj = Object.keys($scope.authorizationGroup).length;
-											var countTrueFalse = 0;
-											var countOjbTrue = 0;
-											var listGroupDetail = [];
-											for(var i = 0; i < countObj; i++){	
-												if($scope.authorizationGroup[i].statusCheck == true){
-													countOjbTrue++;
-													if($scope.authorizationGroup[i].andOrCheck == "And"){
-														$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber);
-														if($scope.authorizationGroup[i].amountCheck != ""){
-															if (isNaN($scope.authorizationGroup[i].amountCheck)) {
-																$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount can not input string !");
-															}else{
-																if(parseInt($scope.authorizationGroup[i].amountCheck) > parseInt($scope.authorizationGroup[i].authGroupCount)){
-																	$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[item-1].itemNumber,"Amount can not big than employee in group "+ $scope.authorizationGroup[item-1].authGroupName+" !");
-																}else{
-																	$scope.setSuccessField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber);
-																	countTrueFalse++;
-																	listGroupDetail.push({"authEmpId":"","authGroupId":$scope.authorizationGroup[i].authGroupId,"authGroupAndOr":"And","authGroupAmount":$scope.authorizationGroup[i].amountCheck});
-																}
-															}	
-														}else{
-															$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount is required and can not be empty!");
-														}
-													}else if($scope.authorizationGroup[i].andOrCheck == "Or"){
-														countTrueFalse++;
-														listGroupDetail.push({"authEmpId":"","authGroupId":$scope.authorizationGroup[i].authGroupId,"authGroupAndOr":"Or","authGroupAmount":1});
-														$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber);
-													}else{
-														$scope.setErrorField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber,"The authorization and \ or is required and can not be empty!");
-													}
-												}
-											}//close for loop object 	
-
+								            	},500);
+								            }
+								        });
 										
-											if(countTrueFalse == countOjbTrue){
-												
-												var stringValue = {
-														"authId":$scope.authoriID,
-														"authName":getValueStringById("authName"),
-														"authType":getValueStringById("authType"), 
-														"authAndOr":"", 
-														"authAmount":0,
-														"authorizationDetail": listGroupDetail
-													};
-												$http({
-										 			method: 'POST',
-												    url: "${pageContext.request.contextPath}/rest/authorization/update",
-												    headers: {
-												    	'Accept': 'application/json',
-												        'Content-Type': 'application/json'
-												    }	,
-												    data : stringValue    
-												}).success(function(response) {	
-													
-													if(response.MESSAGE == "success"){
-														$scope.listAuthorization();
-														$scope.closeModal();
-														 $.alert({
-									                            title: '<h3 class="text-center">Success</h3>',
-									                            type: 'green',
-									                            content: response.DESCRIPTION+"<hr>",
-									                       });
-													}else if(response.MESSAGE == "exist"){
-														 $.alert({
-									                            title: '<h3 class="text-center">Exist</h3>',
-									                            type: 'red',
-									                            content: response.DESCRIPTION+"<hr>",
-									                       });
-													}else if(response.MESSAGE == "not allowed"){
-														$.alert({
-								                            title: '<h3 class="text-center">Not allowed</h3>',
-								                            type: 'red',
-								                            content: response.DESCRIPTION+"<hr>",
-								                       });
-													}else{
-
-													}
-													
-												});
-											}else{
-												
-											}
-											
-										}else{
-										
-										}
-										
-									}else{
-
 									}
+								}
+							}else if($("#authAndOr").val() == "Or"){
+					
+								var stringValue = {
+										"authId":$scope.authoriID,
+										"authName":getValueStringById("authName"),
+										"authType":getValueStringById("authType"), 
+										"authAndOr":"Or", 
+										"authAmount":0,
+										"authorizationDetail": listEmpDetail
+									};
+
+								swal({
+									title:  "<span style='font-size: 20px;'>You are about to update authorization.</span>",
+									text: "Click OK to continue or CANCEL to abort.",
+									type: "info",
+									html: true,
+									showCancelButton: true,
+									closeOnConfirm: false,
+									showLoaderOnConfirm: true,	
+						        }, 
+						        function(isConfirm){ 
+
+						            if(isConfirm){
+						            	setTimeout(function(){
+											$http({
+									 			method: 'POST',
+											    url: "${pageContext.request.contextPath}/rest/authorization/update",
+											    headers: {
+											    	'Accept': 'application/json',
+											        'Content-Type': 'application/json'
+											    }	,
+											    data : stringValue    
+											}).success(function(response) {	
+												if(response.MESSAGE == "fail"){
+													messageTypeFail(response.DESCRIPTION)
+												}else if(response.MESSAGE == "exist"){
+													messageTypeExisted(response.DESCRIPTION)
+												}else if(response.MESSAGE == "not allowed"){
+													messageTypeNotAllowed(response.DESCRIPTION)
+												}else{
+													messagsTypeSuccess(response.DESCRIPTION)
+													$scope.listAuthorization();
+													$scope.closeModal();		
+												}
+												
+												
+											});
+						            	},500);
+						            }
+						        });
+							}
+							
+
+						}else if($scope.sAuthType == "Group"){
+							
+							var countObj = Object.keys($scope.authorizationGroup).length;
+							var countTrueFalse = 0;
+							var countOjbTrue = 0;
+							var listGroupDetail = [];
+							for(var i = 0; i < countObj; i++){	
+								if($scope.authorizationGroup[i].statusCheck == true){
+									countOjbTrue++;
+									if($scope.authorizationGroup[i].andOrCheck == "And"){
+										$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber);
+										if($scope.authorizationGroup[i].amountCheck != ""){
+											if (isNaN($scope.authorizationGroup[i].amountCheck)) {
+												$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount can not input string !");
+											}else{
+												if(parseInt($scope.authorizationGroup[i].amountCheck) > parseInt($scope.authorizationGroup[i].authGroupCount)){
+													$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[item-1].itemNumber,"Amount can not big than employee in group "+ $scope.authorizationGroup[item-1].authGroupName+" !");
+												}else{
+													$scope.setSuccessField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber);
+													countTrueFalse++;
+													listGroupDetail.push({"authEmpId":"","authGroupId":$scope.authorizationGroup[i].authGroupId,"authGroupAndOr":"And","authGroupAmount":$scope.authorizationGroup[i].amountCheck});
+												}
+											}	
+										}else{
+											$scope.setErrorField("divAuthAmount"+$scope.authorizationGroup[i].itemNumber,"The authorization amount is required and can not be empty!");
+										}
+									}else if($scope.authorizationGroup[i].andOrCheck == "Or"){
+										countTrueFalse++;
+										listGroupDetail.push({"authEmpId":"","authGroupId":$scope.authorizationGroup[i].authGroupId,"authGroupAndOr":"Or","authGroupAmount":1});
+										$scope.setSuccessField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber);
+									}else{
+										$scope.setErrorField("divAuthAndOr"+$scope.authorizationGroup[i].itemNumber,"The authorization and \ or is required and can not be empty!");
+									}
+								}
+							}//close for loop object 	
+
+						
+							if(countTrueFalse == countOjbTrue){
+								
+								var stringValue = {
+										"authId":$scope.authoriID,
+										"authName":getValueStringById("authName"),
+										"authType":getValueStringById("authType"), 
+										"authAndOr":"", 
+										"authAmount":0,
+										"authorizationDetail": listGroupDetail
+									};
+								swal({
+									title:  "<span style='font-size: 20px;'>You are about to update authorization.</span>",
+									text: "Click OK to continue or CANCEL to abort.",
+									type: "info",
+									html: true,
+									showCancelButton: true,
+									closeOnConfirm: false,
+									showLoaderOnConfirm: true,	
+						        }, 
+						        function(isConfirm){ 
+
+						            if(isConfirm){
+						            	setTimeout(function(){
+											$http({
+									 			method: 'POST',
+											    url: "${pageContext.request.contextPath}/rest/authorization/update",
+											    headers: {
+											    	'Accept': 'application/json',
+											        'Content-Type': 'application/json'
+											    }	,
+											    data : stringValue    
+											}).success(function(response) {	
+												
+												if(response.MESSAGE == "fail"){
+													messageTypeFail(response.DESCRIPTION)
+												}else if(response.MESSAGE == "exist"){
+													messageTypeExisted(response.DESCRIPTION)
+												}else if(response.MESSAGE == "not allowed"){
+													messageTypeNotAllowed(response.DESCRIPTION)
+												}else{
+													messagsTypeSuccess(response.DESCRIPTION)
+													$scope.listAuthorization();
+													$scope.closeModal();		
+												}
+												
+												
+											});
+						            	},500);
+						            }
+						        });
+							}else{
+								
+							}
+							
+						}else{
+						
+						}
+						
+					}else{
+
+					}
 
 						            
-					            }
-					        },
-					        cancelBtn:{
-								text: "Cancel",
-						    }
-					    }
-					});
-
-					
+					         
 					
 				}
 
 				$scope.deleteAuthorizationId = function(authID,authName){
-					$.confirm({
-					    title: '<h3 class="text-center">Are you sure you want to delete this  authorization with ID '+authID+' ?</h3>',
-					    type: 'orange',
-					    content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.'+"<hr>",
-					    autoClose: 'cancelAction|8000',
-					    buttons: {
-					    	confirm: {
-					            text: 'Delete',
-					            action: function () {
+					swal({
+						title:  "<span style='font-size: 20px;'>Are you sure you want to delete this  authorization with ID "+authID+"</span>",
+						text: "Click OK to continue or CANCEL to abort.",
+						type: "info",
+						html: true,
+						showCancelButton: true,
+						closeOnConfirm: false,
+						showLoaderOnConfirm: true,	
+			        }, 
+			        function(isConfirm){ 
+
+			            if(isConfirm){
+			            	setTimeout(function(){
+					
 					            	$http({
 							 			method: 'DELETE',
 									    url: "${pageContext.request.contextPath}/rest/authorization/delete/"+authID,
@@ -1237,39 +1185,27 @@
 									        'Content-Type': 'application/json'
 									    }	    
 									}).success(function(response) {
-									
-											if(response.MESSAGE == "success"){
-												$scope.listAuthorization();
-												 $.alert({
-							                            title: '<h3 class="text-center">Success</h3>',
-							                            type: 'green',
-							                            content: response.DESCRIPTION+"<hr>",
-							                       });
-											}else if(response.MESSAGE == "used"){
-												 $.alert({
-							                            title: '<h3 class="text-center">Used</h3>',
-							                            type: 'red',
-							                            content: response.DESCRIPTION+"<hr>",
-							                       });
-											}else{
-												$.alert({
-						                            title: '<h3 class="text-center">Fail</h3>',
-						                            type: 'red',
-						                            content: response.DESCRIPTION+"<hr>",
-						                       });
-											}
+										if(response.MESSAGE == "fail"){
+											messageTypeFail(response.DESCRIPTION)
+										}else if(response.MESSAGE == "exist"){
+											messageTypeExisted(response.DESCRIPTION)
+										}else if(response.MESSAGE == "not allowed"){
+											messageTypeNotAllowed(response.DESCRIPTION)
+										}else if(response.MESSAGE == "used"){
+											messageTypeUsed(response.DESCRIPTION)
+										}else{
+											messagsTypeSuccess(response.DESCRIPTION)
+											$scope.listAuthorization();
+										}
+										
+											
 										
 									});
-					            }
-					    	},
-					    	cancelAction:{
-								text: "Cancel Action",
-								action: function(){
 
-								}
-						    }
-					    }
-					});
+			            	},500);
+			            }
+			        });
+					          
 					
 				}
 

@@ -50,21 +50,21 @@
 								<table class="table table-hover">
 									<thead>
 										<tr>
-											<th style="cursor: pointer;" ng-click="sort('authProcess')">Authorization Process
+											<th class="wdiths-30" style="cursor: pointer;" ng-click="sort('authProcess')">Authorization Process
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authProcess'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authId')">Authorization Id
+											<th class="wdiths-30" style="cursor: pointer;" ng-click="sort('authId')">Authorization Id
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authId'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
-											<th style="cursor: pointer;" ng-click="sort('authName')">Authorization Name
+											<th class="wdiths-30" style="cursor: pointer;" ng-click="sort('authName')">Authorization Name
 												<span class="glyphicon sort-icon" ng-show="sortKey=='authName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}">
 											</th>
 											
-											<th style="width: 175px;"></th>
+											<th class="wdiths-10">Action</th>
 										</tr>
 									</thead>
 									<tbody>
-										<tbody>
+									
 											<tr pagination-id="listAuthEmp" dir-paginate="data in authEmployeeId |orderBy:sortKey:reverse |filter:search |itemsPerPage:10"  >
 												<td ng-cloak>{{data.authProcess}}</td>
 												<td ng-cloak>{{data.authId}}</td>
@@ -75,6 +75,9 @@
 											</tr> 
 									
 									</tbody>
+									<tfoot id="footerAtt">
+								
+									</tfoot>
 								</table>
 								<dir-pagination-controls 
 									pagination-id="listAuthEmp"
@@ -176,7 +179,7 @@
 											<span class="glyphicon sort-icon" ng-show="sortKey=='empName'" ng-class="{'glyphicon-chevron-up':reverse,'glyphicon-chevron-down':!reverse}"></th>	
 									</tr>
 								</tbody>
-								<tbody id="data-emp">
+								<tbody >
 									<tr pagination-id="listEmployeeCreate" dir-paginate="tr in emps |orderBy:sortKey:reverse |filter:searchEmp |itemsPerPage:pageSize.row" current-page="currentPage" >
 												<td class="width-75 text-center">
 													<div class="icheckbox icheckbox-primary">
@@ -188,6 +191,7 @@
 												<td ng-cloak>{{tr.empName}}</td>							
 									</tr> 
 								</tbody>
+								
 							</table>
 							<dir-pagination-controls 
 							    pagination-id="listEmployeeCreate"
@@ -222,7 +226,7 @@
 
 	<script type="text/javascript">
 				
-			var app = angular.module('authoriGroup', ['angularUtils.directives.dirPagination','angular-loading-bar', 'ngAnimate']).config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
+			var app = angular.module('authoriGroup', ['angularUtils.directives.dirPagination','angular-loading-bar']).config(['cfpLoadingBarProvider', function(cfpLoadingBarProvider) {
 			    cfpLoadingBarProvider.includeSpinner = false;
 			}]);
 			var self = this;
@@ -329,99 +333,100 @@
 				$scope.listEmployee();
 
 				$scope.changeEmp = function(){
-					
-					$http({
-			 			method: 'GET',
-					    url: "${pageContext.request.contextPath}/rest/authorizationemployee/get-employee/"+$scope.mEmp,
-					    headers: {
-					    	'Accept': 'application/json',
-					        'Content-Type': 'application/json'
-					    } 
-					}).success(function(response) {	
-					
-						if(response.MESSAGE == "sucess"){
-							$scope.authEmployeeId = response.DATA;		
-						}else{
-							
-						}
+					var countObjEmp = "";
+					if($scope.mEmp != ""){
+						$http({
+				 			method: 'GET',
+						    url: "${pageContext.request.contextPath}/rest/authorizationemployee/get-employee/"+$scope.mEmp,
+						    headers: {
+						    	'Accept': 'application/json',
+						        'Content-Type': 'application/json'
+						    } 
+						}).success(function(response) {	
 						
-					});
+							if(response.MESSAGE == "sucess"){
+								$scope.authEmployeeId = response.DATA;	
+								countObjEmp = Object.keys($scope.authEmployeeId).length;
+							
+								if(countObjEmp == 0){
+									$("#footerAtt").html("<tr><td><span class='label label-warning font_size15'>No Data</span></td></tr>");
+									
+								}	
+							}
+							
+						});
+					}else{
+						$("#footerAtt").html("<tr><td><span class='label label-warning font_size15'>No Data</span></td></tr>");
+					}
+					
 					
 				}
 				
 				$scope.createAuthGroup = function(){
-
-					$.confirm({
-					    title: '<h3 class="text-center">Are you sure you want to create this employee authorization ?</h3>',
-					    content: '<hr>',
-					    type: 'green',
-					    buttons: {
-					        createAuthorization: {
-					            text: 'Yes',
-					            action: function () {
-
-					            	var listEmpDetail = [];
-									
-									for(var i=0; i< Object.keys($scope.emps).length ;i++){		
-										if($scope.emps[i].statusCheck == true){	
-											listEmpDetail.push({"empId":$scope.emps[i].empId});
-										}	
-									}
-								
-
-										$('#form_group').data('bootstrapValidator').validate();
-										var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
-										if(addAuthGroup){
-											var process = getValueStringById("process");
-											var authorization = getValueStringById("authorization");
-											var action = getValueStringById("action");
-											var stringValue = {
-												    			"authProcess":process,"authId":authorization, "action": action,"empDetail":listEmpDetail
-															  };
-											$http({
-									 			method: 'POST',
-											    url: "${pageContext.request.contextPath}/rest/authorizationemployee/create",
-											    headers: {
-											    	'Accept': 'application/json',
-											        'Content-Type': 'application/json'
-											    }	,
-											    data : stringValue    
-											}).success(function(response) {	
-
-
-												if(response.MESSAGE == "success"){
-													$scope.closeModal();
-													$.alert({
-							                            title: '<h3 class="text-center">Success</h3>',
-							                            type: 'green',
-							                            content: response.DESCRIPTION+"<hr>",
-							                     	});
-													
-												}else {
-													$.alert({
-							                            title: '<h3 class="text-center">Fail</h3>',
-							                            type: 'red',
-							                            content: "<hr>",
-							                       });
-												}
-												
-											});
-										}
-
-					            	
-								 }
-					        },
-					        cancelAction:{
-								text: 'Cancel',
-								action: function(){
-									
-								}
-						    }
-					    }
-					});
 					
-			            
-			            
+					$('#form_group').data('bootstrapValidator').validate();
+					var addAuthGroup = $("#form_group").data('bootstrapValidator').validate().isValid();
+					if(addAuthGroup){
+						
+						var listEmpDetail = [];
+						
+						for(var i=0; i< Object.keys($scope.emps).length ;i++){		
+							if($scope.emps[i].statusCheck == true){	
+								listEmpDetail.push({"empId":$scope.emps[i].empId});
+							}	
+						}
+
+						
+						var process = getValueStringById("process");
+						var authorization = getValueStringById("authorization");
+						var action = getValueStringById("action");
+						var stringValue = {
+							    			"authProcess":process,"authId":authorization, "action": action,"empDetail":listEmpDetail
+										  };
+						swal({
+							title:  "<span style='font-size: 20px;'>You are about to create employee authorization .</span>",
+							text: "Click OK to continue or CANCEL to abort.",
+							type: "info",
+							html: true,
+							showCancelButton: true,
+							closeOnConfirm: false,
+							showLoaderOnConfirm: true,	
+				        }, 
+				        function(isConfirm){ 
+
+				            if(isConfirm){
+				            	setTimeout(function(){
+								$http({
+						 			method: 'POST',
+								    url: "${pageContext.request.contextPath}/rest/authorizationemployee/create",
+								    headers: {
+								    	'Accept': 'application/json',
+								        'Content-Type': 'application/json'
+								    }	,
+								    data : stringValue    
+								}).success(function(response) {	
+									if(response.MESSAGE == "fail"){
+										messageTypeFail(response.DESCRIPTION)
+									}else if(response.MESSAGE == "exist"){
+										messageTypeExisted(response.DESCRIPTION)
+									}else if(response.MESSAGE == "not allowed"){
+										messageTypeNotAllowed(response.DESCRIPTION)
+									}else{
+										messagsTypeSuccess(response.DESCRIPTION)
+										$scope.closeModal();		
+									}
+									
+									
+									
+									
+								});
+								
+				            	},500);
+				            }
+				        });
+					}
+
+					      
 					
 					
 				}
@@ -429,15 +434,20 @@
 
 			
 				$scope.deleteAuthEmployeeById = function(empId,process,authID){
-					$.confirm({
-					    title: '<h3 class="text-center">Are you sure you want to delete  this process '+process+' ?</h3>',
-					    type: 'orange',
-					    content: 'This dialog will automatically trigger \'cancel\' in 6 seconds if you don\'t respond.'+"<hr>",
-					    autoClose: 'cancelAction|8000',
-					    buttons: {
-					    	confirm: {
-					            text: 'Delete',
-					            action: function () {
+					swal({
+						title:  "<span style='font-size: 20px;'>Are you sure you want to delete with process "+process+".</span>",
+						text: "Click OK to continue or CANCEL to abort.",
+						type: "info",
+						html: true,
+						showCancelButton: true,
+						closeOnConfirm: false,
+						showLoaderOnConfirm: true,	
+			        }, 
+			        function(isConfirm){ 
+
+			            if(isConfirm){
+			            	setTimeout(function(){
+					
 					            	$http({   
 					            		method:"POST",  
 									    url: "${pageContext.request.contextPath}/rest/authorizationemployee/deleteById/"+empId+"/"+process+"/"+authID,
@@ -447,30 +457,22 @@
 									    }	    
 									}).success(function(response) {
 							
-										if(response.MESSAGE == "success"){
-											 $.alert({
-						                            title: '<h3 class="text-center">Success</h3>',
-						                            type: 'green',
-						                            content: response.DESCRIPTION+"<hr>",
-						                     });
-											$scope.changeEmp();
+										if(response.MESSAGE == "fail"){
+											messageTypeFail(response.DESCRIPTION)
+										}else if(response.MESSAGE == "exist"){
+											messageTypeExisted(response.DESCRIPTION)
+										}else if(response.MESSAGE == "not allowed"){
+											messageTypeNotAllowed(response.DESCRIPTION)
 										}else{
-											$.alert({
-					                            title: '<h3 class="text-center">Fail</h3>',
-					                            type: 'red',
-					                            content: response.DESCRIPTION+"<hr>",
-					                       });
+											messagsTypeSuccess(response.DESCRIPTION)
+											$scope.changeEmp();;		
 										}
+										
 									});
-					            }
-					    	},
-					    	cancelAction:{
-								text:"Cancel"
-						    }
-						    	
-					    }
-					});
-					
+									
+			            	},500);
+			            }
+			        });
 					
 				}
 
