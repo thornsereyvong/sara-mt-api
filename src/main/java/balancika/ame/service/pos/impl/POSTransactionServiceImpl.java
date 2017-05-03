@@ -78,4 +78,30 @@ public class POSTransactionServiceImpl implements POSTransactionService{
 		return false;
 	}
 
+	@Override
+	public boolean deleteSaleOrderByStation(POSForm frm) {
+		try (Connection con = DBConnection.getConnection(frm.getDataSource())){						
+			String sql = "DELETE FROM tblres_temporder WHERE stationid=?";
+			PreparedStatement pstmt = con.prepareStatement(sql);
+			pstmt.setObject(1, frm.getRecords().get(0).get("stationId"));
+			pstmt.executeUpdate();
+			return true;
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	@Override
+	public boolean updateSaleOrderByStation(POSForm frm) {
+		try{						
+			if(this.deleteSaleOrderByStation(frm))
+				if(this.addSaleOrder(frm))
+					return true;			
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 }
