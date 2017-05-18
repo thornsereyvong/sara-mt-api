@@ -68,8 +68,6 @@ public class AccountReceivableServiceImpl implements AccountReceivableService{
 					     "AND IF(LOWER(?) = 'All',TRUE,s.ClassID <= ?) "+
 					     "GROUP BY s.SalID "+
 					     "ORDER BY "+orderBy;
-						
-			
 			
 			PreparedStatement p = con.prepareStatement(sql);
 			p.setString(1, criteria.get("fDate"));
