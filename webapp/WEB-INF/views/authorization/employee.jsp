@@ -335,6 +335,7 @@
 				$scope.changeEmp = function(){
 					var countObjEmp = "";
 					if($scope.mEmp != ""){
+						$("#footerAtt").empty();
 						$http({
 				 			method: 'GET',
 						    url: "${pageContext.request.contextPath}/rest/authorizationemployee/get-employee/"+$scope.mEmp,
@@ -349,8 +350,9 @@
 								countObjEmp = Object.keys($scope.authEmployeeId).length;
 							
 								if(countObjEmp == 0){
-									$("#footerAtt").html("<tr><td><span class='label label-warning font_size15'>No Data</span></td></tr>");
-									
+									$("#footerAtt").html("<tr><td><span class='label label-warning font_size15'>No Data</span></td></tr>");	
+								}else{
+									$("#footerAtt").empty();
 								}	
 							}
 							
@@ -426,8 +428,7 @@
 				        });
 					}
 
-					      
-					
+					     	
 					
 				}
 
